@@ -6,6 +6,12 @@ public class PlayerMove : MonoBehaviour
 {
     // 이동 속력
     float moveSpeed = 4.0f;
+
+    float playDashTime = 0.0f;
+    // 대쉬 최대 속력
+    float dashMaxSpeed = 20.0f;
+    float dashTime = 0.3f;
+
     // Character Controller
     public CharacterController cc;
 
@@ -24,10 +30,15 @@ public class PlayerMove : MonoBehaviour
     // 점프 횟수
     int JumpCurN = 0;
 
-    float hAxis;
-    float vAxis;
+    // 대쉬
+    bool dash = false;
 
-    Vector3 moveVec;
+    // 대쉬 방향
+    Vector3 dashDir;
+
+    Vector3 dirH;
+
+    bool bRight = false;
 
     // Start is called before the first frame update
     void Start()
@@ -40,7 +51,8 @@ public class PlayerMove : MonoBehaviour
     void Update()
     {
         float h = Input.GetAxis("Horizontal");
-        Vector3 dirH = transform.right * h;
+        dirH = Vector3.right * h;
+        
 
         dirH.Normalize();
 
@@ -49,6 +61,13 @@ public class PlayerMove : MonoBehaviour
             yVelocity = 0;
             JumpCurN = 0;
         }
+
+        // 스페이스 바를 누르면
+        if (Input.GetKeyDown(KeyCode.A)) // 왼쪽
+            bRight = false;
+
+        if (Input.GetKeyDown(KeyCode.D)) // 오른쪽
+            bRight = true;
 
         // 스페이스 바를 누르면
         if (Input.GetButtonDown("Jump"))
@@ -67,11 +86,40 @@ public class PlayerMove : MonoBehaviour
         // dir.y 값에 yVelocity를 셋팅
         dirH.y = yVelocity;
 
+
         cc.Move(dirH * moveSpeed * Time.deltaTime);
+        Dash();
     }
 
-    void GetInput()
+    void Dash()
     {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            Debug.Log("Dash!");
+            dash = true;
 
+            if (bRight)
+                dashDir = new Vector3(1.0f, 0.0f, 0.0f);
+            else
+                dashDir = new Vector3(-1.0f, 0.0f, 0.0f);
+        }
+            
+
+        if (dash)
+        {
+            playDashTime += Time.deltaTime;
+            // 0 ~ 1 -> 대쉬 플레이 시간 / 대쉬 시간
+            moveSpeed = Mathf.Lerp(moveSpeed, dashMaxSpeed, playDashTime / dashTime);
+            // moveSpeed -> dashMaxSpeed로 값 변경
+            cc.Move(dashDir * moveSpeed * Time.deltaTime);
+        }
+
+        if (playDashTime > dashTime)
+        {
+            playDashTime = 0.0f;
+            dash = false;
+            moveSpeed = 4.0f;
+        }
     }
+
 }
