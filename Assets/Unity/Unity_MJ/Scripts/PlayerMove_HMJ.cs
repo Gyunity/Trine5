@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMove : MonoBehaviour
+public class PlayerMove_HMJ : MonoBehaviour
 {
     // 이동 속력
     float moveSpeed = 4.0f;
