@@ -38,7 +38,9 @@ public class PlayerMove_HMJ : MonoBehaviour
 
     Vector3 dirH;
 
-    bool bRight = false;
+    // bool bRight = false;
+
+    Vector3 movement;
 
     // Start is called before the first frame update
     void Start()
@@ -51,43 +53,17 @@ public class PlayerMove_HMJ : MonoBehaviour
     void Update()
     {
         float h = Input.GetAxis("Horizontal");
-        dirH = Vector3.right * h;
-        
 
-        dirH.Normalize();
+        movement = new Vector3(h, 0.0f, 0.0f);
 
-        if (cc.isGrounded)
+        // 벡터 크기가 0보다 크면
+        if(movement.magnitude > 0)
         {
-            yVelocity = 0;
-            JumpCurN = 0;
+            // 이동 방향으로 캐릭터 회전
+            Quaternion newRotation = Quaternion.LookRotation(movement);
+            transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * 10.0f);
         }
-
-        // 스페이스 바를 누르면
-        if (Input.GetKeyDown(KeyCode.A)) // 왼쪽
-            bRight = false;
-
-        if (Input.GetKeyDown(KeyCode.D)) // 오른쪽
-            bRight = true;
-
-        // 스페이스 바를 누르면
-        if (Input.GetButtonDown("Jump"))
-        {
-            // 만약에 현재 점프 횟수가 최대 점프 횟수보다 작으면
-            if (JumpCurN < maxJumpN)
-            {
-                yVelocity = jumpPower;
-                JumpCurN++;
-            }
-        }
-        // yVelocity를 중력값을 이용해서 감소시킨다.
-        // v = v0 + at;
-        yVelocity += gravity * Time.deltaTime;
-
-        // dir.y 값에 yVelocity를 셋팅
-        dirH.y = yVelocity;
-
-
-        cc.Move(dirH * moveSpeed * Time.deltaTime);
+        Jump();
         Dash();
     }
 
@@ -97,14 +73,8 @@ public class PlayerMove_HMJ : MonoBehaviour
         {
             Debug.Log("Dash!");
             dash = true;
-
-            if (bRight)
-                dashDir = new Vector3(1.0f, 0.0f, 0.0f);
-            else
-                dashDir = new Vector3(-1.0f, 0.0f, 0.0f);
         }
             
-
         if (dash)
         {
             playDashTime += Time.deltaTime;
@@ -120,6 +90,38 @@ public class PlayerMove_HMJ : MonoBehaviour
             dash = false;
             moveSpeed = 4.0f;
         }
+    }
+
+    void Jump()
+    {
+        // 땅에 있음
+        if (cc.isGrounded)
+        {
+            JumpCurN = 0;
+        }
+        if (Input.GetButtonDown("Jump"))
+        {
+            Debug.Log("점프 버튼 누름.");
+            // 만약에 현재 점프 횟수가 최대 점프 횟수보다 작으면
+            if (JumpCurN < maxJumpN)
+            {
+                yVelocity = jumpPower;
+                JumpCurN++;
+            }
+        }
+
+        yVelocity += gravity * Time.deltaTime;
+
+        // dir.y 값에 yVelocity를 셋팅
+        movement.y += yVelocity;
+    }
+    void PlayerMove()
+    {
+        cc.Move((movement * moveSpeed + new Vector3(0.0f, yVelocity, 0.0f)) * Time.fixedDeltaTime);
+    }
+    private void FixedUpdate()
+    {
+        PlayerMove();
     }
 
 }
