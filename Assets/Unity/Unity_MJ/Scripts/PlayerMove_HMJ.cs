@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static PlayerState_HMJ;
 
 public class PlayerMove_HMJ : MonoBehaviour
 {
     // 이동 속력
     float moveSpeed = 4.0f;
-
     float playDashTime = 0.0f;
     // 대쉬 최대 속력
     float dashMaxSpeed = 20.0f;
@@ -16,7 +16,7 @@ public class PlayerMove_HMJ : MonoBehaviour
     public CharacterController cc;
 
     // 점프파워
-    public float jumpPower = 3;
+    public float jumpPower = 2.0f;
 
     // 중력
     float gravity = -9.81f;
@@ -30,9 +30,6 @@ public class PlayerMove_HMJ : MonoBehaviour
     // 점프 횟수
     int JumpCurN = 0;
 
-    // 대쉬
-    bool dash = false;
-
     // 대쉬 방향
     Vector3 dashDir;
 
@@ -42,11 +39,14 @@ public class PlayerMove_HMJ : MonoBehaviour
 
     Vector3 movement;
 
+    PlayerState_HMJ playerState;
+
     // Start is called before the first frame update
     void Start()
     {
         // Character Controller
         cc = GetComponent<CharacterController>();
+        playerState = GameObject.Find("Player").GetComponentInChildren<PlayerState_HMJ>();
     }
 
     // Update is called once per frame
@@ -72,10 +72,10 @@ public class PlayerMove_HMJ : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             Debug.Log("Dash!");
-            dash = true;
+            playerState.SetState(PlayerState.Dash);
         }
             
-        if (dash)
+        if (playerState.GetState() == PlayerState.Dash)
         {
             playDashTime += Time.deltaTime;
             // 0 ~ 1 -> 대쉬 플레이 시간 / 대쉬 시간
@@ -87,7 +87,7 @@ public class PlayerMove_HMJ : MonoBehaviour
         if (playDashTime > dashTime)
         {
             playDashTime = 0.0f;
-            dash = false;
+            playerState.SetState(PlayerState.Idle);
             moveSpeed = 4.0f;
         }
     }
@@ -98,9 +98,11 @@ public class PlayerMove_HMJ : MonoBehaviour
         if (cc.isGrounded)
         {
             JumpCurN = 0;
+            playerState.SetState(PlayerState.Idle);
         }
         if (Input.GetButtonDown("Jump"))
         {
+            playerState.SetState(PlayerState.Jump);
             Debug.Log("점프 버튼 누름.");
             // 만약에 현재 점프 횟수가 최대 점프 횟수보다 작으면
             if (JumpCurN < maxJumpN)
@@ -117,7 +119,14 @@ public class PlayerMove_HMJ : MonoBehaviour
     }
     void PlayerMove()
     {
-        cc.Move((movement * moveSpeed + new Vector3(0.0f, yVelocity, 0.0f)) * Time.fixedDeltaTime);
+        if (playerState.GetState() == PlayerState.Grap) // 무언가를 잡고 있을때
+        {
+            cc.Move(dashDir * moveSpeed * Time.deltaTime);
+        }
+        else
+        {
+            cc.Move((movement * moveSpeed + new Vector3(0.0f, yVelocity, 0.0f)) * Time.fixedDeltaTime);
+        }
     }
     private void FixedUpdate()
     {
