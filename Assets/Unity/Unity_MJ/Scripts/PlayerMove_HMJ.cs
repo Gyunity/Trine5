@@ -130,10 +130,10 @@ public class PlayerMove_HMJ : MonoBehaviour
                 playerState.SetState(PlayerState.Climb);
                 Debug.Log("위로 올릴려고 노력중..");
 
-                //rd.isKinematic = true;
-                //rb.MovePosition(new Vector3(transform.position.x, transform.position.y + targetCollider.bounds.extents.y + 2.0f, transform.position.z));
                 Debug.Log("x: " + transform.position.x + "y: " + transform.position.y + "z: " + transform.position.z);
-                cc.Move(new Vector3(transform.position.x + targetCollider.bounds.extents.x, transform.position.y + targetCollider.bounds.extents.y + 2.0f, transform.position.z));
+                cc.Move(new Vector3(10.0f, 30.0f, 0.0f) * moveSpeed * Time.deltaTime);
+                Debug.Log("콜라이더 - x: " + targetCollider.bounds.extents.x + "y: " + targetCollider.bounds.extents.y);
+                yVelocity = 0.0f;
             }
         }
         else
