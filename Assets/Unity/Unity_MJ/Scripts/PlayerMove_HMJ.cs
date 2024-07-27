@@ -1,36 +1,37 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static PlayerState_HMJ;
 
 public class PlayerMove_HMJ : MonoBehaviour
 {
-    // ÀÌµ¿ ¼Ó·Â
+    // ì´ë™ ì†ë ¥
     float moveSpeed = 4.0f;
     float playDashTime = 0.0f;
-    // ´ë½¬ ÃÖ´ë ¼Ó·Â
+    // ëŒ€ì‰¬ ìµœëŒ€ ì†ë ¥
     float dashMaxSpeed = 20.0f;
     float dashTime = 0.3f;
 
+    Collider targetCollider;
     // Character Controller
     public CharacterController cc;
 
-    // Á¡ÇÁÆÄ¿ö
+    // ì í”„íŒŒì›Œ
     public float jumpPower = 2.0f;
 
-    // Áß·Â
+    // ì¤‘ë ¥
     float gravity = -9.81f;
 
-    // y ¹æÇâ ¼Ó·Â
+    // y ë°©í–¥ ì†ë ¥
     float yVelocity;
 
-    // Á¡ÇÁ ÃÖ´ë È½¼ö
+    // ì í”„ ìµœëŒ€ íšŸìˆ˜
     public int maxJumpN = 2;
 
-    // Á¡ÇÁ È½¼ö
+    // ì í”„ íšŸìˆ˜
     int JumpCurN = 0;
 
-    // ´ë½¬ ¹æÇâ
+    // ëŒ€ì‰¬ ë°©í–¥
     Vector3 dashDir;
 
     Vector3 dirH;
@@ -41,11 +42,14 @@ public class PlayerMove_HMJ : MonoBehaviour
 
     PlayerState_HMJ playerState;
 
+    Rigidbody rb;
     // Start is called before the first frame update
     void Start()
     {
         // Character Controller
+        
         cc = GetComponent<CharacterController>();
+        rb = GetComponentInChildren<Rigidbody>();
         playerState = GameObject.Find("Player").GetComponentInChildren<PlayerState_HMJ>();
     }
 
@@ -56,13 +60,13 @@ public class PlayerMove_HMJ : MonoBehaviour
 
         movement = new Vector3(h, 0.0f, 0.0f);
 
-        // º¤ÅÍ Å©±â°¡ 0º¸´Ù Å©¸é
+        // ë²¡í„° í¬ê¸°ê°€ 0ë³´ë‹¤ í¬ë©´
         if(movement.magnitude > 0)
         {
-            // ÀÌµ¿ ¹æÇâÀ¸·Î Ä³¸¯ÅÍ È¸Àü
+            // ì´ë™ ë°©í–¥ìœ¼ë¡œ ìºë¦­í„° íšŒì „
             Quaternion newRotation = Quaternion.LookRotation(movement);
             transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * 10.0f);
-        }
+        } 
         Jump();
         Dash();
     }
@@ -78,9 +82,9 @@ public class PlayerMove_HMJ : MonoBehaviour
         if (playerState.GetState() == PlayerState.Dash)
         {
             playDashTime += Time.deltaTime;
-            // 0 ~ 1 -> ´ë½¬ ÇÃ·¹ÀÌ ½Ã°£ / ´ë½¬ ½Ã°£
+            // 0 ~ 1 -> ëŒ€ì‰¬ í”Œë ˆì´ ì‹œê°„ / ëŒ€ì‰¬ ì‹œê°„
             moveSpeed = Mathf.Lerp(moveSpeed, dashMaxSpeed, playDashTime / dashTime);
-            // moveSpeed -> dashMaxSpeed·Î °ª º¯°æ
+            // moveSpeed -> dashMaxSpeedë¡œ ê°’ ë³€ê²½
             cc.Move(dashDir * moveSpeed * Time.deltaTime);
         }
 
@@ -94,7 +98,7 @@ public class PlayerMove_HMJ : MonoBehaviour
 
     void Jump()
     {
-        // ¶¥¿¡ ÀÖÀ½
+        // ë•…ì— ìˆìŒ
         if (cc.isGrounded)
         {
             JumpCurN = 0;
@@ -103,8 +107,8 @@ public class PlayerMove_HMJ : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             playerState.SetState(PlayerState.Jump);
-            Debug.Log("Á¡ÇÁ ¹öÆ° ´©¸§.");
-            // ¸¸¾à¿¡ ÇöÀç Á¡ÇÁ È½¼ö°¡ ÃÖ´ë Á¡ÇÁ È½¼öº¸´Ù ÀÛÀ¸¸é
+            Debug.Log("ì í”„ ë²„íŠ¼ ëˆ„ë¦„.");
+            // ë§Œì•½ì— í˜„ì¬ ì í”„ íšŸìˆ˜ê°€ ìµœëŒ€ ì í”„ íšŸìˆ˜ë³´ë‹¤ ì‘ìœ¼ë©´
             if (JumpCurN < maxJumpN)
             {
                 yVelocity = jumpPower;
@@ -114,23 +118,46 @@ public class PlayerMove_HMJ : MonoBehaviour
 
         yVelocity += gravity * Time.deltaTime;
 
-        // dir.y °ª¿¡ yVelocity¸¦ ¼ÂÆÃ
+        // dir.y ê°’ì— yVelocityë¥¼ ì…‹íŒ…
         movement.y += yVelocity;
     }
     void PlayerMove()
     {
-        if (playerState.GetState() == PlayerState.Grap) // ¹«¾ğ°¡¸¦ Àâ°í ÀÖÀ»¶§
+        if (playerState.GetState() == PlayerState.Grap) // ë¬´ì–¸ê°€ë¥¼ ì¡ê³  ìˆì„ë•Œ
         {
-            cc.Move(dashDir * moveSpeed * Time.deltaTime);
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                playerState.SetState(PlayerState.Climb);
+                Debug.Log("ìœ„ë¡œ ì˜¬ë¦´ë ¤ê³  ë…¸ë ¥ì¤‘..");
+
+                //rd.isKinematic = true;
+                //rb.MovePosition(new Vector3(transform.position.x, transform.position.y + targetCollider.bounds.extents.y + 2.0f, transform.position.z));
+                Debug.Log("x: " + transform.position.x + "y: " + transform.position.y + "z: " + transform.position.z);
+                cc.Move(new Vector3(transform.position.x + targetCollider.bounds.extents.x, transform.position.y + targetCollider.bounds.extents.y + 2.0f, transform.position.z));
+            }
         }
         else
         {
             cc.Move((movement * moveSpeed + new Vector3(0.0f, yVelocity, 0.0f)) * Time.fixedDeltaTime);
         }
+
+        if (playerState.GetState() == PlayerState.Climb) // ì˜¬ë¼ê°€ëŠ” ê²ƒ
+        {
+        }
     }
+    void GrabMove()
+    {
+        cc.Move(new Vector3(1.0f, 0.0f, 0.0f) * moveSpeed * Time.deltaTime);
+    }
+
     private void FixedUpdate()
     {
-        PlayerMove();
+       PlayerMove();
+    }
+
+    public void SetCollisionCollider(Collider collider)
+    {
+        targetCollider = collider;
     }
 
 }

@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,7 +12,7 @@ public class PlayerState_HMJ : MonoBehaviour
         Jump,
         Dash,
         Grap,
-        GrapDown,
+        Climb,
         PlayerStateEnd
 
     }
@@ -50,7 +50,10 @@ public class PlayerState_HMJ : MonoBehaviour
                 break;
             case PlayerState.Grap:
                 transform.position = new Vector3(transform.position.x, grabyPos, transform.position.z);
-                Debug.Log("ÇöÀç ±×·¦Áß");
+                Debug.Log("í˜„ìž¬ ê·¸ëž©ì¤‘");
+                break;
+            case PlayerState.Climb:
+
                 break;
         }
     }

@@ -1,4 +1,4 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -9,28 +9,39 @@ public class PlayerGrab_HMJ : MonoBehaviour
     float swingSpeed = 5.0f;
     bool isSwinging = false;
     Vector3 swingPolePosition;
+
+    GameObject playerHead;
+
+    Collider playerCollider;
+    Collider targetCollider;
+
+    Vector3 playerColliderCenter;
+
+    PlayerState_HMJ playerState;
+    float distanceX;
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.Find("Player");
+        playerState = player.GetComponent<PlayerState_HMJ>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        //if(isSwinging) // ∫¿¿ª ¿‚∞Ì ¿÷¥Ÿ∏È
-        //{
-
-        //}
+            
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("√Êµπ! «√∑π¿ÃæÓ º’∞˙: " + other.name);
+        Debug.Log("Ï∂©Îèå! ÌîåÎ†àÏù¥Ïñ¥ ÏÜêÍ≥º: " + other.name);
        
         if (other.gameObject.layer == LayerMask.NameToLayer("GrapplePoint"))
         {
             GameObject.Find("Player").GetComponent<PlayerState_HMJ>().SetState(PlayerState_HMJ.PlayerState.Grap);
+            GameObject.Find("Player").GetComponent<PlayerMove_HMJ>().SetCollisionCollider(GetComponentInChildren<Collider>());
+
         }
     }
 
@@ -38,17 +49,5 @@ public class PlayerGrab_HMJ : MonoBehaviour
     {
         //Vector3 direction = (swingPolePosition - player.transform.position).normalized;
         //player.transform.position += direction * swingSpeed * Time.deltaTime;
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        Debug.Log("√Êµπ »ƒ Exit: " + other.name);
-        if (other.gameObject.layer == LayerMask.NameToLayer("GrapplePoint"))
-        {
-            PlayerState_HMJ playerState = player.GetComponent<PlayerState_HMJ>();
-            // ∫¿∞˙ √Êµπ«ﬂ¿ª ∂ß ∫¿¿ª ≥ıµµ∑œ º≥¡§
-            if (player)
-                playerState.SetState(PlayerState_HMJ.PlayerState.GrapDown);
-        }
     }
 }
