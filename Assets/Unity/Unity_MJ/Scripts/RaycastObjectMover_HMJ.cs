@@ -1,22 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class RaycastObjectMover_HMJ : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    GameObject hitObject;
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
+    bool mouseClick = false;
     private void FixedUpdate()
     {
         // 마우스 오른쪽 버튼을 클릭했을 때만 해당되는 레이어 오브젝트의 위치가 변경되도록 수정
@@ -25,11 +17,19 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
 
     void ObjectMove()
     {
-        if (Input.GetMouseButton(1) == false) return; // 햔재 오른쪽 마우스 클릭x -> false 반환
-
         RaycastHit hitInfo;
-        if(RaycastGrab(out hitInfo)) // 현재 충돌 여부 및 부딪힌 hit 정보 가져오기
-            RaycastMove(hitInfo); // 현재 hit된 오브젝트를 마우스 위치로 변경(2d -> 3d) (만약 레이케스팅된 물체가 있다면 실행)
+        if(Input.GetMouseButton(0)) // 계속 마우스를 누르고 있고
+        {
+            if ((null == hitObject) && RaycastGrab(out hitInfo)) // 만약 마우스와 충돌된 오브젝트가 이전에 없었고, 현재 있다면 저장
+                hitObject = hitInfo.collider.gameObject;
+            else if(hitObject)
+                RaycastMove(); // 현재 hit된 보관된 오브젝트를 마우스 위치로 변경(2d -> 3d) (만약 레이케스팅된 물체가 있다면 실행)
+        }
+        else // 마우스를 누르지 않을 경우 다시 충돌된 오브젝트를 null로 넣어줌. (해당 정보로 클릭 여부 확인)
+        {
+            hitObject = null;
+        }
+
     }
 
     bool RaycastGrab(out RaycastHit hitInfo)
@@ -48,11 +48,11 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
         return false; // 해당 레이어의 물체와 충돌하지 않았으면 false 반환
     }
 
-    void RaycastMove(RaycastHit hitInfo)
+    void RaycastMove()
     {
         Vector3 mousePos = Input.mousePosition; // 현재 마우스 커서 가져오기
-        mousePos.z = Camera.main.WorldToScreenPoint(hitInfo.transform.position).z; // 현재 z 값을 넣기 (2d -> 3d) 깊이 정보 추가
+        mousePos.z = Camera.main.WorldToScreenPoint(gameObject.transform.position).z; // 현재 z 값을 넣기 (2d -> 3d) 깊이 정보 추가
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(mousePos); // 마우스 좌표 -> 월드 좌표로 변경
-        hitInfo.collider.gameObject.transform.position = worldPos; // 레이케스팅해서 충돌된 오브젝트의 위치를 마우스 위치로 변경
+        hitObject.transform.position = worldPos; // 레이케스팅해서 충돌된 오브젝트의 위치를 마우스 위치로 변경
     }
 }
