@@ -25,8 +25,9 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
             else if(hitObject)
                 RaycastMove(); // 현재 hit된 보관된 오브젝트를 마우스 위치로 변경(2d -> 3d) (만약 레이케스팅된 물체가 있다면 실행)
         }
-        else // 마우스를 누르지 않을 경우 다시 충돌된 오브젝트를 null로 넣어줌. (해당 정보로 클릭 여부 확인)
+        else if(hitObject) // 마우스를 누르지 않을 경우 다시 충돌된 오브젝트를 null로 넣어줌. (해당 정보로 클릭 여부 확인)
         {
+            hitObject.GetComponentInChildren<Rigidbody>().useGravity = true;
             hitObject = null;
         }
 
@@ -54,5 +55,6 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
         mousePos.z = Camera.main.WorldToScreenPoint(gameObject.transform.position).z; // 현재 z 값을 넣기 (2d -> 3d) 깊이 정보 추가
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(mousePos); // 마우스 좌표 -> 월드 좌표로 변경
         hitObject.transform.position = worldPos; // 레이케스팅해서 충돌된 오브젝트의 위치를 마우스 위치로 변경
+        hitObject.GetComponentInChildren<Rigidbody>().useGravity = false;
     }
 }
