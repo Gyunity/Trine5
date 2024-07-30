@@ -7,8 +7,7 @@ public class PlayerState_HMJ : MonoBehaviour
     public enum PlayerState
     {
         Idle,
-        LeftRun,
-        RightRun,
+        Walk,
         Jump,
         Dash,
         Grap,
@@ -21,6 +20,16 @@ public class PlayerState_HMJ : MonoBehaviour
     PlayerState prePlayerState;
 
     float grabyPos;
+
+    Animator anim;
+
+    PlayerMove_HMJ playerMove;
+
+    private void Awake()
+    {
+        anim = GetComponentInChildren<Animator>();
+        playerMove = GetComponentInChildren<PlayerMove_HMJ>();
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -39,21 +48,24 @@ public class PlayerState_HMJ : MonoBehaviour
         switch(curPlayerState)
         {
             case PlayerState.Idle:
+                Debug.Log("Idle State");
                 break;
-            case PlayerState.LeftRun:
-                break;
-            case PlayerState.RightRun:
+            case PlayerState.Walk:
+                Debug.Log("Walk State");
                 break;
             case PlayerState.Jump:
+
+                Debug.Log("Jump State");
                 break;
             case PlayerState.Dash:
+                Debug.Log("Dash State");
                 break;
             case PlayerState.Grap:
+                Debug.Log("Grap State");
                 transform.position = new Vector3(transform.position.x, grabyPos, transform.position.z);
-                Debug.Log("현재 그랩중");
                 break;
             case PlayerState.Climb:
-
+                Debug.Log("Climb State");
                 break;
         }
     }
@@ -65,14 +77,17 @@ public class PlayerState_HMJ : MonoBehaviour
             switch (playerState)
             {
                 case PlayerState.Idle:
+                    playerMove.ResetDashData();
                     break;
-                case PlayerState.LeftRun:
-                    break;
-                case PlayerState.RightRun:
+                case PlayerState.Walk:
+                    playerMove.ResetDashData();
                     break;
                 case PlayerState.Jump:
+                    playerMove.ResetDashData();
+                    anim.SetTrigger("Jump");
                     break;
                 case PlayerState.Dash:
+                    anim.SetTrigger("Dash");
                     break;
                 case PlayerState.Grap:
                     grabyPos = transform.position.y;

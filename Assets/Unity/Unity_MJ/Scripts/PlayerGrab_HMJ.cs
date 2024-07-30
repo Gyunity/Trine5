@@ -35,8 +35,6 @@ public class PlayerGrab_HMJ : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("충돌! 플레이어 손과: " + other.name);
-       
         if (other.gameObject.layer == LayerMask.NameToLayer("GrapplePoint"))
         {
             GameObject.Find("Player").GetComponent<PlayerState_HMJ>().SetState(PlayerState_HMJ.PlayerState.Grap);

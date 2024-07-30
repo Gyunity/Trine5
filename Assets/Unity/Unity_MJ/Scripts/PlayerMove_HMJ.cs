@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static PlayerState_HMJ;
 
@@ -43,6 +44,7 @@ public class PlayerMove_HMJ : MonoBehaviour
     PlayerState_HMJ playerState;
 
     Rigidbody rb;
+    Animator anim;
     // Start is called before the first frame update
     void Start()
     {
@@ -50,6 +52,7 @@ public class PlayerMove_HMJ : MonoBehaviour
         
         cc = GetComponent<CharacterController>();
         rb = GetComponentInChildren<Rigidbody>();
+        anim = GetComponentInChildren<Animator>();
         playerState = GameObject.Find("Player").GetComponentInChildren<PlayerState_HMJ>();
     }
 
@@ -58,7 +61,15 @@ public class PlayerMove_HMJ : MonoBehaviour
     {
         float h = Input.GetAxis("Horizontal");
 
+        //if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+        //    playerState.SetState(PlayerState.Walk);
+        //else
+        //    playerState.SetState(PlayerState.Idle);
+
         movement = new Vector3(h, 0.0f, 0.0f);
+        // -1 ~ 1
+        // -1 ~ 0 // 왼쪽 1 `
+        // 0 ~ 1
 
         // 벡터 크기가 0보다 크면
         if(movement.magnitude > 0)
@@ -66,33 +77,34 @@ public class PlayerMove_HMJ : MonoBehaviour
             // 이동 방향으로 캐릭터 회전
             Quaternion newRotation = Quaternion.LookRotation(movement);
             transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * 10.0f);
+            anim.SetFloat("MoveSpeed", Mathf.Abs(h));
         } 
+            
         Jump();
         Dash();
     }
 
     void Dash()
     {
+
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            Debug.Log("Dash!");
             playerState.SetState(PlayerState.Dash);
         }
             
         if (playerState.GetState() == PlayerState.Dash)
         {
+            Debug.Log("Dash Data: moveSpeed - " + moveSpeed + "dashMaxSpeed - " + dashMaxSpeed);
             playDashTime += Time.deltaTime;
             // 0 ~ 1 -> 대쉬 플레이 시간 / 대쉬 시간
             moveSpeed = Mathf.Lerp(moveSpeed, dashMaxSpeed, playDashTime / dashTime);
-            // moveSpeed -> dashMaxSpeed로 값 변경
+            // moveSpeed -> dashMaxSpeed로 값 변경 
             cc.Move(dashDir * moveSpeed * Time.deltaTime);
-        }
 
-        if (playDashTime > dashTime)
-        {
-            playDashTime = 0.0f;
-            playerState.SetState(PlayerState.Idle);
-            moveSpeed = 4.0f;
+            if(playDashTime >= dashTime)
+            {
+                playerState.SetState(PlayerState.Idle);
+            }
         }
     }
 
@@ -102,12 +114,10 @@ public class PlayerMove_HMJ : MonoBehaviour
         if (cc.isGrounded)
         {
             JumpCurN = 0;
-            playerState.SetState(PlayerState.Idle);
         }
         if (Input.GetButtonDown("Jump"))
         {
             playerState.SetState(PlayerState.Jump);
-            Debug.Log("점프 버튼 누름.");
             // 만약에 현재 점프 횟수가 최대 점프 횟수보다 작으면
             if (JumpCurN < maxJumpN)
             {
@@ -128,11 +138,7 @@ public class PlayerMove_HMJ : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.D))
             {
                 playerState.SetState(PlayerState.Climb);
-                Debug.Log("위로 올릴려고 노력중..");
-
-                Debug.Log("x: " + transform.position.x + "y: " + transform.position.y + "z: " + transform.position.z);
                 cc.Move(new Vector3(10.0f, 30.0f, 0.0f) * moveSpeed * Time.deltaTime);
-                Debug.Log("콜라이더 - x: " + targetCollider.bounds.extents.x + "y: " + targetCollider.bounds.extents.y);
                 yVelocity = 0.0f;
             }
         }
@@ -148,6 +154,12 @@ public class PlayerMove_HMJ : MonoBehaviour
     void GrabMove()
     {
         cc.Move(new Vector3(1.0f, 0.0f, 0.0f) * moveSpeed * Time.deltaTime);
+    }
+
+    public void ResetDashData()
+    {
+        playDashTime = 0.0f;
+        moveSpeed = 4.0f;
     }
 
     private void FixedUpdate()
