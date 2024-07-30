@@ -34,36 +34,67 @@ public class ValeribotFSM_GH : MonoBehaviour
     int RandMove = 0;
     #endregion
 
+    //레이저 발사
+    public GameObject firePoint;
+    public float maxLength;
+    public GameObject laserPrefab;
+
+    private Vector3 direction;
+    private Quaternion rotation;
+
+    private GameObject[] lasers;
+    private LaserFire_GH laserScript;
+
+    float laserCurrTime = 0;
+
+    public bool onReadyLaser = true; 
+
     #region 타게팅 레이저 공격
-    //레이저 발사 위치
-    public Transform layserPos;
+    //레이저 발사 시간
+    float targetLaserReadyTime = 3;
+    float targetLaserDuraTime = 6;
+
     //레이저 방향
-    Vector3 layserToPlayer;
-    //레이저 길이
-    float layserToPlayerDist;
-    //레이저 정보
-    RaycastHit hitInfo;
-    //레이저 공장
-    public GameObject layserFactory;
+    Vector3 laserToPlayer;
 
-    float layserCurrTime = 0;
-    float layserReadyTime = 3;
-    float layserDuraTime = 6;
+    //레이저 발사
+    bool onTargetingLaser = false;
+    #endregion
 
-    GameObject layser;
+    #region 회전 레이저
+    bool onRtateLaser = false;
+
+    //레이저 발사 시간
+    float rotateLaserReadyTime = 2;
+    float rotateLaserDuraTime = 9;
+    #endregion
+
+    #region 땅 레이저
+    bool onGroundLaser = false;
     #endregion
 
     void Start()
     {
         chicken = GetComponent<Chicken_GH>();
         transform.position = pointC.position;
+
+        lasers = new GameObject[5];
+
+        for (int i = 0; i < lasers.Length; i++)
+        {
+            lasers[i] = Instantiate(laserPrefab, firePoint.transform.position, firePoint.transform.rotation);
+            lasers[i].transform.parent = transform;
+            laserScript = lasers[i].GetComponent<LaserFire_GH>();
+            lasers[i].SetActive(false);
+        }
     }
 
     void Update()
     {
-
+        TargetingLaser();
+        RotateLaser();
+        GroundLaser();
         BossJumpMove();
-        TargetLayser();
     }
 
     void BossJumpMove()
@@ -129,24 +160,6 @@ public class ValeribotFSM_GH : MonoBehaviour
 
 
     }
-
-    /*
-    private void OnDrawGizmos()
-    {
-        if (pointC != null && pointL != null && pointLC != null && Time.deltaTime != 0)
-        {
-            Vector3 previousPoint = pointC.position;
-
-            for (float t = 0; t <= jumpDuration; t += Time.deltaTime)
-            {
-                Vector3 currentPoint = CalculateBezierPoint(t / jumpDuration, pointC.position, pointLC.position, pointL.position);
-                Gizmos.DrawLine(previousPoint, currentPoint);
-                previousPoint = currentPoint;
-            }
-        }
-    }
-    */
-
     Vector3 CalculateBezierPoint(float t, Vector3 p1, Vector3 p2, Vector3 p3)
     {
         Vector3 p1p2 = Vector3.Lerp(p1, p2, t);
@@ -156,42 +169,155 @@ public class ValeribotFSM_GH : MonoBehaviour
 
 
 
-    void TargetLayser()
+    void TargetingLaser()
     {
-
-
-        layserToPlayer = player.transform.position - layserPos.position;
-        //layserToPlayer = hitInfo.point - layserPos.position;
-        Ray ray = new Ray(layserPos.position, layserToPlayer);
-
-        if (Physics.Raycast(ray, out hitInfo, float.MaxValue, LayerMask.NameToLayer("Player")))
-        {
-            layserToPlayerDist = layserToPlayer.magnitude;
-        }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            layser = Instantiate(layserFactory);
+            laserCurrTime = 0;
 
+            lasers[0].SetActive(true);
+            onTargetingLaser = true;
         }
-        if (layser != null)
+        if (onTargetingLaser)
         {
-            layserCurrTime += Time.deltaTime;
-            if (layserCurrTime < layserDuraTime)
+            laserCurrTime += Time.deltaTime;
+            if (laserCurrTime < targetLaserReadyTime)
             {
-                if (layserCurrTime < layserReadyTime)
-                {
-                    layser.transform.position = layserPos.position;
-                    layser.transform.localScale = new Vector3(1, layserToPlayerDist, 1);
-                    layser.transform.up = -layserToPlayer;
-                }
-                
+                laserToPlayer = player.transform.position - firePoint.transform.position;
+                lasers[0].transform.forward = laserToPlayer;
+                onReadyLaser = true;
+
+            }
+            else if (laserCurrTime >= targetLaserReadyTime && laserCurrTime < targetLaserDuraTime)
+            {
+                onReadyLaser = false;
+
+            }
+            else if (laserCurrTime >= targetLaserDuraTime)
+            {
+                onReadyLaser = true;
+
+                lasers[0].SetActive(false);
+                laserCurrTime = 0;
+                onTargetingLaser = false;
+            }
+        }
+    }
+
+
+    void RotateLaser()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            firePoint.transform.localEulerAngles = new Vector3(0, 0, 0);
+            laserCurrTime = 0;
+
+            lasers[0].SetActive(true);
+            lasers[1].SetActive(true);
+
+            onRtateLaser = true;
+        }
+        if (onRtateLaser)
+        {
+            laserCurrTime += Time.deltaTime;
+                lasers[0].transform.forward = firePoint.transform.right;
+                lasers[1].transform.forward = -firePoint.transform.right;
+            if (laserCurrTime < rotateLaserReadyTime)
+            {
+                onReadyLaser = true;
+
+            }
+            else if (laserCurrTime >= rotateLaserReadyTime && laserCurrTime < rotateLaserDuraTime)
+            {
+                firePoint.transform.localEulerAngles += new Vector3(0, 0, 1) * 25 * Time.deltaTime;
+                onReadyLaser = false;
+
+
+            }
+            else if (laserCurrTime >= rotateLaserDuraTime)
+            {
+                lasers[0].SetActive(false);
+                lasers[1].SetActive(false);
+
+                onRtateLaser = false;
+
+                onReadyLaser = true;
+
+            }
+        }
+    }
+
+    void GroundLaser()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            firePoint.transform.localEulerAngles = new Vector3(0, 0, 0);
+
+            if (currBossPisState == 0)
+            {
+                firePoint.transform.localEulerAngles = new Vector3(0, 0, -30);
+            }
+            else if (currBossPisState == 2)
+            {
+                firePoint.transform.localEulerAngles = new Vector3(0, 0, 30);
             }
             else
             {
-                layserCurrTime = 0;
-                Destroy(layser.gameObject);
+                return;
             }
-            print(layserCurrTime);
+            laserCurrTime = 0;
+
+            lasers[0].SetActive(true);
+
+            onGroundLaser = true;
+
+            onReadyLaser = true;
+
+        }
+
+        if (onGroundLaser)
+        {
+            laserCurrTime += Time.deltaTime;
+            lasers[0].transform.forward = -firePoint.transform.up;
+            if (laserCurrTime < rotateLaserReadyTime)
+            {
+                onReadyLaser = true;
+
+            }
+            else if (laserCurrTime >= rotateLaserReadyTime && laserCurrTime < rotateLaserDuraTime)
+            {
+                if (currBossPisState == 0)
+                {
+                    firePoint.transform.localEulerAngles += new Vector3(0, 0, 1) * 15 * Time.deltaTime;
+
+                }
+
+                else if (currBossPisState == 2)
+                {
+
+                    firePoint.transform.localEulerAngles -= new Vector3(0, 0, 1) * 15 * Time.deltaTime;
+
+                }
+                onReadyLaser = false;
+
+
+            }
+            else if (laserCurrTime >= rotateLaserDuraTime)
+            {
+                lasers[0].SetActive(false);
+                onGroundLaser = false;
+                laserCurrTime = 0;
+
+                onReadyLaser = true;
+
+
+            }
         }
     }
+
+    void LaserMachine()
+    {
+
+    }
+
 }
