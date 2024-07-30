@@ -106,7 +106,6 @@ public class LaserFire_GH : MonoBehaviour
                 length[2] = noiseTextureLength * (Vector3.Distance(transform.position, endPos));
             }
 
-            print(length[0]);
 
             //텍스처 크기
             laserLine.material.SetTextureScale("_MainTex", new Vector2(length[0], length[1]));

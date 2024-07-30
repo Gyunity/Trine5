@@ -785,7 +785,7 @@ GameObject:
   - component: {fileID: 126482911}
   - component: {fileID: 126482910}
   - component: {fileID: 126482909}
-  m_Layer: 7
+  m_Layer: 14
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13377,7 +13377,7 @@ GameObject:
   - component: {fileID: 953545864}
   - component: {fileID: 953545863}
   - component: {fileID: 953545862}
-  m_Layer: 7
+  m_Layer: 14
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15898,7 +15898,7 @@ GameObject:
   - component: {fileID: 1664701991}
   - component: {fileID: 1664701992}
   m_Layer: 6
-  m_Name: Valeribot
+  m_Name: Valeribot_GH
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15996,6 +15996,7 @@ MonoBehaviour:
   maxLength: 0
   laserPrefab: {fileID: 1818483698145146, guid: 86e0ee876ef5abb4d96f9cc96f43e4e1,
     type: 3}
+  onReadyLaser: 1
 --- !u!114 &1664701992
 MonoBehaviour:
   m_ObjectHideFlags: 0
