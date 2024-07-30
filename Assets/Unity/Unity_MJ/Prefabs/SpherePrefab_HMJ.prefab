@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1523970065685262825}
   - component: {fileID: 3555697344846420037}
   - component: {fileID: 7760311649129792491}
-  m_Layer: 15
+  m_Layer: 17
   m_Name: SpherePrefab_HMJ
   m_TagString: Untagged
   m_Icon: {fileID: 0}
