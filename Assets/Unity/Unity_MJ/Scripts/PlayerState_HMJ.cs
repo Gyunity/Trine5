@@ -16,10 +16,10 @@ public class PlayerState_HMJ : MonoBehaviour
 
     }
 
-    PlayerState curPlayerState;
-    PlayerState prePlayerState;
+    public PlayerState curPlayerState;
+    public PlayerState prePlayerState;
 
-    float grabyPos;
+    public float grabyPos;
 
     Animator anim;
 
@@ -54,11 +54,11 @@ public class PlayerState_HMJ : MonoBehaviour
                 Debug.Log("Walk State");
                 break;
             case PlayerState.Jump:
-
                 Debug.Log("Jump State");
                 break;
             case PlayerState.Dash:
                 Debug.Log("Dash State");
+                playerMove.Dash();
                 break;
             case PlayerState.Grap:
                 Debug.Log("Grap State");
@@ -66,6 +66,7 @@ public class PlayerState_HMJ : MonoBehaviour
                 break;
             case PlayerState.Climb:
                 Debug.Log("Climb State");
+                transform.position = new Vector3(transform.position.x, grabyPos, transform.position.z);
                 break;
         }
     }
@@ -74,23 +75,28 @@ public class PlayerState_HMJ : MonoBehaviour
     {
         if(curPlayerState != playerState)
         {
+            playerMove.ResetDashData();
+
             switch (playerState)
             {
                 case PlayerState.Idle:
-                    playerMove.ResetDashData();
+                    anim.SetTrigger("Idle");
                     break;
                 case PlayerState.Walk:
-                    playerMove.ResetDashData();
                     break;
                 case PlayerState.Jump:
-                    playerMove.ResetDashData();
                     anim.SetTrigger("Jump");
                     break;
                 case PlayerState.Dash:
                     anim.SetTrigger("Dash");
                     break;
                 case PlayerState.Grap:
-                    grabyPos = transform.position.y;
+                    anim.SetTrigger("Hanging");
+                    grabyPos = 1.8f;
+                    break;
+                case PlayerState.Climb:
+                    anim.SetTrigger("Climb");
+                    grabyPos = 1.4f;
                     break;
             }
 

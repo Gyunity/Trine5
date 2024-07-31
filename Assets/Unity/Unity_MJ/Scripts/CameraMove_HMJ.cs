@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -6,13 +6,13 @@ using UnityEngine;
 public class CameraMove : MonoBehaviour
 {
     public Transform target;
-    // Ä«¸Ş¶ó°¡ µû¶ó°¥ ´ë»ó
+    // ì¹´ë©”ë¼ê°€ ë”°ë¼ê°ˆ ëŒ€ìƒ
 
     public float smoothSpeed = 0.125f;
-    // Ä«¸Ş¶óÀÇ µû¶ó°¡´Â ¼Óµµ
+    // ì¹´ë©”ë¼ì˜ ë”°ë¼ê°€ëŠ” ì†ë„
 
     public Vector3 offset;
-    // ´ë»ó°ú Ä«¸Ş¶ó »çÀÌÀÇ °Å¸®
+    // ëŒ€ìƒê³¼ ì¹´ë©”ë¼ ì‚¬ì´ì˜ ê±°ë¦¬
 
     // Start is called before the first frame update
     void Start()
@@ -28,7 +28,7 @@ public class CameraMove : MonoBehaviour
 
     private void LateUpdate()
     {
-        // Ä«¸Ş¶óÀÇ ¸ñÇ¥ À§Ä¡ °è»ê
+        // ì¹´ë©”ë¼ì˜ ëª©í‘œ ìœ„ì¹˜ ê³„ì‚°
         Vector3 desiredPosition = target.position + offset;
 
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
@@ -36,3 +36,4 @@ public class CameraMove : MonoBehaviour
         transform.position = smoothedPosition;
     }
 }
+ 

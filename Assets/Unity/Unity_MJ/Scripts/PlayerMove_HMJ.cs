@@ -24,7 +24,7 @@ public class PlayerMove_HMJ : MonoBehaviour
     float gravity = -9.81f;
 
     // y 방향 속력
-    float yVelocity;
+    public float yVelocity;
 
     // 점프 최대 횟수
     public int maxJumpN = 2;
@@ -78,43 +78,47 @@ public class PlayerMove_HMJ : MonoBehaviour
             Quaternion newRotation = Quaternion.LookRotation(movement);
             transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * 10.0f);
             anim.SetFloat("MoveSpeed", Mathf.Abs(h));
-        } 
-            
+        }
+
+
+        
+
         Jump();
-        Dash();
-    }
-
-    void Dash()
-    {
-
+        PlayerMove();
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             playerState.SetState(PlayerState.Dash);
         }
-            
-        if (playerState.GetState() == PlayerState.Dash)
-        {
-            Debug.Log("Dash Data: moveSpeed - " + moveSpeed + "dashMaxSpeed - " + dashMaxSpeed);
-            playDashTime += Time.deltaTime;
-            // 0 ~ 1 -> 대쉬 플레이 시간 / 대쉬 시간
-            moveSpeed = Mathf.Lerp(moveSpeed, dashMaxSpeed, playDashTime / dashTime);
-            // moveSpeed -> dashMaxSpeed로 값 변경 
-            cc.Move(dashDir * moveSpeed * Time.deltaTime);
+        // Dash();
+    }
 
-            if(playDashTime >= dashTime)
-            {
-                playerState.SetState(PlayerState.Idle);
-            }
+    public void Dash()
+    {
+        Debug.Log("Dash Data: moveSpeed - " + moveSpeed + "dashMaxSpeed - " + dashMaxSpeed);
+        playDashTime += Time.deltaTime;
+        // 0 ~ 1 -> 대쉬 플레이 시간 / 대쉬 시간
+        moveSpeed = Mathf.Lerp(moveSpeed, dashMaxSpeed, playDashTime / dashTime);
+        // moveSpeed -> dashMaxSpeed로 값 변경 
+        cc.Move(dashDir * moveSpeed * Time.deltaTime);
+
+        if(playDashTime >= dashTime)
+        {
+            playerState.SetState(PlayerState.Idle);
         }
     }
 
     void Jump()
     {
+
         // 땅에 있음
         if (cc.isGrounded)
         {
             JumpCurN = 0;
+            yVelocity = 0.0f;
+           
+            playerState.SetState(PlayerState.Idle);              
         }
+
         if (Input.GetButtonDown("Jump"))
         {
             playerState.SetState(PlayerState.Jump);
@@ -133,22 +137,23 @@ public class PlayerMove_HMJ : MonoBehaviour
     }
     void PlayerMove()
     {
-        if (playerState.GetState() == PlayerState.Grap) // 무언가를 잡고 있을때
+        if (playerState.GetState() == PlayerState.Grap) // 무a언가를 잡고 있을때
         {
             if (Input.GetKeyDown(KeyCode.D))
             {
                 playerState.SetState(PlayerState.Climb);
-                cc.Move(new Vector3(10.0f, 30.0f, 0.0f) * moveSpeed * Time.deltaTime);
+                //cc.Move(new Vector3(10.0f, 30.0f, 0.0f) * moveSpeed * Time.deltaTime);
                 yVelocity = 0.0f;
             }
         }
         else
         {
-            cc.Move((movement * moveSpeed + new Vector3(0.0f, yVelocity, 0.0f)) * Time.fixedDeltaTime);
+            cc.Move((movement * moveSpeed + new Vector3(0.0f, yVelocity, 0.0f)) * Time.deltaTime);
         }
 
         if (playerState.GetState() == PlayerState.Climb) // 올라가는 것
         {
+            
         }
     }
     void GrabMove()
@@ -164,7 +169,7 @@ public class PlayerMove_HMJ : MonoBehaviour
 
     private void FixedUpdate()
     {
-       PlayerMove();
+       //PlayerMove();
     }
 
     public void SetCollisionCollider(Collider collider)

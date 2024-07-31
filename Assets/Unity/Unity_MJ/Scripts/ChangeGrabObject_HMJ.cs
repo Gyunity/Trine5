@@ -27,6 +27,7 @@ public class ChangeGrabObject_HMJ : MonoBehaviour
         SetMeshAllActive(false); // 모든 엑티브 끄기
         curMeshType = MeshType.MeshType_End;
     }
+
     void Start()
     {
 
@@ -57,17 +58,19 @@ public class ChangeGrabObject_HMJ : MonoBehaviour
         {
             SetMeshAllActive(false); // 모든 엑티브 끄기
             curMeshType = meshtype;
-            objectList[(int)curMeshType].SetActive(true); // 해당 오브젝트만 엑티브 키기
 
+            objectList[(int)curMeshType].SetActive(true); // 해당 오브젝트만 엑티브 키기
+            objectList[(int)curMeshType].GetComponentInChildren<Rigidbody>().useGravity = false; // 해당 오브젝트만 중력 끄기
+            objectList[(int)curMeshType].GetComponentInChildren<Rigidbody>().isKinematic = true;
             // 자식 조종 오브젝트를 플레이어 머리 위로
             Vector3 playerPos = GameObject.Find("Player").transform.position;
             playerPos.y += 5.0f;
             objectList[(int)curMeshType].transform.position = playerPos;
-
         }
     }
+
     void SetMeshActive(ChangeGrabObject_HMJ.MeshType meshtype, bool bActive)
-    {
+    {       
         objectList[(int)meshtype].SetActive(bActive);
     }
 
