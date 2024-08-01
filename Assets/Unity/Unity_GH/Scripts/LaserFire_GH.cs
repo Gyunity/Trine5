@@ -50,6 +50,7 @@ public class LaserFire_GH : MonoBehaviour
             {
                 //끝 레이저 위치가 오브젝트이면
                 laserLine.SetPosition(1, rayHit.point);
+               
 
                 if (!valeribotSC.onReadyLaser)
                 {
@@ -104,6 +105,12 @@ public class LaserFire_GH : MonoBehaviour
                 }
                 length[0] = mainTextureLength * (Vector3.Distance(transform.position, endPos));
                 length[2] = noiseTextureLength * (Vector3.Distance(transform.position, endPos));
+
+                if (!valeribotSC.onReadyLaser)
+                    laserLine.material = laserMat[0];
+                else
+                    laserLine.material = laserMat[1];
+
             }
 
 
@@ -118,6 +125,8 @@ public class LaserFire_GH : MonoBehaviour
                 laserSaver = true;
                 laserLine.enabled = true;
             }
+
+           
         }
 
     }
@@ -141,5 +150,13 @@ public class LaserFire_GH : MonoBehaviour
         }
     }
 
+    public void LaserDone()
+    {
+        laserLine.enabled = false;
+        laserSaver = false;
+        gameObject.SetActive(false);
+        //laserLine.SetPosition(0, Vector3.zero);
+        //laserLine.SetPosition(1, Vector3.zero);
+    }
 
 }

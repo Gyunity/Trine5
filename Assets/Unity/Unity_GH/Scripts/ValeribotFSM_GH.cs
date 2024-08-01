@@ -34,20 +34,19 @@ public class ValeribotFSM_GH : MonoBehaviour
     int RandMove = 0;
     #endregion
 
+    #region 레이저 전역 변수
     //레이저 발사
     public GameObject firePoint;
     public float maxLength;
     public GameObject laserPrefab;
-
-    private Vector3 direction;
-    private Quaternion rotation;
 
     private GameObject[] lasers;
     private LaserFire_GH laserScript;
 
     float laserCurrTime = 0;
 
-    public bool onReadyLaser = true; 
+    public bool onReadyLaser = true;
+    #endregion
 
     #region 타게팅 레이저 공격
     //레이저 발사 시간
@@ -73,12 +72,24 @@ public class ValeribotFSM_GH : MonoBehaviour
     bool onGroundLaser = false;
     #endregion
 
+    #region 레이저머신
+    public GameObject laserMachineFactory;
+
+    private GameObject[] laserMachines;
+
+    bool onLaserMachine = false;
+
+    float laserMachineMoveTime = 1.5f;
+
+    float laserMachineMoveCurrTime = 0;
+    #endregion
+
     void Start()
     {
         chicken = GetComponent<Chicken_GH>();
         transform.position = pointC.position;
 
-        lasers = new GameObject[5];
+        lasers = new GameObject[8];
 
         for (int i = 0; i < lasers.Length; i++)
         {
@@ -87,6 +98,17 @@ public class ValeribotFSM_GH : MonoBehaviour
             laserScript = lasers[i].GetComponent<LaserFire_GH>();
             lasers[i].SetActive(false);
         }
+
+        laserMachines = new GameObject[4];
+
+        for (int i = 0; i < laserMachines.Length; i++)
+        {
+            laserMachines[i] = Instantiate(laserMachineFactory);
+            laserMachines[i].transform.position = transform.position;
+            laserMachines[i].SetActive(false);
+        }
+
+
     }
 
     void Update()
@@ -95,6 +117,7 @@ public class ValeribotFSM_GH : MonoBehaviour
         RotateLaser();
         GroundLaser();
         BossJumpMove();
+        LaserMachine();
     }
 
     void BossJumpMove()
@@ -174,8 +197,8 @@ public class ValeribotFSM_GH : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             laserCurrTime = 0;
-
             lasers[0].SetActive(true);
+
             onTargetingLaser = true;
         }
         if (onTargetingLaser)
@@ -197,9 +220,11 @@ public class ValeribotFSM_GH : MonoBehaviour
             {
                 onReadyLaser = true;
 
-                lasers[0].SetActive(false);
                 laserCurrTime = 0;
                 onTargetingLaser = false;
+
+                lasers[0].GetComponent<LaserFire_GH>().LaserDone();
+
             }
         }
     }
@@ -220,8 +245,8 @@ public class ValeribotFSM_GH : MonoBehaviour
         if (onRtateLaser)
         {
             laserCurrTime += Time.deltaTime;
-                lasers[0].transform.forward = firePoint.transform.right;
-                lasers[1].transform.forward = -firePoint.transform.right;
+            lasers[0].transform.forward = firePoint.transform.right;
+            lasers[1].transform.forward = -firePoint.transform.right;
             if (laserCurrTime < rotateLaserReadyTime)
             {
                 onReadyLaser = true;
@@ -236,8 +261,9 @@ public class ValeribotFSM_GH : MonoBehaviour
             }
             else if (laserCurrTime >= rotateLaserDuraTime)
             {
-                lasers[0].SetActive(false);
-                lasers[1].SetActive(false);
+                lasers[0].GetComponent<LaserFire_GH>().LaserDone();
+                lasers[1].GetComponent<LaserFire_GH>().LaserDone();
+
 
                 onRtateLaser = false;
 
@@ -265,9 +291,10 @@ public class ValeribotFSM_GH : MonoBehaviour
             {
                 return;
             }
-            laserCurrTime = 0;
 
             lasers[0].SetActive(true);
+
+            laserCurrTime = 0;
 
             onGroundLaser = true;
 
@@ -304,11 +331,11 @@ public class ValeribotFSM_GH : MonoBehaviour
             }
             else if (laserCurrTime >= rotateLaserDuraTime)
             {
-                lasers[0].SetActive(false);
                 onGroundLaser = false;
                 laserCurrTime = 0;
 
                 onReadyLaser = true;
+                lasers[0].GetComponent<LaserFire_GH>().LaserDone();
 
 
             }
@@ -317,7 +344,84 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     void LaserMachine()
     {
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            laserCurrTime = 0;
+            laserMachineMoveCurrTime = 0;
+            onLaserMachine = true;
+            laserMachines[0].transform.position = transform.position + Vector3.up * 2;
+            laserMachines[1].transform.position = transform.position + Vector3.up * 2;
+
+            laserMachines[0].SetActive(true);
+            laserMachines[1].SetActive(true);
+        }
+
+        if (onLaserMachine)
+        {
+            laserMachineMoveCurrTime += Time.deltaTime;
+
+            if (laserMachineMoveCurrTime < laserMachineMoveTime)
+            {
+                laserMachines[0].transform.position += (Vector3.down + (Vector3.left * 3)) * Time.deltaTime;
+                laserMachines[1].transform.position += (Vector3.down + (Vector3.right * 3)) * Time.deltaTime;
+            }
+            else
+            {
+                laserCurrTime += Time.deltaTime;
+                for (int i = 0; i < 4; i++)
+                {
+                    lasers[i].transform.position = laserMachines[0].transform.position;
+                    laserMachines[0].transform.localRotation = Quaternion.Euler(0, 0, 45 + (i * 90));
+                    lasers[i].transform.forward = laserMachines[0].transform.up;
+                }
+                for (int i = 4; i < 8; i++)
+                {
+                    lasers[i].transform.position = laserMachines[1].transform.position;
+                    laserMachines[1].transform.localRotation = Quaternion.Euler(0, 0, 45 + (i * 90));
+                    lasers[i].transform.forward = laserMachines[1].transform.up;
+                }
+                if (laserCurrTime < rotateLaserReadyTime)
+                {
+                    for (int i = 0; i < 8; i++)
+                    {
+                        lasers[i].SetActive(true);
+                    }
+                    onReadyLaser = true;
+
+                }
+                else if (laserCurrTime >= rotateLaserReadyTime && laserCurrTime < rotateLaserDuraTime - 1.5f)
+                {
+
+                    onReadyLaser = false;
+
+
+                }
+                else if (laserCurrTime < rotateLaserDuraTime && laserCurrTime >= rotateLaserDuraTime - 1.5f)
+                {
+                    for (int i = 0; i < 8; i++)
+                    {
+                        lasers[i].GetComponent<LaserFire_GH>().LaserDone();
+                    }
+                    laserMachines[0].transform.position -= (Vector3.down + (Vector3.left * 3)) * Time.deltaTime;
+                    laserMachines[1].transform.position -= (Vector3.down + (Vector3.right * 3)) * Time.deltaTime;
+                }
+                else
+                {
+                    laserMachines[0].SetActive(false);
+                    laserMachines[1].SetActive(false);
+
+                    laserCurrTime = 0;
+                    laserMachineMoveCurrTime = 0;
+                    onReadyLaser = true;
+
+
+                    onLaserMachine = false;
+
+                }
+            }
+        }
 
     }
+
 
 }
