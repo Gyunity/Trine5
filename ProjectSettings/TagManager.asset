@@ -3,8 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - Player_Dummy
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -13,11 +12,17 @@ TagManager:
   - Water
   - UI
   - Boss
-  - 
+  - Ground
   - 
   - 
   - 
   - Shell
+  - GrapplePoint
+  - PlayerHand
+  - Thorn
+  - 
+  - PlayerHead
+  - SummonedObject
   - 
   - 
   - 
@@ -30,14 +35,8 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Top
+  - Wall
   m_SortingLayers:
   - name: Default
     uniqueID: 0

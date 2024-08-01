@@ -1,125 +1,180 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using static PlayerState_HMJ;
 
 public class PlayerMove_HMJ : MonoBehaviour
 {
-    // ÀÌµ¿ ¼Ó·Â
+    // ì´ë™ ì†ë ¥
     float moveSpeed = 4.0f;
-
     float playDashTime = 0.0f;
-    // ´ë½¬ ÃÖ´ë ¼Ó·Â
+    // ëŒ€ì‰¬ ìµœëŒ€ ì†ë ¥
     float dashMaxSpeed = 20.0f;
     float dashTime = 0.3f;
 
+    Collider targetCollider;
     // Character Controller
     public CharacterController cc;
 
-    // Á¡ÇÁÆÄ¿ö
-    public float jumpPower = 3;
+    // ì í”„íŒŒì›Œ
+    public float jumpPower = 2.0f;
 
-    // Áß·Â
+    // ì¤‘ë ¥
     float gravity = -9.81f;
 
-    // y ¹æÇâ ¼Ó·Â
-    float yVelocity;
+    // y ë°©í–¥ ì†ë ¥
+    public float yVelocity;
 
-    // Á¡ÇÁ ÃÖ´ë È½¼ö
+    // ì í”„ ìµœëŒ€ íšŸìˆ˜
     public int maxJumpN = 2;
 
-    // Á¡ÇÁ È½¼ö
+    // ì í”„ íšŸìˆ˜
     int JumpCurN = 0;
 
-    // ´ë½¬
-    bool dash = false;
-
-    // ´ë½¬ ¹æÇâ
+    // ëŒ€ì‰¬ ë°©í–¥
     Vector3 dashDir;
 
     Vector3 dirH;
 
-    bool bRight = false;
+    // bool bRight = false;
 
+    Vector3 movement;
+
+    PlayerState_HMJ playerState;
+
+    Rigidbody rb;
+    Animator anim;
     // Start is called before the first frame update
     void Start()
     {
         // Character Controller
+        
         cc = GetComponent<CharacterController>();
+        rb = GetComponentInChildren<Rigidbody>();
+        anim = GetComponentInChildren<Animator>();
+        playerState = GameObject.Find("Player").GetComponentInChildren<PlayerState_HMJ>();
     }
 
     // Update is called once per frame
     void Update()
     {
         float h = Input.GetAxis("Horizontal");
-        dirH = Vector3.right * h;
-        
 
-        dirH.Normalize();
+        //if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+        //    playerState.SetState(PlayerState.Walk);
+        //else
+        //    playerState.SetState(PlayerState.Idle);
 
-        if (cc.isGrounded)
+        movement = new Vector3(h, 0.0f, 0.0f);
+        // -1 ~ 1
+        // -1 ~ 0 // ì™¼ìª½ 1 `
+        // 0 ~ 1
+
+        // ë²¡í„° í¬ê¸°ê°€ 0ë³´ë‹¤ í¬ë©´
+        if(movement.magnitude > 0)
         {
-            yVelocity = 0;
-            JumpCurN = 0;
+            // ì´ë™ ë°©í–¥ìœ¼ë¡œ ìºë¦­í„° íšŒì „
+            Quaternion newRotation = Quaternion.LookRotation(movement);
+            transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * 10.0f);
+            anim.SetFloat("MoveSpeed", Mathf.Abs(h));
         }
 
-        // ½ºÆäÀÌ½º ¹Ù¸¦ ´©¸£¸é
-        if (Input.GetKeyDown(KeyCode.A)) // ¿ŞÂÊ
-            bRight = false;
 
-        if (Input.GetKeyDown(KeyCode.D)) // ¿À¸¥ÂÊ
-            bRight = true;
+        
 
-        // ½ºÆäÀÌ½º ¹Ù¸¦ ´©¸£¸é
+        Jump();
+        PlayerMove();
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            playerState.SetState(PlayerState.Dash);
+        }
+        // Dash();
+    }
+
+    public void Dash()
+    {
+        Debug.Log("Dash Data: moveSpeed - " + moveSpeed + "dashMaxSpeed - " + dashMaxSpeed);
+        playDashTime += Time.deltaTime;
+        // 0 ~ 1 -> ëŒ€ì‰¬ í”Œë ˆì´ ì‹œê°„ / ëŒ€ì‰¬ ì‹œê°„
+        moveSpeed = Mathf.Lerp(moveSpeed, dashMaxSpeed, playDashTime / dashTime);
+        // moveSpeed -> dashMaxSpeedë¡œ ê°’ ë³€ê²½ 
+        cc.Move(dashDir * moveSpeed * Time.deltaTime);
+
+        if(playDashTime >= dashTime)
+        {
+            playerState.SetState(PlayerState.Idle);
+        }
+    }
+
+    void Jump()
+    {
+
+        // ë•…ì— ìˆìŒ
+        if (cc.isGrounded)
+        {
+            JumpCurN = 0;
+            yVelocity = 0.0f;
+           
+            playerState.SetState(PlayerState.Idle);              
+        }
+
         if (Input.GetButtonDown("Jump"))
         {
-            // ¸¸¾à¿¡ ÇöÀç Á¡ÇÁ È½¼ö°¡ ÃÖ´ë Á¡ÇÁ È½¼öº¸´Ù ÀÛÀ¸¸é
+            playerState.SetState(PlayerState.Jump);
+            // ë§Œì•½ì— í˜„ì¬ ì í”„ íšŸìˆ˜ê°€ ìµœëŒ€ ì í”„ íšŸìˆ˜ë³´ë‹¤ ì‘ìœ¼ë©´
             if (JumpCurN < maxJumpN)
             {
                 yVelocity = jumpPower;
                 JumpCurN++;
             }
         }
-        // yVelocity¸¦ Áß·Â°ªÀ» ÀÌ¿ëÇØ¼­ °¨¼Ò½ÃÅ²´Ù.
-        // v = v0 + at;
+
         yVelocity += gravity * Time.deltaTime;
 
-        // dir.y °ª¿¡ yVelocity¸¦ ¼ÂÆÃ
-        dirH.y = yVelocity;
+        // dir.y ê°’ì— yVelocityë¥¼ ì…‹íŒ…
+        movement.y += yVelocity;
+    }
+    void PlayerMove()
+    {
+        if (playerState.GetState() == PlayerState.Grap) // ë¬´aì–¸ê°€ë¥¼ ì¡ê³  ìˆì„ë•Œ
+        {
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                playerState.SetState(PlayerState.Climb);
+                //cc.Move(new Vector3(10.0f, 30.0f, 0.0f) * moveSpeed * Time.deltaTime);
+                yVelocity = 0.0f;
+            }
+        }
+        else
+        {
+            cc.Move((movement * moveSpeed + new Vector3(0.0f, yVelocity, 0.0f)) * Time.deltaTime);
+        }
 
-
-        cc.Move(dirH * moveSpeed * Time.deltaTime);
-        Dash();
+        if (playerState.GetState() == PlayerState.Climb) // ì˜¬ë¼ê°€ëŠ” ê²ƒ
+        {
+            
+        }
+    }
+    void GrabMove()
+    {
+        cc.Move(new Vector3(1.0f, 0.0f, 0.0f) * moveSpeed * Time.deltaTime);
     }
 
-    void Dash()
+    public void ResetDashData()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            Debug.Log("Dash!");
-            dash = true;
+        playDashTime = 0.0f;
+        moveSpeed = 4.0f;
+    }
 
-            if (bRight)
-                dashDir = new Vector3(1.0f, 0.0f, 0.0f);
-            else
-                dashDir = new Vector3(-1.0f, 0.0f, 0.0f);
-        }
-            
+    private void FixedUpdate()
+    {
+       //PlayerMove();
+    }
 
-        if (dash)
-        {
-            playDashTime += Time.deltaTime;
-            // 0 ~ 1 -> ´ë½¬ ÇÃ·¹ÀÌ ½Ã°£ / ´ë½¬ ½Ã°£
-            moveSpeed = Mathf.Lerp(moveSpeed, dashMaxSpeed, playDashTime / dashTime);
-            // moveSpeed -> dashMaxSpeed·Î °ª º¯°æ
-            cc.Move(dashDir * moveSpeed * Time.deltaTime);
-        }
-
-        if (playDashTime > dashTime)
-        {
-            playDashTime = 0.0f;
-            dash = false;
-            moveSpeed = 4.0f;
-        }
+    public void SetCollisionCollider(Collider collider)
+    {
+        targetCollider = collider;
     }
 
 }
