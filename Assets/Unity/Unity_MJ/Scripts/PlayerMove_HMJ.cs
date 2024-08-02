@@ -63,6 +63,9 @@ public class PlayerMove_HMJ : MonoBehaviour
         if(playerState.GetState() != PlayerState.Grap && playerState.GetState() != PlayerState.Climb)
         horizontal = Input.GetAxis("Horizontal");
 
+        //z축 고정 추가 (규현)
+        transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+        
         //if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
         //    playerState.SetState(PlayerState.Walk);
         //else
@@ -141,11 +144,13 @@ public class PlayerMove_HMJ : MonoBehaviour
     {
         if (playerState.GetState() == PlayerState.Grap) // 무a언가를 잡고 있을때
         {
+            yVelocity = 0.0f;
+            JumpCurN = 0;
             if (Input.GetKeyDown(KeyCode.D))
             {
-                playerState.SetState(PlayerState.Climb);
+                //playerState.SetState(PlayerState.Climb);
                 //cc.Move(new Vector3(10.0f, 30.0f, 0.0f) * moveSpeed * Time.deltaTime);
-                yVelocity = 0.0f;
+                //yVelocity = 0.0f;
             }
         }
         else

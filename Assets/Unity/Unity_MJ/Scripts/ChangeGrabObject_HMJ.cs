@@ -62,6 +62,7 @@ public class ChangeGrabObject_HMJ : MonoBehaviour
             objectList[(int)curMeshType].SetActive(true); // 해당 오브젝트만 엑티브 키기
             objectList[(int)curMeshType].GetComponentInChildren<Rigidbody>().useGravity = false; // 해당 오브젝트만 중력 끄기
             objectList[(int)curMeshType].GetComponentInChildren<Rigidbody>().isKinematic = true;
+            //objectList[(int)curMeshType].transform.
             // 자식 조종 오브젝트를 플레이어 머리 위로
             Vector3 playerPos = GameObject.Find("Player").transform.position;
             playerPos.y += 5.0f;
