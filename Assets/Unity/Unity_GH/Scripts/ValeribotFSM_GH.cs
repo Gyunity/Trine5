@@ -84,6 +84,22 @@ public class ValeribotFSM_GH : MonoBehaviour
     float laserMachineMoveCurrTime = 0;
     #endregion
 
+    #region 폭탄발로차기
+    //폭탄 쏘기
+    // 폭탄 프리팹
+    public GameObject bombFactory;
+
+    GameObject bomb;
+    // 폭탄의 발사 위치
+    public Transform[] bombPoints;
+    // 발사 힘
+    public float launchForce = 10f;
+    // 발사 각도
+    public float angle = 45f;
+
+
+    #endregion
+
     void Start()
     {
         chicken = GetComponent<Chicken_GH>();
@@ -118,6 +134,7 @@ public class ValeribotFSM_GH : MonoBehaviour
         GroundLaser();
         BossJumpMove();
         LaserMachine();
+        BombShoot();
     }
 
     void BossJumpMove()
@@ -423,5 +440,46 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     }
 
+    void BombShoot()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            if (currBossPisState == 0)
+            {
+                bomb = Instantiate(bombFactory, bombPoints[1].position, bombPoints[1].rotation);
+                //포탄 생성
 
+                //포탄의 Rigidbody
+                Rigidbody rb = bomb.GetComponent<Rigidbody>();
+
+                //발사각도 라디안으로 변경
+                float radianAngle = angle * Mathf.Deg2Rad;
+
+                //발사 백터 계산
+                Vector3 launchDirection = new Vector3(Mathf.Cos(radianAngle), Mathf.Sin(radianAngle), 0);
+
+                //발사 힘 적용
+                rb.velocity = launchDirection * launchForce;
+
+            }
+            else
+            {
+                bomb = Instantiate(bombFactory, bombPoints[0].position, bombPoints[0].rotation);
+                //포탄 생성
+
+                //포탄의 Rigidbody
+                Rigidbody rb = bomb.GetComponent<Rigidbody>();
+
+                //발사각도 라디안으로 변경
+                float radianAngle = angle * Mathf.Deg2Rad;
+
+                //발사 백터 계산
+                Vector3 launchDirection = new Vector3(-Mathf.Cos(radianAngle), Mathf.Sin(radianAngle), 0);
+
+                //발사 힘 적용
+                rb.velocity = launchDirection * launchForce;
+            }
+
+        }
+    }
 }

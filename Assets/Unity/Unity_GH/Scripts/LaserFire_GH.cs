@@ -50,12 +50,12 @@ public class LaserFire_GH : MonoBehaviour
             {
                 //끝 레이저 위치가 오브젝트이면
                 laserLine.SetPosition(1, rayHit.point);
-               
+
 
                 if (!valeribotSC.onReadyLaser)
                 {
-                    hitEffect.transform.position = rayHit.point + rayHit.normal * hitOffset;
-                    laserLine.material = laserMat[0];
+                        hitEffect.transform.position = rayHit.point + rayHit.normal * hitOffset;
+                        laserLine.material = laserMat[0];
                     if (rayHit.transform.gameObject.layer == LayerMask.NameToLayer("Ground"))
                     {
                         GameObject thorn = Instantiate(thornFactory);
@@ -100,7 +100,7 @@ public class LaserFire_GH : MonoBehaviour
                 {
                     if (allPs.isPlaying)
                     {
-                        allPs.Stop();
+                        allPs.Play();
                     }
                 }
                 length[0] = mainTextureLength * (Vector3.Distance(transform.position, endPos));
@@ -126,7 +126,7 @@ public class LaserFire_GH : MonoBehaviour
                 laserLine.enabled = true;
             }
 
-           
+
         }
 
     }
