@@ -66,7 +66,8 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
         Vector3 mousePos = Input.mousePosition; // 현재 마우스 커서 가져오기
         mousePos.z = Camera.main.WorldToScreenPoint(gameObject.transform.position).z; // 현재 z 값을 넣기 (2d -> 3d) 깊이 정보 추가
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(mousePos); // 마우스 좌표 -> 월드 좌표로 변경
-        hitObject.transform.position = worldPos; // 레이케스팅해서 충돌된 오브젝트의 위치를 마우스 위치로 변경
+        hitObject.transform.position = new Vector3(worldPos.x, worldPos.y, 0.0f); // 레이케스팅해서 충돌된 오브젝트의 위치를 마우스 위치로 변경
+
         hitObject.GetComponentInChildren<Rigidbody>().useGravity = false;
         hitObject.GetComponentInChildren<Rigidbody>().isKinematic = true;
     }

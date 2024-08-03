@@ -45,9 +45,11 @@ public class ChangeGrabObject_HMJ : MonoBehaviour
         string[] prefabNames = { "CubePrefab_HMJ.prefab", "BrickPrefab_HMJ.prefab", "SpherePrefab_HMJ.prefab" }; // .prefab
         foreach (string prefabName in prefabNames)
         {
+            GameObject parentObject = GameObject.Find("Player");
             // 프리팹 로드(특정 경로에 있는 프리팹 3가지 로드)
             GameObject obj = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Unity/Unity_MJ/Prefabs/" + prefabName);
             objectList.Add(Instantiate(obj, Vector3.zero, Quaternion.identity));
+            parentObject.transform.SetParent(parentObject.transform, false);
         }
     }
     
@@ -56,6 +58,7 @@ public class ChangeGrabObject_HMJ : MonoBehaviour
     {
         if(curMeshType != meshtype)
         {
+            
             SetMeshAllActive(false); // 모든 엑티브 끄기
             curMeshType = meshtype;
 
@@ -67,6 +70,7 @@ public class ChangeGrabObject_HMJ : MonoBehaviour
             Vector3 playerPos = GameObject.Find("Player").transform.position;
             playerPos.y += 5.0f;
             objectList[(int)curMeshType].transform.position = playerPos;
+
         }
     }
 
