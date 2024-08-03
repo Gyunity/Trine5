@@ -50,8 +50,8 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     #region 타게팅 레이저 공격
     //레이저 발사 시간
-    float targetLaserReadyTime = 3;
-    float targetLaserDuraTime = 6;
+    public float targetLaserReadyTime = 3;
+    public float targetLaserDuraTime = 6;
 
     //레이저 방향
     Vector3 laserToPlayer;
@@ -61,15 +61,20 @@ public class ValeribotFSM_GH : MonoBehaviour
     #endregion
 
     #region 회전 레이저
-    bool onRtateLaser = false;
+    public bool onRtateLaser = false;
 
     //레이저 발사 시간
-    float rotateLaserReadyTime = 2;
-    float rotateLaserDuraTime = 9;
+    public float rotateLaserReadyTime = 2;
+    public float rotateLaserDuraTime = 9;
     #endregion
 
     #region 땅 레이저
     bool onGroundLaser = false;
+
+    public float groundLaserReadyTime = 2;
+    public float groundLaserDuraTime = 9;
+
+    public float groundLaserSpeed = 10;
     #endregion
 
     #region 레이저머신
@@ -79,9 +84,14 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     bool onLaserMachine = false;
 
-    float laserMachineMoveTime = 1.5f;
+    public float machineLaserReadyTime = 2;
+    public float machineLaserDuraTime = 9;
+
+    public float laserMachineMoveTime = 1.5f;
 
     float laserMachineMoveCurrTime = 0;
+
+
     #endregion
 
     #region 폭탄발로차기
@@ -97,6 +107,7 @@ public class ValeribotFSM_GH : MonoBehaviour
     // 발사 각도
     public float angle = 45f;
 
+    public float bombTime = 5;
 
     #endregion
 
@@ -139,7 +150,7 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     void BossJumpMove()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Z))
         {
             jumpState = true;
             chicken.ControllChicken();
@@ -211,12 +222,13 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     void TargetingLaser()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (Input.GetKeyDown(KeyCode.Alpha5))
         {
             laserCurrTime = 0;
-            lasers[0].SetActive(true);
 
             onTargetingLaser = true;
+            lasers[0].transform.position = firePoint.transform.position;
+            lasers[0].SetActive(true);
         }
         if (onTargetingLaser)
         {
@@ -249,10 +261,12 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     void RotateLaser()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        if (Input.GetKeyDown(KeyCode.Alpha6))
         {
             firePoint.transform.localEulerAngles = new Vector3(0, 0, 0);
             laserCurrTime = 0;
+            lasers[0].transform.position = firePoint.transform.position;
+            lasers[1].transform.position = firePoint.transform.position;
 
             lasers[0].SetActive(true);
             lasers[1].SetActive(true);
@@ -292,7 +306,7 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     void GroundLaser()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha4))
+        if (Input.GetKeyDown(KeyCode.Alpha7))
         {
             firePoint.transform.localEulerAngles = new Vector3(0, 0, 0);
 
@@ -309,6 +323,7 @@ public class ValeribotFSM_GH : MonoBehaviour
                 return;
             }
 
+            lasers[0].transform.position = firePoint.transform.position;
             lasers[0].SetActive(true);
 
             laserCurrTime = 0;
@@ -323,30 +338,30 @@ public class ValeribotFSM_GH : MonoBehaviour
         {
             laserCurrTime += Time.deltaTime;
             lasers[0].transform.forward = -firePoint.transform.up;
-            if (laserCurrTime < rotateLaserReadyTime)
+            if (laserCurrTime < groundLaserReadyTime)
             {
                 onReadyLaser = true;
 
             }
-            else if (laserCurrTime >= rotateLaserReadyTime && laserCurrTime < rotateLaserDuraTime)
+            else if (laserCurrTime >= groundLaserReadyTime && laserCurrTime < groundLaserDuraTime)
             {
                 if (currBossPisState == 0)
                 {
-                    firePoint.transform.localEulerAngles += new Vector3(0, 0, 1) * 15 * Time.deltaTime;
+                    firePoint.transform.localEulerAngles += new Vector3(0, 0, 1) * groundLaserSpeed * Time.deltaTime;
 
                 }
 
                 else if (currBossPisState == 2)
                 {
 
-                    firePoint.transform.localEulerAngles -= new Vector3(0, 0, 1) * 15 * Time.deltaTime;
+                    firePoint.transform.localEulerAngles -= new Vector3(0, 0, 1) * groundLaserSpeed * Time.deltaTime;
 
                 }
                 onReadyLaser = false;
 
 
             }
-            else if (laserCurrTime >= rotateLaserDuraTime)
+            else if (laserCurrTime >= groundLaserDuraTime)
             {
                 onGroundLaser = false;
                 laserCurrTime = 0;
@@ -361,7 +376,7 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     void LaserMachine()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha5))
+        if (Input.GetKeyDown(KeyCode.Alpha8))
         {
             laserCurrTime = 0;
             laserMachineMoveCurrTime = 0;
@@ -397,7 +412,7 @@ public class ValeribotFSM_GH : MonoBehaviour
                     laserMachines[1].transform.localRotation = Quaternion.Euler(0, 0, 45 + (i * 90));
                     lasers[i].transform.forward = laserMachines[1].transform.up;
                 }
-                if (laserCurrTime < rotateLaserReadyTime)
+                if (laserCurrTime < machineLaserReadyTime)
                 {
                     for (int i = 0; i < 8; i++)
                     {
@@ -406,14 +421,14 @@ public class ValeribotFSM_GH : MonoBehaviour
                     onReadyLaser = true;
 
                 }
-                else if (laserCurrTime >= rotateLaserReadyTime && laserCurrTime < rotateLaserDuraTime - 1.5f)
+                else if (laserCurrTime >= machineLaserReadyTime && laserCurrTime < machineLaserDuraTime - 1.5f)
                 {
 
                     onReadyLaser = false;
 
 
                 }
-                else if (laserCurrTime < rotateLaserDuraTime && laserCurrTime >= rotateLaserDuraTime - 1.5f)
+                else if (laserCurrTime < machineLaserDuraTime && laserCurrTime >= machineLaserDuraTime - 1.5f)
                 {
                     for (int i = 0; i < 8; i++)
                     {
@@ -442,7 +457,7 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     void BombShoot()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha6))
+        if (Input.GetKeyDown(KeyCode.Alpha9))
         {
             if (currBossPisState == 0)
             {
@@ -478,7 +493,9 @@ public class ValeribotFSM_GH : MonoBehaviour
 
                 //발사 힘 적용
                 rb.velocity = launchDirection * launchForce;
+
             }
+            Destroy(bomb, bombTime);
 
         }
     }
