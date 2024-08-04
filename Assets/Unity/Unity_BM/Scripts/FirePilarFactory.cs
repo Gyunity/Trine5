@@ -12,14 +12,18 @@ public class FirePilarFactory : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(PilarGo());
-
+        //StartCoroutine(PilarGo());
+        
     }
 
 
     // Update is called once per frame
     void Update()
-    {        
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            StartCoroutine(PilarGo());
+        }
     }
 
     IEnumerator PilarGo()
@@ -28,7 +32,7 @@ public class FirePilarFactory : MonoBehaviour
         {
             //firePilarPrefab 을 FirePilarFactory 위치로 옮긴다.
             //x값에 padding을 주면서 인스턴스을 생성한다. 
-            Instantiate(firePilarPrefab, transform.position + new Vector3(i * padding, 0, 0), Quaternion.identity);
+            Instantiate(firePilarPrefab, transform.position + new Vector3(-i * padding, 0, 0), Quaternion.identity);
             //pil.transform.position += transform.position;
             yield return new WaitForSeconds(delay);
         }

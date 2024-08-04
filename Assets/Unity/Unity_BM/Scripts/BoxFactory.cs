@@ -11,13 +11,16 @@ public class BoxFactory : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(BoxGo());
+        //StartCoroutine(BoxGo());
     }
 
     // Update is called once per frame
     void Update()
     {
-       
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            StartCoroutine(BoxGo());
+        }
     }
     IEnumerator BoxGo()
     {
