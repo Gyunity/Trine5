@@ -65,7 +65,6 @@ public class PlayerMove_HMJ : MonoBehaviour
 
         //z축 고정 추가 (규현)
         transform.position = new Vector3(transform.position.x, transform.position.y, 0);
-
         
         //if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
         //    playerState.SetState(PlayerState.Walk);
@@ -96,9 +95,6 @@ public class PlayerMove_HMJ : MonoBehaviour
             playerState.SetState(PlayerState.Dash);
         }
         // Dash();
-
-        //z축 고정 추가 (규현)
-        transform.position = new Vector3(transform.position.x, transform.position.y, 0);
     }
 
     public void Dash()
