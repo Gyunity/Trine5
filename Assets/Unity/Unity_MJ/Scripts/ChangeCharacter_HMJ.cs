@@ -10,6 +10,7 @@ public enum PlayerCharacterType
     ArcherType,
     PlayerCharacterTypeEnd
 }
+
 public class ChangeCharacter : MonoBehaviour
 {
     List<GameObject> objectList = new List<GameObject>();
@@ -34,16 +35,22 @@ public class ChangeCharacter : MonoBehaviour
     void LoadPrefab()
     {
         GameObject player = GameObject.Find("Player");
-        // 프리펩 정보 리스트에 미리 로드
-        string[] prefabNames = { "Wizard.prefab", "Archer.prefab"};
-        foreach (string prefabName in prefabNames)
+
+        for(int i = 0; i < (int)PlayerCharacterType.PlayerCharacterTypeEnd; i++)
         {
-            // 프리팹 로드(특정 경로에 있는 프리팹 3가지 로드)
-            GameObject obj = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Unity/Unity_MJ/Prefabs/Player/" + prefabName);
-            GameObject Data = Instantiate(obj, Vector3.zero, Quaternion.identity);
-            objectList.Add(Data);
-            Data.transform.SetParent(player.transform, false);
+            objectList.Add(player.transform.GetChild(i).gameObject);
         }
+
+        //// 프리펩 정보 리스트에 미리 로드
+        //string[] prefabNames = { "Wizard.prefab", "Archer.prefab"};
+        //foreach (string prefabName in prefabNames)
+        //{
+        //    // 프리팹 로드(특정 경로에 있는 프리팹 3가지 로드)
+        //    GameObject obj = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Unity/Unity_MJ/Prefabs/Player/" + prefabName);
+        //    GameObject Data = Instantiate(obj, Vector3.zero, Quaternion.identity);
+        //    objectList.Add(Data);
+        //    Data.transform.SetParent(player.transform, false);
+        //}
     }
 
     public void SetMeshData(PlayerCharacterType PlayerCharacterMeshType)
