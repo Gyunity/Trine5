@@ -13,6 +13,7 @@ public class ChangeGrabObject_HMJ : MonoBehaviour
         Cube,
         Brick,
         Sphere,
+        NoneMesh,
         MeshType_End
     };
 
@@ -62,6 +63,9 @@ public class ChangeGrabObject_HMJ : MonoBehaviour
             SetMeshAllActive(false); // 모든 엑티브 끄기
             curMeshType = meshtype;
 
+            if (curMeshType == MeshType.NoneMesh)
+                return;
+
             objectList[(int)curMeshType].SetActive(true); // 해당 오브젝트만 엑티브 키기
             objectList[(int)curMeshType].GetComponentInChildren<Rigidbody>().useGravity = false; // 해당 오브젝트만 중력 끄기
             objectList[(int)curMeshType].GetComponentInChildren<Rigidbody>().isKinematic = true;
@@ -96,5 +100,8 @@ public class ChangeGrabObject_HMJ : MonoBehaviour
             SetMeshData(MeshType.Brick);
         else if (Input.GetKeyDown(KeyCode.Q))
             SetMeshData(MeshType.Sphere);
+        else if (Input.GetKeyDown(KeyCode.R))
+            SetMeshData(MeshType.NoneMesh);
+
     }
 }

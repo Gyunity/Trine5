@@ -368,7 +368,7 @@ PrefabInstance:
     - target: {fileID: 1832280006862214929, guid: be4867a0c12358448b2a3ab1079bd4b5,
         type: 3}
       propertyPath: m_Center.y
-      value: 1
+      value: 1.02
       objectReference: {fileID: 0}
     - target: {fileID: 2391159420326210823, guid: be4867a0c12358448b2a3ab1079bd4b5,
         type: 3}
@@ -1102,7 +1102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1499f0d5ce6d86149a9f043e7d2159a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  target: {fileID: 668661289}
   smoothSpeed: 0.01
   offset: {x: 0, y: 5, z: -9}
 --- !u!143 &1864090719
