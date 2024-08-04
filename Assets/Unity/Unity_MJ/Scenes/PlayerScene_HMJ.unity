@@ -360,6 +360,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1832280006862214929, guid: be4867a0c12358448b2a3ab1079bd4b5,
+        type: 3}
+      propertyPath: m_Height
+      value: 1.93
+      objectReference: {fileID: 0}
+    - target: {fileID: 1832280006862214929, guid: be4867a0c12358448b2a3ab1079bd4b5,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2391159420326210823, guid: be4867a0c12358448b2a3ab1079bd4b5,
         type: 3}
       propertyPath: m_Enabled
@@ -377,6 +387,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2391159420326210823, guid: be4867a0c12358448b2a3ab1079bd4b5, type: 3}
+    - {fileID: 8079799033698866018, guid: be4867a0c12358448b2a3ab1079bd4b5, type: 3}
     m_RemovedGameObjects:
     - {fileID: 8972549979576135111, guid: be4867a0c12358448b2a3ab1079bd4b5, type: 3}
     m_AddedGameObjects:
@@ -681,7 +692,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wizard
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5866666021909216657, guid: e7c947e92c585194fb36a4c20806c107, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -759,7 +771,8 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: b706e26155d1027408f307448d574469, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5866666021909216657, guid: b0ee6d0b1c27efd4a84dd90023acd65b, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using static ChangeGrabObject_HMJ;
@@ -14,11 +15,14 @@ public enum PlayerCharacterType
 public class ChangeCharacter : MonoBehaviour
 {
     List<GameObject> objectList = new List<GameObject>();
+    List<Avatar> avatarList = new List<Avatar>();
     PlayerCharacterType curPlayerCharacterType = PlayerCharacterType.PlayerCharacterTypeEnd;
+    Animator animator;
 
     private void Awake()
     {
         LoadPrefab();
+        LoadAnimData();
     }
     // Start is called before the first frame update
     void Start()
@@ -60,6 +64,8 @@ public class ChangeCharacter : MonoBehaviour
             SetMeshAllActive(false);
             curPlayerCharacterType = PlayerCharacterMeshType;
             SetMeshActive(curPlayerCharacterType, true);
+            animator.avatar = avatarList[(int)PlayerCharacterMeshType];
+
         }
     }
 
@@ -87,5 +93,14 @@ public class ChangeCharacter : MonoBehaviour
         {
             obj.SetActive(bActive);
         }
+    }
+
+    void LoadAnimData()
+    {
+        // 
+
+        animator = GetComponentInChildren<Animator>();
+        avatarList.Add(AssetDatabase.LoadAssetAtPath<Avatar>("Assets/Unity/Unity_MJ/Assets/Mesh/Download/Knight D Pelegrini.fbx"));
+        avatarList.Add(AssetDatabase.LoadAssetAtPath<Avatar>("Assets/Unity/Unity_MJ/Assets/Character/Erika Archer With Bow Arrow.fbx"));
     }
 }
