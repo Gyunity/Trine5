@@ -47,7 +47,7 @@ public class LaserFire_GH : MonoBehaviour
             laserLine.SetPosition(0, transform.position);
             RaycastHit rayHit;
             //플레이어와 그라운드만 레이를 쏜다.
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out rayHit, maxLength, 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Thorn")))
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out rayHit, maxLength, 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Thorn") | 1 << LayerMask.NameToLayer("SummonedObject")))
             {
                 //끝 레이저 위치가 오브젝트이면
                 laserLine.SetPosition(1, rayHit.point);
@@ -71,14 +71,6 @@ public class LaserFire_GH : MonoBehaviour
                     hitEffect.transform.position = Vector3.down * 200;
 
                 }
-                //if (useLaserRotation)
-                //{
-                //    hitEffect.transform.rotation = transform.rotation;
-                //}
-                //else
-                //{
-                //    hitEffect.transform.LookAt(rayHit.point + rayHit.normal);
-                //}
 
                 foreach (var allPs in effects)
                 {
@@ -87,7 +79,6 @@ public class LaserFire_GH : MonoBehaviour
                         if (!valeribotSC.onReadyLaser)
                         {
                             allPs.Play();
-                            print("333");
                         }
                     }
                 }
@@ -110,7 +101,6 @@ public class LaserFire_GH : MonoBehaviour
                         if (!valeribotSC.onReadyLaser)
                         {
                             allPs.Play();
-                            print("4444");
 
                         }
                     }
@@ -142,25 +132,6 @@ public class LaserFire_GH : MonoBehaviour
         }
 
     }
-    //public void DIsablePrepare()
-    //{
-    //    if (laserLine != null)
-    //    {
-    //        laserLine.enabled = false;
-    //    }
-    //    updateSaver = true;
-
-    //    if (effects != null)
-    //    {
-    //        foreach (var allPs in effects)
-    //        {
-    //            if (allPs.isPlaying)
-    //            {
-    //                allPs.Stop();
-    //            }
-    //        }
-    //    }
-    //}
 
     public void LaserDone()
     {
@@ -169,7 +140,6 @@ public class LaserFire_GH : MonoBehaviour
             if (allPs.isPlaying)
             {
                 allPs.Stop();
-                print("111");
             }
         }
 
@@ -178,7 +148,6 @@ public class LaserFire_GH : MonoBehaviour
             if (allPs.isPlaying)
             {
                 allPs.Stop();
-                print("11221");
 
             }
         }

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8330316736458386085}
   - component: {fileID: 7928432988158897063}
   - component: {fileID: 7373866606914416689}
-  m_Layer: 11
+  m_Layer: 17
   m_Name: Shell_GH
   m_TagString: Untagged
   m_Icon: {fileID: 0}
