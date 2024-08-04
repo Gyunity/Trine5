@@ -12,6 +12,8 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
     float rotateValue = 0.0f;
     float rotateSpeed = 50.0f;
     bool mouseClick = false;
+
+
     private void FixedUpdate()
     {
         // 마우스 오른쪽 버튼을 클릭했을 때만 해당되는 레이어 오브젝트의 위치가 변경되도록 수정
@@ -24,15 +26,16 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
         if(Input.GetMouseButton(0)) // 계속 마우스를 누르고 있고
         {
             if ((null == hitObject) && RaycastGrab(out hitInfo)) // 만약 마우스와 충돌된 오브젝트가 이전에 없었고, 현재 있다면 저장
+            {
                 hitObject = hitInfo.collider.gameObject;
+            }
             else if (hitObject)
             {
                 RaycastMove(); // 현재 hit된 보관된 오브젝트를 마우스 위치로 변경(2d -> 3d) (만약 레이케스팅된 물체가 있다면 실행)
-                RotateMove();
                 if (Input.GetKey(KeyCode.Z))
-                    rotateValue += Time.deltaTime * rotateSpeed;
-                else if(Input.GetKey(KeyCode.X))
-                    rotateValue -= Time.deltaTime * rotateSpeed;
+                    AddRotationValue(Time.deltaTime * rotateSpeed);
+                else if (Input.GetKey(KeyCode.X))
+                    AddRotationValue(-Time.deltaTime * rotateSpeed);
 
             }
         }
@@ -45,6 +48,19 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
 
     }
 
+    void AddRotationValue(float RotateValue)
+    {
+        RaycastObjectData_HMJ raycastObjectData = hitObject.GetComponentInChildren<RaycastObjectData_HMJ>();
+        if(raycastObjectData)
+            raycastObjectData.AddRotateValue(RotateValue);
+    }
+
+    void SetRotationValue(float RotateValue)
+    {
+        RaycastObjectData_HMJ raycastObjectData = hitObject.GetComponentInChildren<RaycastObjectData_HMJ>();
+        if (raycastObjectData)
+            raycastObjectData.SetRotateValue(RotateValue);
+    }
     bool RaycastGrab(out RaycastHit hitInfo)
     {
 
@@ -72,8 +88,4 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
         hitObject.GetComponentInChildren<Rigidbody>().isKinematic = true;
     }
 
-    void RotateMove()
-    {
-        hitObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, rotateValue);
-    }
 }

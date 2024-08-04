@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.ProBuilder.Shapes;
 using UnityEngine.UIElements;
+using static ChangeGrabObject_HMJ;
 
 public class ChangeGrabObject_HMJ : MonoBehaviour
 {
@@ -69,6 +70,7 @@ public class ChangeGrabObject_HMJ : MonoBehaviour
             objectList[(int)curMeshType].SetActive(true); // 해당 오브젝트만 엑티브 키기
             objectList[(int)curMeshType].GetComponentInChildren<Rigidbody>().useGravity = false; // 해당 오브젝트만 중력 끄기
             objectList[(int)curMeshType].GetComponentInChildren<Rigidbody>().isKinematic = true;
+
             //objectList[(int)curMeshType].transform.
             // 자식 조종 오브젝트를 플레이어 머리 위로
             Vector3 playerPos = GameObject.Find("Player").transform.position;
@@ -79,7 +81,13 @@ public class ChangeGrabObject_HMJ : MonoBehaviour
     }
 
     void SetMeshActive(ChangeGrabObject_HMJ.MeshType meshtype, bool bActive)
-    {       
+    {
+        // 해당 스크립트가 없는 오브젝트는 회전X
+        RaycastObjectData_HMJ RaycastObjectData = objectList[(int)meshtype].GetComponentInChildren<RaycastObjectData_HMJ>();
+        if (RaycastObjectData)
+        {
+            RaycastObjectData.SetRotateValue(0.0f);
+        }
         objectList[(int)meshtype].SetActive(bActive);
     }
 
@@ -88,8 +96,17 @@ public class ChangeGrabObject_HMJ : MonoBehaviour
     {
         foreach (GameObject obj in objectList)
         {
+            // 해당 스크립트가 없는 오브젝트는 회전X
+            RaycastObjectData_HMJ RaycastObjectData = obj.GetComponentInChildren<RaycastObjectData_HMJ>();
+            if (RaycastObjectData)
+            {
+                RaycastObjectData.SetRotateValue(0.0f);
+            }
+
             obj.SetActive(bActive);
         }
+
+
     }
     
     void ChangeMeshPrefab()
