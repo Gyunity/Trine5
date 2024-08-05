@@ -414,7 +414,7 @@ public class ValeribotFSM_GH : MonoBehaviour
             laserCurrTime += Time.deltaTime;
             if (laserCurrTime < targetLaserReadyTime)
             {
-                laserToPlayer = player.transform.position - firePoint.transform.position;
+                laserToPlayer = (player.transform.position + Vector3.up) - firePoint.transform.position;
                 lasers[0].transform.forward = laserToPlayer;
 
             }

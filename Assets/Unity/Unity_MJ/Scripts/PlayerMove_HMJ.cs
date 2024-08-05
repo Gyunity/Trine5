@@ -63,9 +63,6 @@ public class PlayerMove_HMJ : MonoBehaviour
         if(playerState.GetState() != PlayerState.Grap && playerState.GetState() != PlayerState.Climb)
         horizontal = Input.GetAxis("Horizontal");
 
-        //z축 고정 추가 (규현)
-        transform.position = new Vector3(transform.position.x, transform.position.y, 0);
-        
         //if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
         //    playerState.SetState(PlayerState.Walk);
         //else
@@ -95,6 +92,11 @@ public class PlayerMove_HMJ : MonoBehaviour
             playerState.SetState(PlayerState.Dash);
         }
         // Dash();
+
+
+        //z축 고정 추가 (규현)
+        transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+        
     }
 
     public void Dash()
@@ -182,6 +184,11 @@ public class PlayerMove_HMJ : MonoBehaviour
     public void SetCollisionCollider(Collider collider)
     {
         targetCollider = collider;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        print("충돌" + collision.gameObject.name);
     }
 
 }

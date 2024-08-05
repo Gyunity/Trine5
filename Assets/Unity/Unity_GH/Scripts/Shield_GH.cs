@@ -17,7 +17,7 @@ public class Shield_GH : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Shell"))
+        if (other.gameObject.tag == "shell")
         {
             Destroy(other.gameObject);
             ValeriboyManager_GH.instance.onShield = false;
