@@ -26,8 +26,13 @@ public class LaserFire_GH : MonoBehaviour
 
     private ParticleSystem[] effects;
     private ParticleSystem[] hit;
+    ParticleSystem Flash;
 
     public Material[] laserMat;
+
+    bool onFlash = true;
+    bool onFlash2 = true;
+
 
     void Start()
     {
@@ -36,11 +41,12 @@ public class LaserFire_GH : MonoBehaviour
         laserLine = GetComponent<LineRenderer>();
         effects = GetComponentsInChildren<ParticleSystem>();
         hit = hitEffect.GetComponentsInChildren<ParticleSystem>();
-
+        Flash = transform.GetChild(0).gameObject.GetComponent<ParticleSystem>();
     }
 
     void Update()
     {
+
         //라인렌더 위치
         if (laserLine != null && updateSaver == false)
         {
@@ -55,6 +61,14 @@ public class LaserFire_GH : MonoBehaviour
 
                 if (!valeribotSC.onReadyLaser)
                 {
+                    if (onFlash)
+                    {
+                        Flash.Play();
+                        onFlash = false;
+
+                    }
+
+                    laserLine.textureScale = new Vector2(1, 1);
                     laserLine.material = laserMat[0];
                     hitEffect.transform.position = rayHit.point + rayHit.normal * hitOffset;
                     if (rayHit.transform.gameObject.layer == LayerMask.NameToLayer("Ground") && valeribotSC.onRtateLaser == false)
@@ -67,21 +81,25 @@ public class LaserFire_GH : MonoBehaviour
                 }
                 else
                 {
+                    onFlash = true;
+                    Flash.Stop();
+                    laserLine.textureScale = new Vector2(2, 1.5f);
                     laserLine.material = laserMat[1];
                     hitEffect.transform.position = Vector3.down * 200;
 
                 }
 
-                foreach (var allPs in effects)
-                {
-                    if (allPs.isPlaying)
-                    {
-                        if (!valeribotSC.onReadyLaser)
-                        {
-                            allPs.Play();
-                        }
-                    }
-                }
+                //foreach (var allPs in effects)
+                //{
+                //    if (allPs.isPlaying)
+                //    {
+                //        if (!valeribotSC.onReadyLaser)
+                //        {
+                //            //여기서 플래쉬 빼고 시작하게
+                //            //allPs.Play();
+                //        }
+                //    }
+                //}
                 //텍스처 틸팅
                 length[0] = mainTextureLength * (Vector3.Distance(transform.position, rayHit.point));
                 length[2] = noiseTextureLength * (Vector3.Distance(transform.position, rayHit.point));
@@ -109,9 +127,25 @@ public class LaserFire_GH : MonoBehaviour
                 length[2] = noiseTextureLength * (Vector3.Distance(transform.position, endPos));
 
                 if (!valeribotSC.onReadyLaser)
+                {
+                    if (onFlash2)
+                    {
+                        Flash.Play();
+                        onFlash2 = false;
+                    }
                     laserLine.material = laserMat[0];
+                    laserLine.textureScale = new Vector2(1, 1);
+
+                }
+
                 else
+                {
+                    Flash.Stop();
+                    onFlash2 = true;
                     laserLine.material = laserMat[1];
+                    laserLine.textureScale = new Vector2(2, 1.5f);
+
+                }
 
             }
 

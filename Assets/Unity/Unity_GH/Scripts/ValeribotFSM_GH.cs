@@ -27,6 +27,9 @@ public class ValeribotFSM_GH : MonoBehaviour
     // 보스 행동 랜덤 변수
     int randBoss;
 
+    // 보스 페이즈
+    public int bossPhase = 0;
+
 
     public GameObject player;
 
@@ -80,6 +83,8 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     //레이저 발사
     bool onTargetingLaser = false;
+
+    int targetLaserCount = 0;
     #endregion
 
     #region 회전 레이저
@@ -257,20 +262,26 @@ public class ValeribotFSM_GH : MonoBehaviour
                 chicken.ControllChicken();
                 break;
             case EValeribotState.TARGETLAGER:
-                onTargetingLaser = true;
-                lasers[0].transform.position = firePoint.transform.position;
-                lasers[0].SetActive(true);
+                if (bossPhase < 2)
+                {
+                    onTargetingLaser = true;
+                    lasers[0].transform.position = firePoint.transform.position;
+                    lasers[0].SetActive(true);
+                }
+                else
+                {
+                    ChangeState(EValeribotState.IDLE);
+                }
                 break;
             case EValeribotState.ROTATELAGER:
                 {
                     if (currBossPosState == 1)
                     {
-                        lasers[0].transform.position = firePoint.transform.position;
-                        lasers[1].transform.position = firePoint.transform.position;
-
-                        lasers[0].SetActive(true);
-                        lasers[1].SetActive(true);
-
+                        for (int i = 0; i < bossPhase + 2; i++)
+                        {
+                            lasers[i].transform.position = firePoint.transform.position;
+                            lasers[i].SetActive(true);
+                        }
                         onRtateLaser = true;
 
                     }
@@ -425,11 +436,26 @@ public class ValeribotFSM_GH : MonoBehaviour
             }
             else if (laserCurrTime >= targetLaserDuraTime)
             {
+                if (bossPhase == 0)
+                {
+                    lasers[0].GetComponent<LaserFire_GH>().LaserDone();
+                    ChangeState(EValeribotState.STAYDELAY);
 
-                lasers[0].GetComponent<LaserFire_GH>().LaserDone();
-                ChangeState(EValeribotState.STAYDELAY);
+                    onTargetingLaser = false;
+                }
+                else if (bossPhase == 1 && targetLaserCount < 1)
+                {
+                    laserCurrTime = 0;
+                    onReadyLaser = true;
+                    targetLaserCount++;
+                }
+                else if (bossPhase == 1 && targetLaserCount >= 1)
+                {
+                    lasers[0].GetComponent<LaserFire_GH>().LaserDone();
+                    ChangeState(EValeribotState.STAYDELAY);
 
-                onTargetingLaser = false;
+                    onTargetingLaser = false;
+                }
             }
         }
     }
@@ -439,13 +465,11 @@ public class ValeribotFSM_GH : MonoBehaviour
         if (onRtateLaser)
         {
             laserCurrTime += Time.deltaTime;
-            lasers[0].transform.forward = firePoint.transform.right;
-            lasers[1].transform.forward = -firePoint.transform.right;
-            //if (laserCurrTime < rotateLaserReadyTime)
-            //{
-            //    onReadyLaser = true;
+            for (int i = 0; i < bossPhase + 2; i++)
+            {
+                //lasers[0].transform.forward = firePoint.transform.right + Quaternion.Euler(new Vector3(0, 0, 360));
+            }
 
-            //}
             if (laserCurrTime >= rotateLaserReadyTime && laserCurrTime < rotateLaserDuraTime)
             {
                 firePoint.transform.localEulerAngles += new Vector3(0, 0, 1) * 25 * Time.deltaTime;
@@ -455,8 +479,10 @@ public class ValeribotFSM_GH : MonoBehaviour
             }
             else if (laserCurrTime >= rotateLaserDuraTime)
             {
-                lasers[0].GetComponent<LaserFire_GH>().LaserDone();
-                lasers[1].GetComponent<LaserFire_GH>().LaserDone();
+                for (int i = 0; i < bossPhase + 2; i++)
+                {
+                    lasers[i].GetComponent<LaserFire_GH>().LaserDone();
+                }
 
 
 
