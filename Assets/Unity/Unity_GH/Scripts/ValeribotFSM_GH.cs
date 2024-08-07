@@ -6,10 +6,35 @@ using UnityEngine;
 
 public class ValeribotFSM_GH : MonoBehaviour
 {
+    //상태 enum
+    public enum EValeribotState
+    {
+        IDLE,
+        JUMP,
+        TARGETLAGER,
+        ROTATELAGER,
+        GROUNDLAGER,
+        MACHINELAGER,
+        BOMBKICK,
+        STAYDELAY,
+        DAMAGE,
+        DIE
+    }
+
+    //현재 상태
+    public EValeribotState currState;
+
+    // 보스 행동 랜덤 변수
+    int randBoss;
+
+    // 보스 페이즈
+    public int bossPhase = 1;
+
+
     public GameObject player;
 
-    //닭 점프 스크립트
-    Chicken_GH chicken;
+
+    public float stateDelayTime = 3;
 
     #region 점프 전역 변수
     //점프 포인트
@@ -19,17 +44,17 @@ public class ValeribotFSM_GH : MonoBehaviour
     //점프 다음 포인트
     Vector3 currentPoint;
     //점프 시간
-    public float jumpDuration = 2;
+    public float jumpDuration = 0.5f;
 
     float currTime;
 
     Vector3 currPosition;
 
-    public bool jumpState = false;
+    bool jumpState = false;
 
     //보스가 있는 위치
     //보스가 지금 왼쪽 - 0, 가운데 - 1, 오른쪽 - 2에 있을 때 움직임
-    int currBossPisState = 1;
+    int currBossPosState = 1;
 
     int RandMove = 0;
     #endregion
@@ -50,26 +75,33 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     #region 타게팅 레이저 공격
     //레이저 발사 시간
-    float targetLaserReadyTime = 3;
-    float targetLaserDuraTime = 6;
+    public float targetLaserReadyTime = 3;
+    public float targetLaserDuraTime = 6;
 
     //레이저 방향
     Vector3 laserToPlayer;
 
     //레이저 발사
     bool onTargetingLaser = false;
+
+    int targetLaserCount = 0;
     #endregion
 
     #region 회전 레이저
-    bool onRtateLaser = false;
+    public bool onRtateLaser = false;
 
     //레이저 발사 시간
-    float rotateLaserReadyTime = 2;
-    float rotateLaserDuraTime = 9;
+    public float rotateLaserReadyTime = 2;
+    public float rotateLaserDuraTime = 9;
     #endregion
 
     #region 땅 레이저
     bool onGroundLaser = false;
+
+    public float groundLaserReadyTime = 2;
+    public float groundLaserDuraTime = 6;
+
+    public float groundLaserSpeed = 25;
     #endregion
 
     #region 레이저머신
@@ -79,17 +111,47 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     bool onLaserMachine = false;
 
-    float laserMachineMoveTime = 1.5f;
+    public float machineLaserReadyTime = 2;
+    public float machineLaserDuraTime = 5;
+
+    public float laserMachineMoveTime = 1.5f;
 
     float laserMachineMoveCurrTime = 0;
+
+
     #endregion
+
+    #region 폭탄발로차기
+    //폭탄 쏘기
+    // 폭탄 프리팹
+    public GameObject bombFactory;
+
+    GameObject bomb;
+    // 폭탄의 발사 위치
+    public Transform[] bombPoints;
+    // 발사 힘
+    public float launchForce = 12f;
+    // 발사 각도
+    public float angle = 45f;
+
+    public float bombTime = 5;
+
+    #endregion
+
+    //닭 점프 스크립트
+    Chicken_GH chicken;
+
 
     void Start()
     {
+
         chicken = GetComponent<Chicken_GH>();
+
         transform.position = pointC.position;
 
-        lasers = new GameObject[8];
+        currState = EValeribotState.STAYDELAY;
+
+        lasers = new GameObject[12];
 
         for (int i = 0; i < lasers.Length; i++)
         {
@@ -99,7 +161,7 @@ public class ValeribotFSM_GH : MonoBehaviour
             lasers[i].SetActive(false);
         }
 
-        laserMachines = new GameObject[4];
+        laserMachines = new GameObject[3];
 
         for (int i = 0; i < laserMachines.Length; i++)
         {
@@ -113,31 +175,212 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     void Update()
     {
-        TargetingLaser();
-        RotateLaser();
-        GroundLaser();
-        BossJumpMove();
-        LaserMachine();
+        //z축 고정
+        transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+
+        if (!jumpState)
+        {
+            switch (currBossPosState)
+            {
+                case 0:
+                    transform.position = pointL.transform.position;
+                    break;
+                case 1:
+                    transform.position = pointC.transform.position;
+                    break;
+                case 2:
+                    transform.position = pointR.transform.position;
+                    break;
+            }
+        }
+
+
+        switch (currState)
+        {
+            case EValeribotState.IDLE:
+                UpdateIdle();
+                break;
+            case EValeribotState.JUMP:
+                BossJumpMove();
+                break;
+            case EValeribotState.TARGETLAGER:
+                TargetingLaser();
+                break;
+            case EValeribotState.ROTATELAGER:
+                RotateLaser();
+                break;
+            case EValeribotState.GROUNDLAGER:
+                GroundLaser();
+                break;
+            case EValeribotState.MACHINELAGER:
+                LaserMachine();
+                break;
+            case EValeribotState.BOMBKICK:
+                BombShoot();
+                break;
+            case EValeribotState.STAYDELAY:
+                StateDelay();
+                break;
+            case EValeribotState.DAMAGE:
+                break;
+            case EValeribotState.DIE:
+                break;
+        }
+
+    }
+    //상태가 전환 될 때 한 번만 실행하는 동작
+    public void ChangeState(EValeribotState state)
+    {
+        print(currState + "---->" + state);
+
+        // 현재 상태를 state 값으로 설정
+        currState = state;
+
+        // 현재시간을 초기화
+        currTime = 0;
+
+        //레이저 머신 시간을 초기화
+        laserMachineMoveCurrTime = 0;
+
+        //레이저 시간을 초기화
+        laserCurrTime = 0;
+
+
+        onReadyLaser = true;
+
+        firePoint.transform.localEulerAngles = new Vector3(0, 0, 0);
+
+
+        switch (currState)
+        {
+            case EValeribotState.IDLE:
+
+                randBoss = 3;
+                    //Random.Range(1, 7);
+                break;
+
+            case EValeribotState.JUMP:
+                jumpState = true;
+                chicken.ControllChicken();
+                break;
+            case EValeribotState.TARGETLAGER:
+                targetLaserCount = 0;
+                if (bossPhase < 3)
+                {
+                    onTargetingLaser = true;
+                    lasers[0].transform.position = firePoint.transform.position;
+                    lasers[0].SetActive(true);
+                }
+                else
+                {
+                    ChangeState(EValeribotState.IDLE);
+                }
+                break;
+            case EValeribotState.ROTATELAGER:
+                {
+                    if (currBossPosState == 1)
+                    {
+                        for (int i = 0; i < bossPhase + 1; i++)
+                        {
+                            lasers[i].transform.position = firePoint.transform.position;
+                            lasers[i].SetActive(true);
+                        }
+
+                        onRtateLaser = true;
+
+                    }
+                    else
+                    {
+                        ChangeState(EValeribotState.IDLE);
+                    }
+                }
+                break;
+
+            case EValeribotState.GROUNDLAGER:
+                if (currBossPosState == 0)
+                {
+                    firePoint.transform.localEulerAngles = new Vector3(0, 0, -30);
+                    lasers[0].transform.position = firePoint.transform.position;
+                    lasers[0].SetActive(true);
+
+                    onReadyLaser = true;
+                    onGroundLaser = true;
+                }
+                else if (currBossPosState == 2)
+                {
+                    firePoint.transform.localEulerAngles = new Vector3(0, 0, 30);
+                    lasers[0].transform.position = firePoint.transform.position;
+                    lasers[0].SetActive(true);
+
+                    onReadyLaser = true;
+                    onGroundLaser = true;
+                }
+                else
+                {
+                    ChangeState(EValeribotState.IDLE);
+                }
+
+
+                break;
+
+            case EValeribotState.MACHINELAGER:
+                if (currBossPosState == 1 && bossPhase > 2)
+                {
+                    laserMachines[0].transform.position = transform.position + Vector3.up * 2;
+                    laserMachines[1].transform.position = transform.position + Vector3.up * 2;
+
+                    laserMachines[0].SetActive(true);
+                    laserMachines[1].SetActive(true);
+                    if (bossPhase > 3)
+                    {
+
+                        laserMachines[2].transform.position = transform.position + Vector3.up * 2;
+                        laserMachines[2].SetActive(true);
+                    }
+                    onLaserMachine = true;
+                }
+                else
+                {
+                    ChangeState(EValeribotState.IDLE);
+                }
+                break;
+
+            case EValeribotState.BOMBKICK:
+                if (bossPhase < 3)
+                {
+                    ChangeState(EValeribotState.IDLE);
+                }
+                break;
+        }
+    }
+
+    void StateDelay()
+    {
+        currTime += Time.deltaTime;
+
+        if (currTime > stateDelayTime)
+        {
+            ChangeState(EValeribotState.IDLE);
+
+        }
+    }
+
+
+    void UpdateIdle()
+    {
+        ChangeState((EValeribotState)randBoss);
     }
 
     void BossJumpMove()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            jumpState = true;
-            chicken.ControllChicken();
-
-        }
-
         if (jumpState)
         {
             currTime += Time.deltaTime;
 
-
             previousPoint = pointC.position;
 
             //보스가 지금 왼쪽 - 0, 가운데 - 1, 오른쪽 - 2에 있을 때 움직임
-            switch (currBossPisState)
+            switch (currBossPosState)
             {
                 case 0:
                     currentPoint = CalculateBezierPoint(currTime / jumpDuration, pointL.position, pointLC.position, pointC.position);
@@ -163,21 +406,21 @@ public class ValeribotFSM_GH : MonoBehaviour
             if (currTime > jumpDuration)
             {
                 RandMove = Random.Range(0, 2);
+                ChangeState(EValeribotState.STAYDELAY);
                 jumpState = false;
-                currTime = 0;
             }
 
             if (transform.position == pointC.position)
             {
-                currBossPisState = 1;
+                currBossPosState = 1;
             }
             else if (transform.position == pointL.position)
             {
-                currBossPisState = 0;
+                currBossPosState = 0;
             }
             else if (transform.position == pointR.position)
             {
-                currBossPisState = 2;
+                currBossPosState = 2;
             }
         }
 
@@ -189,26 +432,15 @@ public class ValeribotFSM_GH : MonoBehaviour
         Vector3 p2p3 = Vector3.Lerp(p2, p3, t);
         return Vector3.Lerp(p1p2, p2p3, t);
     }
-
-
-
     void TargetingLaser()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            laserCurrTime = 0;
-            lasers[0].SetActive(true);
-
-            onTargetingLaser = true;
-        }
         if (onTargetingLaser)
         {
             laserCurrTime += Time.deltaTime;
             if (laserCurrTime < targetLaserReadyTime)
             {
-                laserToPlayer = player.transform.position - firePoint.transform.position;
+                laserToPlayer = (player.transform.position + Vector3.up) - firePoint.transform.position;
                 lasers[0].transform.forward = laserToPlayer;
-                onReadyLaser = true;
 
             }
             else if (laserCurrTime >= targetLaserReadyTime && laserCurrTime < targetLaserDuraTime)
@@ -218,202 +450,240 @@ public class ValeribotFSM_GH : MonoBehaviour
             }
             else if (laserCurrTime >= targetLaserDuraTime)
             {
-                onReadyLaser = true;
+                if (bossPhase == 1)
+                {
+                    lasers[0].GetComponent<LaserFire_GH>().LaserDone();
+                    ChangeState(EValeribotState.STAYDELAY);
 
-                laserCurrTime = 0;
-                onTargetingLaser = false;
+                    onTargetingLaser = false;
+                }
+                else if (bossPhase == 2 && targetLaserCount < 1)
+                {
+                    laserCurrTime = 0;
+                    onReadyLaser = true;
+                    targetLaserCount++;
+                }
+                else if (bossPhase == 2 && targetLaserCount >= 1)
+                {
+                    lasers[0].GetComponent<LaserFire_GH>().LaserDone();
+                    ChangeState(EValeribotState.STAYDELAY);
 
-                lasers[0].GetComponent<LaserFire_GH>().LaserDone();
-
+                    onTargetingLaser = false;
+                }
             }
         }
     }
 
-
     void RotateLaser()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            firePoint.transform.localEulerAngles = new Vector3(0, 0, 0);
-            laserCurrTime = 0;
-
-            lasers[0].SetActive(true);
-            lasers[1].SetActive(true);
-
-            onRtateLaser = true;
-        }
+        print(Quaternion.Euler(0, 0, 90) * Vector3.right);
         if (onRtateLaser)
         {
             laserCurrTime += Time.deltaTime;
-            lasers[0].transform.forward = firePoint.transform.right;
-            lasers[1].transform.forward = -firePoint.transform.right;
-            if (laserCurrTime < rotateLaserReadyTime)
+            for (int i = 0; i < bossPhase + 1; i++)
             {
-                onReadyLaser = true;
-
+                lasers[i].transform.position = firePoint.transform.position;
+                lasers[i].transform.forward = Quaternion.Euler(0, 0, 0 + i * (360 / (bossPhase + 1))) * firePoint.transform.right;
             }
-            else if (laserCurrTime >= rotateLaserReadyTime && laserCurrTime < rotateLaserDuraTime)
+
+            if (laserCurrTime >= rotateLaserReadyTime && laserCurrTime < rotateLaserDuraTime)
             {
                 firePoint.transform.localEulerAngles += new Vector3(0, 0, 1) * 25 * Time.deltaTime;
                 onReadyLaser = false;
-
-
             }
             else if (laserCurrTime >= rotateLaserDuraTime)
             {
-                lasers[0].GetComponent<LaserFire_GH>().LaserDone();
-                lasers[1].GetComponent<LaserFire_GH>().LaserDone();
+                for (int i = 0; i < bossPhase + 1; i++)
+                {
+                    lasers[i].GetComponent<LaserFire_GH>().LaserDone();
+                }
 
 
+
+                ChangeState(EValeribotState.STAYDELAY);
                 onRtateLaser = false;
-
-                onReadyLaser = true;
 
             }
         }
+
     }
 
     void GroundLaser()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            firePoint.transform.localEulerAngles = new Vector3(0, 0, 0);
-
-            if (currBossPisState == 0)
-            {
-                firePoint.transform.localEulerAngles = new Vector3(0, 0, -30);
-            }
-            else if (currBossPisState == 2)
-            {
-                firePoint.transform.localEulerAngles = new Vector3(0, 0, 30);
-            }
-            else
-            {
-                return;
-            }
-
-            lasers[0].SetActive(true);
-
-            laserCurrTime = 0;
-
-            onGroundLaser = true;
-
-            onReadyLaser = true;
-
-        }
-
         if (onGroundLaser)
         {
             laserCurrTime += Time.deltaTime;
             lasers[0].transform.forward = -firePoint.transform.up;
-            if (laserCurrTime < rotateLaserReadyTime)
-            {
-                onReadyLaser = true;
+            //if (laserCurrTime < groundLaserReadyTime)
+            //{
+            //    onReadyLaser = true;
 
-            }
-            else if (laserCurrTime >= rotateLaserReadyTime && laserCurrTime < rotateLaserDuraTime)
+            //}
+            if (laserCurrTime >= groundLaserReadyTime && laserCurrTime < groundLaserDuraTime)
             {
-                if (currBossPisState == 0)
+                if (currBossPosState == 0)
                 {
-                    firePoint.transform.localEulerAngles += new Vector3(0, 0, 1) * 15 * Time.deltaTime;
+                    firePoint.transform.localEulerAngles += new Vector3(0, 0, 1) * groundLaserSpeed * Time.deltaTime;
 
                 }
 
-                else if (currBossPisState == 2)
+                else if (currBossPosState == 2)
                 {
 
-                    firePoint.transform.localEulerAngles -= new Vector3(0, 0, 1) * 15 * Time.deltaTime;
+                    firePoint.transform.localEulerAngles -= new Vector3(0, 0, 1) * groundLaserSpeed * Time.deltaTime;
 
                 }
                 onReadyLaser = false;
 
 
             }
-            else if (laserCurrTime >= rotateLaserDuraTime)
+            else if (laserCurrTime >= groundLaserDuraTime)
             {
-                onGroundLaser = false;
-                laserCurrTime = 0;
 
-                onReadyLaser = true;
                 lasers[0].GetComponent<LaserFire_GH>().LaserDone();
 
+                ChangeState(EValeribotState.STAYDELAY);
 
+                onGroundLaser = false;
             }
         }
+
     }
 
     void LaserMachine()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            laserCurrTime = 0;
-            laserMachineMoveCurrTime = 0;
-            onLaserMachine = true;
-            laserMachines[0].transform.position = transform.position + Vector3.up * 2;
-            laserMachines[1].transform.position = transform.position + Vector3.up * 2;
-
-            laserMachines[0].SetActive(true);
-            laserMachines[1].SetActive(true);
-        }
-
         if (onLaserMachine)
         {
             laserMachineMoveCurrTime += Time.deltaTime;
 
             if (laserMachineMoveCurrTime < laserMachineMoveTime)
             {
-                laserMachines[0].transform.position += (Vector3.down + (Vector3.left * 3)) * Time.deltaTime;
-                laserMachines[1].transform.position += (Vector3.down + (Vector3.right * 3)) * Time.deltaTime;
+                if (bossPhase < 4)
+                {
+                    laserMachines[0].transform.position += (Vector3.down + (Vector3.left * 3)) * Time.deltaTime;
+                    laserMachines[1].transform.position += (Vector3.down + (Vector3.right * 3)) * Time.deltaTime;
+
+                }
+                else
+                {
+                    laserMachines[0].transform.position += ((Vector3.down * 3) + (Vector3.left * 3)) * Time.deltaTime;
+                    laserMachines[1].transform.position += ((Vector3.down * 3) + (Vector3.right * 3)) * Time.deltaTime;
+                    laserMachines[2].transform.position += (Vector3.up * 3) * Time.deltaTime;
+
+                }
             }
             else
             {
                 laserCurrTime += Time.deltaTime;
-                for (int i = 0; i < 4; i++)
+                if (bossPhase < 4)
                 {
-                    lasers[i].transform.position = laserMachines[0].transform.position;
-                    laserMachines[0].transform.localRotation = Quaternion.Euler(0, 0, 45 + (i * 90));
-                    lasers[i].transform.forward = laserMachines[0].transform.up;
-                }
-                for (int i = 4; i < 8; i++)
-                {
-                    lasers[i].transform.position = laserMachines[1].transform.position;
-                    laserMachines[1].transform.localRotation = Quaternion.Euler(0, 0, 45 + (i * 90));
-                    lasers[i].transform.forward = laserMachines[1].transform.up;
-                }
-                if (laserCurrTime < rotateLaserReadyTime)
-                {
-                    for (int i = 0; i < 8; i++)
+                    for (int i = 0; i < 4; i++)
                     {
-                        lasers[i].SetActive(true);
+                        lasers[i].transform.position = laserMachines[0].transform.position;
+                        laserMachines[0].transform.localRotation = Quaternion.Euler(0, 0, 45 + (i * 90));
+                        lasers[i].transform.forward = laserMachines[0].transform.up;
                     }
+                    for (int i = 4; i < 8; i++)
+                    {
+                        lasers[i].transform.position = laserMachines[1].transform.position;
+                        laserMachines[1].transform.localRotation = Quaternion.Euler(0, 0, 45 + (i * 90));
+                        lasers[i].transform.forward = laserMachines[1].transform.up;
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        lasers[i].transform.position = laserMachines[0].transform.position;
+                        laserMachines[0].transform.localRotation = Quaternion.Euler(0, 0, 0 + (i * 90));
+                        lasers[i].transform.forward = laserMachines[0].transform.up;
+                    }
+                    for (int i = 4; i < 8; i++)
+                    {
+                        lasers[i].transform.position = laserMachines[1].transform.position;
+                        laserMachines[1].transform.localRotation = Quaternion.Euler(0, 0, 0 + (i * 90));
+                        lasers[i].transform.forward = laserMachines[1].transform.up;
+                    }
+                    for (int i = 8; i < 12; i++)
+                    {
+                        lasers[i].transform.position = laserMachines[2].transform.position;
+                        laserMachines[2].transform.localRotation = Quaternion.Euler(0, 0, 45 + (i * 90));
+                        lasers[i].transform.forward = laserMachines[2].transform.up;
+                    }
+                }
+                if (laserCurrTime < machineLaserReadyTime)
+                {
+                    if (bossPhase < 4)
+                    {
+                        for (int i = 0; i < 8; i++)
+                        {
+                            lasers[i].SetActive(true);
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < 12; i++)
+                        {
+                            lasers[i].SetActive(true);
+                        }
+                    }
+
+
                     onReadyLaser = true;
 
                 }
-                else if (laserCurrTime >= rotateLaserReadyTime && laserCurrTime < rotateLaserDuraTime - 1.5f)
+                else if (laserCurrTime >= machineLaserReadyTime && laserCurrTime < machineLaserDuraTime - 1.5f)
                 {
 
                     onReadyLaser = false;
 
 
                 }
-                else if (laserCurrTime < rotateLaserDuraTime && laserCurrTime >= rotateLaserDuraTime - 1.5f)
+                else if (laserCurrTime < machineLaserDuraTime && laserCurrTime >= machineLaserDuraTime - 1.5f)
                 {
-                    for (int i = 0; i < 8; i++)
+                    if (bossPhase < 4)
                     {
-                        lasers[i].GetComponent<LaserFire_GH>().LaserDone();
+                        for (int i = 0; i < 8; i++)
+                        {
+                            lasers[i].GetComponent<LaserFire_GH>().LaserDone();
+
+                        }
                     }
-                    laserMachines[0].transform.position -= (Vector3.down + (Vector3.left * 3)) * Time.deltaTime;
-                    laserMachines[1].transform.position -= (Vector3.down + (Vector3.right * 3)) * Time.deltaTime;
+                    else
+                    {
+                        for (int i = 0; i < 12; i++)
+                        {
+                            lasers[i].GetComponent<LaserFire_GH>().LaserDone();
+
+                        }
+                    }
+                    if (bossPhase < 4)
+                    {
+                        laserMachines[0].transform.position -= (Vector3.down + (Vector3.left * 3)) * Time.deltaTime;
+                        laserMachines[1].transform.position -= (Vector3.down + (Vector3.right * 3)) * Time.deltaTime;
+
+                    }
+                    else
+                    {
+                        laserMachines[0].transform.position -= ((Vector3.down * 3) + (Vector3.left * 3)) * Time.deltaTime;
+                        laserMachines[1].transform.position -= ((Vector3.down * 3) + (Vector3.right * 3)) * Time.deltaTime;
+                        laserMachines[2].transform.position -= (Vector3.up * 3) * Time.deltaTime;
+
+                    }
                 }
                 else
                 {
+
                     laserMachines[0].SetActive(false);
                     laserMachines[1].SetActive(false);
+                    if (bossPhase > 3)
+                    {
+                        laserMachines[2].SetActive(false);
 
-                    laserCurrTime = 0;
-                    laserMachineMoveCurrTime = 0;
-                    onReadyLaser = true;
+                    }
 
+
+                    ChangeState(EValeribotState.STAYDELAY);
 
                     onLaserMachine = false;
 
@@ -423,5 +693,58 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     }
 
+    void BombShoot()
+    {
+        if (currBossPosState == 0)
+        {
+            bomb = Instantiate(bombFactory, bombPoints[1].position, bombPoints[1].rotation);
+            //포탄 생성
 
+            //포탄의 Rigidbody
+            Rigidbody rb = bomb.GetComponent<Rigidbody>();
+
+            //발사각도 라디안으로 변경
+            float radianAngle = angle * Mathf.Deg2Rad;
+
+            //발사 백터 계산
+            Vector3 launchDirection = new Vector3(Mathf.Cos(radianAngle), Mathf.Sin(radianAngle), 0);
+
+            //발사 힘 적용
+            rb.velocity = launchDirection * launchForce;
+
+            ChangeState(EValeribotState.STAYDELAY);
+
+
+        }
+        else if (currBossPosState == 2)
+        {
+            bomb = Instantiate(bombFactory, bombPoints[0].position, bombPoints[0].rotation);
+            //포탄 생성
+
+            //포탄의 Rigidbody
+            Rigidbody rb = bomb.GetComponent<Rigidbody>();
+
+            //발사각도 라디안으로 변경
+            float radianAngle = angle * Mathf.Deg2Rad;
+
+            //발사 백터 계산
+            Vector3 launchDirection = new Vector3(-Mathf.Cos(radianAngle), Mathf.Sin(radianAngle), 0);
+
+            //발사 힘 적용
+            rb.velocity = launchDirection * launchForce;
+
+            ChangeState(EValeribotState.STAYDELAY);
+
+
+        }
+        else
+        {
+            ChangeState(EValeribotState.IDLE);
+
+        }
+
+        if (bomb != null)
+            Destroy(bomb, bombTime);
+
+    }
 }

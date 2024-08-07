@@ -20,17 +20,12 @@ public class Cam_GH : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         //transform.forward = camDir;
-
-
-       
-
     }
     private void LateUpdate()
     {
         // 카메라의 목표 위치 계산
-       // Vector3 desiredPosition = camFocusPos + offset;
+        // Vector3 desiredPosition = camFocusPos + offset;
         camFocusPos = (player.transform.position + camFIx.transform.position) / 2;
 
         camDir = camFocusPos - transform.position;
@@ -38,5 +33,7 @@ public class Cam_GH : MonoBehaviour
         Vector3 smoothedPosition = Vector3.Lerp(transform.forward, camDir, smoothSpeed);
 
         transform.forward = smoothedPosition;
+
+        transform.position = new Vector3(player.transform.position.x, transform.position.y, transform.position.z);
     }
 }

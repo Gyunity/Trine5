@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class LaserFire_GH : MonoBehaviour
@@ -25,8 +26,13 @@ public class LaserFire_GH : MonoBehaviour
 
     private ParticleSystem[] effects;
     private ParticleSystem[] hit;
+    ParticleSystem Flash;
 
     public Material[] laserMat;
+
+    bool onFlash = true;
+    bool onFlash2 = true;
+
 
     void Start()
     {
@@ -35,56 +41,65 @@ public class LaserFire_GH : MonoBehaviour
         laserLine = GetComponent<LineRenderer>();
         effects = GetComponentsInChildren<ParticleSystem>();
         hit = hitEffect.GetComponentsInChildren<ParticleSystem>();
-
+        Flash = transform.GetChild(0).gameObject.GetComponent<ParticleSystem>();
     }
 
     void Update()
     {
+
         //라인렌더 위치
         if (laserLine != null && updateSaver == false)
         {
             laserLine.SetPosition(0, transform.position);
             RaycastHit rayHit;
             //플레이어와 그라운드만 레이를 쏜다.
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out rayHit, maxLength, 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Thorn")))
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out rayHit, maxLength, 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Thorn") | 1 << LayerMask.NameToLayer("SummonedObject")))
             {
                 //끝 레이저 위치가 오브젝트이면
                 laserLine.SetPosition(1, rayHit.point);
-               
+
 
                 if (!valeribotSC.onReadyLaser)
                 {
-                    hitEffect.transform.position = rayHit.point + rayHit.normal * hitOffset;
+                    if (onFlash)
+                    {
+                        Flash.Play();
+                        onFlash = false;
+
+                    }
+
+                    laserLine.textureScale = new Vector2(1, 1);
                     laserLine.material = laserMat[0];
-                    if (rayHit.transform.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                    hitEffect.transform.position = rayHit.point + rayHit.normal * hitOffset;
+                    if (rayHit.transform.gameObject.layer == LayerMask.NameToLayer("Ground") && valeribotSC.onRtateLaser == false)
                     {
                         GameObject thorn = Instantiate(thornFactory);
                         thorn.transform.position = rayHit.point + rayHit.normal * hitOffset;
+                        thorn.transform.up = rayHit.normal;
                         Destroy(thorn, 5);
                     }
                 }
                 else
                 {
-                    hitEffect.transform.position = Vector3.up * 200;
+                    onFlash = true;
+                    Flash.Stop();
+                    laserLine.textureScale = new Vector2(2, 1.5f);
                     laserLine.material = laserMat[1];
+                    hitEffect.transform.position = Vector3.down * 200;
 
                 }
-                if (useLaserRotation)
-                {
-                    hitEffect.transform.rotation = transform.rotation;
-                }
-                else
-                {
-                    hitEffect.transform.LookAt(rayHit.point + rayHit.normal);
-                }
 
-                foreach (var allPs in effects)
-                {
-                    if (allPs.isPlaying)
-                    {
-                        allPs.Play();
-                    }
-                }
+                //foreach (var allPs in effects)
+                //{
+                //    if (allPs.isPlaying)
+                //    {
+                //        if (!valeribotSC.onReadyLaser)
+                //        {
+                //            //여기서 플래쉬 빼고 시작하게
+                //            //allPs.Play();
+                //        }
+                //    }
+                //}
                 //텍스처 틸팅
                 length[0] = mainTextureLength * (Vector3.Distance(transform.position, rayHit.point));
                 length[2] = noiseTextureLength * (Vector3.Distance(transform.position, rayHit.point));
@@ -100,16 +115,37 @@ public class LaserFire_GH : MonoBehaviour
                 {
                     if (allPs.isPlaying)
                     {
-                        allPs.Stop();
+
+                        if (!valeribotSC.onReadyLaser)
+                        {
+                            allPs.Play();
+
+                        }
                     }
                 }
                 length[0] = mainTextureLength * (Vector3.Distance(transform.position, endPos));
                 length[2] = noiseTextureLength * (Vector3.Distance(transform.position, endPos));
 
                 if (!valeribotSC.onReadyLaser)
+                {
+                    if (onFlash2)
+                    {
+                        Flash.Play();
+                        onFlash2 = false;
+                    }
                     laserLine.material = laserMat[0];
+                    laserLine.textureScale = new Vector2(1, 1);
+
+                }
+
                 else
+                {
+                    Flash.Stop();
+                    onFlash2 = true;
                     laserLine.material = laserMat[1];
+                    laserLine.textureScale = new Vector2(2, 1.5f);
+
+                }
 
             }
 
@@ -126,37 +162,32 @@ public class LaserFire_GH : MonoBehaviour
                 laserLine.enabled = true;
             }
 
-           
+
         }
 
-    }
-    public void DIsablePrepare()
-    {
-        if (laserLine != null)
-        {
-            laserLine.enabled = false;
-        }
-        updateSaver = true;
-
-        if (effects != null)
-        {
-            foreach (var allPs in effects)
-            {
-                if (allPs.isPlaying)
-                {
-                    allPs.Stop();
-                }
-            }
-        }
     }
 
     public void LaserDone()
     {
+        foreach (var allPs in effects)
+        {
+            if (allPs.isPlaying)
+            {
+                allPs.Stop();
+            }
+        }
+
+        foreach (var allPs in hit)
+        {
+            if (allPs.isPlaying)
+            {
+                allPs.Stop();
+
+            }
+        }
         laserLine.enabled = false;
         laserSaver = false;
         gameObject.SetActive(false);
-        //laserLine.SetPosition(0, Vector3.zero);
-        //laserLine.SetPosition(1, Vector3.zero);
     }
 
 }

@@ -1,25 +1,30 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class StongunButton : MonoBehaviour
 {
-    public GameObject stungun;
+    //public GameObject stungun;
+
+    //public bool isOn = false;
 
     public bool isOn = false;
+    public bool isMove = false;
+   
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player_Dummy")
+        if (other.tag == "Player")
         {
-            //Àü±âÃæ°İ
-            Debug.Log("Àü±â Ãæ°İ");
-
-            //Stungun ÀÇ ¿ÀºêÁ§Æ®¿¡¼­ StungunMove ÄÄÆ÷³ÍÆ®¸¦ °¡Á®¿ÀÀÚ.
-            StungunMove stunmove = stungun.GetComponent<StungunMove>();
-            //°¡Á®¿Â ÄÄÆ÷³ÍÆ®¿¡¼­ caneMove ¸¦ true ·ÎÇÏÀÚ.
-            stunmove.canMove = true;
-
-
+            //ì „ê¸°ì¶©ê²©
+            Debug.Log("ì „ê¸° ì¶©ê²©");
+            ////Stungun ì˜ ì˜¤ë¸Œì íŠ¸ì—ì„œ StungunMove ì»´í¬ë„ŒíŠ¸ë¥¼ ê°€ì ¸ì˜¤ì.
+            //StungunMove stunmove = stungun.GetComponent<StungunMove>();
+            ////ê°€ì ¸ì˜¨ ì»´í¬ë„ŒíŠ¸ì—ì„œ caneMove ë¥¼ true ë¡œí•˜ì.
+            //stunmove.canMove = true;
+            //StungunDown stg =stungun.GetComponent<StungunDown>();-
+            //stg.canMove = true;-
+            isOn = true;
+            isMove = true;
         }
     }
 }

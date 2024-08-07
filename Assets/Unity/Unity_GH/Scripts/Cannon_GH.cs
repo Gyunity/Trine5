@@ -34,6 +34,7 @@ public class Cannon_GH : MonoBehaviour
         {
             Invoke("shoot", 2);
             shellLoad = false;
+
             //ToDo 화살구현되면 false로 바꾸기
             arrowFire = true;
         }

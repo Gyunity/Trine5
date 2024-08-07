@@ -45,6 +45,7 @@ public class PlayerMove_HMJ : MonoBehaviour
 
     Rigidbody rb;
     Animator anim;
+    float horizontal = 0.0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -59,14 +60,15 @@ public class PlayerMove_HMJ : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float h = Input.GetAxis("Horizontal");
+        if(playerState.GetState() != PlayerState.Grap && playerState.GetState() != PlayerState.Climb)
+        horizontal = Input.GetAxis("Horizontal");
 
         //if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
         //    playerState.SetState(PlayerState.Walk);
         //else
         //    playerState.SetState(PlayerState.Idle);
 
-        movement = new Vector3(h, 0.0f, 0.0f);
+        movement = new Vector3(horizontal, 0.0f, 0.0f);
         // -1 ~ 1
         // -1 ~ 0 // 왼쪽 1 `
         // 0 ~ 1
@@ -77,7 +79,7 @@ public class PlayerMove_HMJ : MonoBehaviour
             // 이동 방향으로 캐릭터 회전
             Quaternion newRotation = Quaternion.LookRotation(movement);
             transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * 10.0f);
-            anim.SetFloat("MoveSpeed", Mathf.Abs(h));
+            anim.SetFloat("MoveSpeed", Mathf.Abs(horizontal));
         }
 
 
@@ -90,6 +92,11 @@ public class PlayerMove_HMJ : MonoBehaviour
             playerState.SetState(PlayerState.Dash);
         }
         // Dash();
+
+
+        //z축 고정 추가 (규현)
+        transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+        
     }
 
     public void Dash()
@@ -139,11 +146,13 @@ public class PlayerMove_HMJ : MonoBehaviour
     {
         if (playerState.GetState() == PlayerState.Grap) // 무a언가를 잡고 있을때
         {
+            yVelocity = 0.0f;
+            JumpCurN = 0;
             if (Input.GetKeyDown(KeyCode.D))
             {
-                playerState.SetState(PlayerState.Climb);
+                //playerState.SetState(PlayerState.Climb);
                 //cc.Move(new Vector3(10.0f, 30.0f, 0.0f) * moveSpeed * Time.deltaTime);
-                yVelocity = 0.0f;
+                //yVelocity = 0.0f;
             }
         }
         else
@@ -175,6 +184,11 @@ public class PlayerMove_HMJ : MonoBehaviour
     public void SetCollisionCollider(Collider collider)
     {
         targetCollider = collider;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        print("충돌" + collision.gameObject.name);
     }
 
 }

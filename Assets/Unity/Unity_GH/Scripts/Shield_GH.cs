@@ -11,15 +11,15 @@ public class Shield_GH : MonoBehaviour
 
     void Update()
     {
-        
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Shell"))
+        if (other.gameObject.tag == "shell")
         {
-            Destroy(other.gameObject);
-            ValeriboyManager_GH.instance.onShield = false;
+            other.gameObject.SetActive(false);
+            ValeribotManager_GH.instance.onShield = false;
         }
     }
 }
