@@ -602,33 +602,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 343015042}
     m_Modifications:
-    - target: {fileID: 1139711617679052, guid: 02c9d373237917847b636baad496fa95, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1473272751334056, guid: 02c9d373237917847b636baad496fa95, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1482055764322774, guid: 02c9d373237917847b636baad496fa95, type: 3}
       propertyPath: m_Name
       value: cart1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1582111830667644, guid: 02c9d373237917847b636baad496fa95, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4886805986209428, guid: 02c9d373237917847b636baad496fa95, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 4886805986209428, guid: 02c9d373237917847b636baad496fa95, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.6000001
-      objectReference: {fileID: 0}
-    - target: {fileID: 4886805986209428, guid: 02c9d373237917847b636baad496fa95, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 4886805986209428, guid: 02c9d373237917847b636baad496fa95, type: 3}
       propertyPath: m_LocalPosition.x
@@ -670,18 +646,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -56.209
       objectReference: {fileID: 0}
-    - target: {fileID: 4886805986209428, guid: 02c9d373237917847b636baad496fa95, type: 3}
-      propertyPath: m_ConstrainProportionsScale
+    - target: {fileID: 1368318717115625627, guid: 02c9d373237917847b636baad496fa95,
+        type: 3}
+      propertyPath: m_UseGravity
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1482055764322774, guid: 02c9d373237917847b636baad496fa95,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1809417649}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 02c9d373237917847b636baad496fa95, type: 3}
 --- !u!1 &153351151
 GameObject:
@@ -18486,8 +18459,9 @@ GameObject:
   - component: {fileID: 1664701990}
   - component: {fileID: 1664701989}
   - component: {fileID: 1664701994}
-  - component: {fileID: 1664701993}
   - component: {fileID: 1664701992}
+  - component: {fileID: 1664701996}
+  - component: {fileID: 1664701995}
   m_Layer: 6
   m_Name: Valeribot_GH
   m_TagString: Untagged
@@ -18580,51 +18554,6 @@ MonoBehaviour:
   jumpForce: 300
   timeBeforeNextJump: 1.2
   anim: {fileID: 694896769}
---- !u!114 &1664701993
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1664701987}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab57bb529760a304588811e811adb543, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 1763493986}
-  pointL: {fileID: 1638281189}
-  pointC: {fileID: 2113154646}
-  pointR: {fileID: 2139629444}
-  pointLC: {fileID: 965875446}
-  pointRC: {fileID: 1293876806}
-  jumpDuration: 0.5
-  firePoint: {fileID: 1673633631}
-  maxLength: 0
-  laserPrefab: {fileID: 1818483698145146, guid: 86e0ee876ef5abb4d96f9cc96f43e4e1,
-    type: 3}
-  onReadyLaser: 1
-  targetLaserReadyTime: 3
-  targetLaserDuraTime: 6
-  onRtateLaser: 0
-  rotateLaserReadyTime: 2
-  rotateLaserDuraTime: 9
-  groundLaserReadyTime: 2
-  groundLaserDuraTime: 6
-  groundLaserSpeed: 25
-  laserMachineFactory: {fileID: 2227161262207552991, guid: 8ae56ad876fe7924bada37a05faf3b56,
-    type: 3}
-  machineLaserReadyTime: 2
-  machineLaserDuraTime: 5
-  laserMachineMoveTime: 1.5
-  bombFactory: {fileID: 730900041467684307, guid: 4c5903656cda87f4eb1157d18db69b81,
-    type: 3}
-  bombPoints:
-  - {fileID: 1593188376}
-  - {fileID: 951080789}
-  launchForce: 12
-  angle: 45
-  bombTime: 5
 --- !u!114 &1664701994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18640,6 +18569,7 @@ MonoBehaviour:
   currState: 0
   bossPhase: 1
   player: {fileID: 1763493986}
+  stateDelayTime: 0
   pointL: {fileID: 1638281189}
   pointC: {fileID: 2113154646}
   pointR: {fileID: 2139629444}
@@ -18662,7 +18592,7 @@ MonoBehaviour:
   laserMachineFactory: {fileID: 2227161262207552991, guid: 8ae56ad876fe7924bada37a05faf3b56,
     type: 3}
   machineLaserReadyTime: 2
-  machineLaserDuraTime: 5
+  machineLaserDuraTime: 7
   laserMachineMoveTime: 1.5
   bombFactory: {fileID: 730900041467684307, guid: 4c5903656cda87f4eb1157d18db69b81,
     type: 3}
@@ -18672,6 +18602,34 @@ MonoBehaviour:
   launchForce: 12
   angle: 45
   bombTime: 5
+--- !u!114 &1664701995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664701987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f8f94c277e42c84ea31c0fc09ab4338, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHP: 1000
+  currHP: 0
+--- !u!114 &1664701996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664701987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5045f2cdbe02b8949883d425cd4291c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currPhase: 0
+  phase2_Shell: {fileID: 309344561}
 --- !u!1001 &1671646639
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19818,33 +19776,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 129348664}
   m_PrefabAsset: {fileID: 0}
---- !u!54 &1809417649
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 309344561}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &1813019069
 GameObject:
   m_ObjectHideFlags: 0

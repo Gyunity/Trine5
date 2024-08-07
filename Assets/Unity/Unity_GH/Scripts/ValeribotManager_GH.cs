@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ValeriboyManager_GH : MonoBehaviour
+public class ValeribotManager_GH : MonoBehaviour
 {
-    public static ValeriboyManager_GH instance;
+    public static ValeribotManager_GH instance;
 
     public GameObject shield;
     public bool onShield = true;
