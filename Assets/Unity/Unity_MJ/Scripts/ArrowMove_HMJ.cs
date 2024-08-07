@@ -1,40 +1,148 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static ArrowMove_HMJ;
 
 public class ArrowMove_HMJ : MonoBehaviour
 {
-    float tValue = 0.0f;
+    public enum ArrowState
+    {
+        ArrowMove,
+        ArrowNon,
+        ArrowDraw,
+        ArrowStateEnd
+    }
+
+    public float tValue = 0.0f;
 
     public BezierCurve_HMJ bezierCurve;
-    float speed = 5.0f;
+    public float speed;
 
     public int numPoints = 4;
-    private LineRenderer lineRenderer;
+    public LineRenderer lineRenderer;
 
-    Vector3 mousePos;
+    public Vector3 mousePos;
+
+    public Vector3 dir;
+
+    public List<Vector3> linePositions = new List<Vector3>();
+    public int moveIndex = 0;
+
+    public ArrowState m_eCurArrowState;
+    public ArrowState m_ePreArrowState;
+
+    public float moveTime = 0.0f;
+
+    public float myPower = 0;
+
+    public GameObject arrowObject;
 
     private void Awake()
     {
         lineRenderer = GetComponentInChildren<LineRenderer>();
         bezierCurve = GetComponentInChildren<BezierCurve_HMJ>();
+        speed = 0.1f;
 
-        speed = 5.0f;
+        m_eCurArrowState = ArrowState.ArrowStateEnd;
+        m_ePreArrowState = ArrowState.ArrowStateEnd;
+    }
+
+    void ArrowMove()
+    {
+        transform.position += dir * speed;
+        //Debug.Log("화살 dir: " + dir.x + ", " + dir.y + ", " + dir.z);
+        //Debug.Log("화살 이동 중~: " + transform.position.x + ", " + transform.position.y + ", " + transform.position.z);
+    }
+
+    void UpdateState()
+    {
+        switch (m_eCurArrowState)
+        {
+            case ArrowState.ArrowMove:
+                {
+                    //RotationArrow();
+                    MoveArrow();
+                    ArrowMove();
+                }
+                break;
+            case ArrowState.ArrowNon:
+                {
+                }
+                break;
+            case ArrowState.ArrowDraw:
+                {
+                    linePositions.Clear();
+                    LineRender_On();
+                }
+                break;
+            case ArrowState.ArrowStateEnd:
+                {
+
+                }
+                break;
+
+        }
+    }
+        void ChangeState(ArrowState arrowState)
+    {
+        if (m_eCurArrowState != arrowState)
+        {
+            switch (arrowState)
+            {
+                case ArrowState.ArrowMove:
+                    {
+                        transform.position = arrowObject.transform.position;
+                        Debug.Log("화살 위치: 현재 화살 위치 설정");
+                        moveIndex = 0;
+                        dir = new Vector3(0.0f, 0.0f, 0.0f);
+                        //transform.position = ;
+                        myPower = 0;
+                        lineRenderer.enabled = false;
+                    }
+                    break;
+                case ArrowState.ArrowDraw:
+                    {
+                    }
+                    break;
+                case ArrowState.ArrowStateEnd:
+                    {
+                    }
+                    break;
+
+            }
+
+            m_ePreArrowState = m_eCurArrowState;
+            m_eCurArrowState = arrowState;
+        }
     }
     // Start is called before the first frame update
     void Start()
-    { 
+    {
 
     }
 
-    // 화살 이동 경로 베지어 곡선으로 계산
     void MoveArrow()
     {
-        // 0 ~ 1 사이로 t값 증가하도록 설정
-        tValue += Time.deltaTime * speed;
-        tValue = Mathf.Clamp01(tValue);
-        Vector3 position = bezierCurve.GetPoint(tValue);
-        transform.position = position;
+        if (moveIndex + 1 > linePositions.Count)
+        {
+            dir = new Vector3(0.0f, 0.0f, 0.0f);
+            return;
+        }
+            
+
+        dir = (linePositions[moveIndex] - transform.position).normalized;
+
+        //Debug.Log("Dir: " + dir.x + ", " + dir.y + ", " + dir.z);
+        // 현재 위치가 목표 지점보다 오른쪽에 있으면 다음 인덱스로 
+
+        transform.rotation = Quaternion.LookRotation(dir);
+
+        if (Vector3.Distance(linePositions[moveIndex], transform.position) < 1.0f)
+        {
+            moveIndex++;
+            print(moveIndex);
+        }
     }
 
     // 화살 회전 방향
@@ -59,40 +167,18 @@ public class ArrowMove_HMJ : MonoBehaviour
 
         Vector3 upVector = Vector3.Cross(forwadVector, Vector3.right);
 
-
         // 해당 방향으로 로테이션 설정
         transform.rotation = Quaternion.LookRotation(forwadVector, upVector);
-
-
     }
 
     void DrawCurve()
     {
-        //// 라인렌더러 점 개수를 50개로 고정
-        //lineRenderer.positionCount = numPoints;
+        linePositions.Clear();
 
-        //// numPoints만큼 개수 추가
-        //Vector3[] positions = new Vector3[numPoints];
-
-        //// t에 따른 포지션 저장
-        //for (int i = 0; i < numPoints; i++)
-        //{
-        //    float t = (i / (float)(numPoints - 1)); // 점 개수에 따른 t의 값 조절
-        //    positions[i] = bezierCurve.GetPoint(t);
-        //    Debug.Log(i + ": " + positions[i].x + ", " + positions[i].y + ", " + positions[i].z);
-        //}
-
-        //lineRenderer.SetPositions(positions); // 라인 렌더러 포지션 셋팅
-
-
-        ///////////////임시 테스트/////////////
-        //힘, yVelocity, 출발 벡터, 땅에 닿았는 체크 할 bool
         bool isGround = false;
 
-        Vector3 pos = transform.position;
+        Vector3 pos = arrowObject.transform.position;
         Vector3 dir = transform.forward * myPower;
-
-        List<Vector3> linePositions = new List<Vector3>();
 
         linePositions.Add(pos);
 
@@ -103,7 +189,7 @@ public class ArrowMove_HMJ : MonoBehaviour
             Ray ray = new Ray(pos, dir);
             RaycastHit hitinfo;
 
-            if(Physics.Raycast(ray, out hitinfo, dir.magnitude * Time.deltaTime))
+            if (Physics.Raycast(ray, out hitinfo, dir.magnitude * Time.deltaTime))
             {
                 isGround = true;
                 linePositions.Add(hitinfo.point);
@@ -112,20 +198,14 @@ public class ArrowMove_HMJ : MonoBehaviour
             {
                 pos = pos + (Time.deltaTime * dir);
                 linePositions.Add(pos);
-
-
                 dir = dir + (Vector3.down * 9.8f * Time.deltaTime);
-
             }
-
             test++;
-
-            if(test >= 500)
+            if (test >= 500)
             {
                 break;
             }
         }
-
 
         // 라인렌더러 점 개수를 50개로 고정
         lineRenderer.positionCount = linePositions.Count;
@@ -135,8 +215,6 @@ public class ArrowMove_HMJ : MonoBehaviour
         {
             lineRenderer.SetPosition(i, linePositions[i]);
         }
-
-        //SetPositions(positions); // 라인 렌더러 포지션 셋팅
     }
 
     // 마우스 클릭된 위치 반환
@@ -154,39 +232,35 @@ public class ArrowMove_HMJ : MonoBehaviour
         return mousePos;
     }
 
-    void DestPosition()
+    void LineRender_On()
     {
-        // 마우스 레이케스트한 위치 Get - z값은 0으로 고정
-        bezierCurve.SetPoint(MouseClickPosition());
-        bezierCurve.UpdatePoint();
-        tValue = 0.0f;
-    }
+        Debug.Log("라인 렌더러 활성화o");
+        lineRenderer.enabled = true;
+        // 화살 이동
+        MoveArrow();
+        // 화살 해당 방향으로 회전
+        RotationArrow();
 
-    float myPower = 0;
+        myPower += Time.deltaTime * 10f;
+
+        myPower = Mathf.Clamp(myPower, 0, 50f);
+
+        DrawCurve();
+    }
 
     // Update is called once per frame
     void Update()
     {
-        // 왼쪽 마우스 버튼을 클릭할 때
-        if (Input.GetMouseButton(0)) 
+        if (Input.GetMouseButton(0) && (m_eCurArrowState != ArrowState.ArrowDraw))
         {
-            // 화살 이동
-            //MoveArrow();
-            // 화살 해당 방향으로 회전
-            RotationArrow();
-            // 마우스를 클릭하면
-            DestPosition();
-
-            myPower += Time.deltaTime * 10f;
-
-            myPower = Mathf.Clamp(myPower, 0, 50f);
-
-            DrawCurve();
+            ChangeState(ArrowState.ArrowDraw);
         }
 
-        if(Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && (m_eCurArrowState != ArrowState.ArrowMove))
         {
-            myPower = 0;
+            ChangeState(ArrowState.ArrowMove);
         }
+
+        UpdateState();
     }
 }
