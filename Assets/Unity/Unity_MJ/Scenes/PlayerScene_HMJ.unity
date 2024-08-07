@@ -394,12 +394,12 @@ PrefabInstance:
     - target: {fileID: 410230597679375033, guid: 356391fdb01bff14b81c1079a97e61b8,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.62019753
+      value: -0.972
       objectReference: {fileID: 0}
     - target: {fileID: 410230597679375033, guid: 356391fdb01bff14b81c1079a97e61b8,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0000052452087
+      value: 0.569
       objectReference: {fileID: 0}
     - target: {fileID: 410230597679375033, guid: 356391fdb01bff14b81c1079a97e61b8,
         type: 3}
@@ -490,6 +490,7 @@ MonoBehaviour:
   point1: {x: 0, y: 0, z: 0}
   point2: {x: 0, y: 0, z: 0}
   point3: {x: 0, y: 0, z: 0}
+  point3Data: {x: 0, y: 0, z: 0}
 --- !u!114 &935540235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -503,7 +504,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bezierCurve: {fileID: 935540234}
-  speed: 0
   numPoints: 50
 --- !u!120 &935540239
 LineRenderer:
@@ -513,7 +513,7 @@ LineRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 935540233}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -552,7 +552,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 0.05
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -570,7 +570,7 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 1}
+      key0: {r: 0, g: 0.515193, b: 0.9245283, a: 1}
       key1: {r: 1, g: 1, b: 1, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
@@ -595,7 +595,7 @@ LineRenderer:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: -1
+      m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0

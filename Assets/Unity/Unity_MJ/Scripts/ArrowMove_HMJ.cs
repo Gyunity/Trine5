@@ -9,7 +9,7 @@ public class ArrowMove_HMJ : MonoBehaviour
     public BezierCurve_HMJ bezierCurve;
     float speed = 5.0f;
 
-    public int numPoints = 50;
+    public int numPoints = 4;
     private LineRenderer lineRenderer;
 
     Vector3 mousePos;
@@ -51,29 +51,92 @@ public class ArrowMove_HMJ : MonoBehaviour
         // 목적지 - 출발지 (방향 구하기)
         Vector3 direction = nextPosition - transform.position;
 
+
+        Vector3 myPos = transform.position;
+        myPos.z = 0;
+
+        Vector3 forwadVector = MouseClickPosition() - myPos;
+
+        Vector3 upVector = Vector3.Cross(forwadVector, Vector3.right);
+
+
         // 해당 방향으로 로테이션 설정
-        transform.rotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.LookRotation(forwadVector, upVector);
 
 
     }
 
     void DrawCurve()
     {
-        // 라인렌더러 점 개수를 50개로 고정
-        lineRenderer.positionCount = numPoints;
+        //// 라인렌더러 점 개수를 50개로 고정
+        //lineRenderer.positionCount = numPoints;
 
-        // numPoints만큼 개수 추가
-        Vector3[] positions = new Vector3[numPoints];
+        //// numPoints만큼 개수 추가
+        //Vector3[] positions = new Vector3[numPoints];
 
-        // t에 따른 포지션 저장
-        for (int i = 0; i < numPoints; i++)
+        //// t에 따른 포지션 저장
+        //for (int i = 0; i < numPoints; i++)
+        //{
+        //    float t = (i / (float)(numPoints - 1)); // 점 개수에 따른 t의 값 조절
+        //    positions[i] = bezierCurve.GetPoint(t);
+        //    Debug.Log(i + ": " + positions[i].x + ", " + positions[i].y + ", " + positions[i].z);
+        //}
+
+        //lineRenderer.SetPositions(positions); // 라인 렌더러 포지션 셋팅
+
+
+        ///////////////임시 테스트/////////////
+        //힘, yVelocity, 출발 벡터, 땅에 닿았는 체크 할 bool
+        bool isGround = false;
+
+        Vector3 pos = transform.position;
+        Vector3 dir = transform.forward * myPower;
+
+        List<Vector3> linePositions = new List<Vector3>();
+
+        linePositions.Add(pos);
+
+        int test = 0;
+
+        while (isGround == false)
         {
-            float t = (i / (float)(numPoints - 1)); // 점 개수에 따른 t의 값 조절
-            positions[i] = bezierCurve.GetPoint(t);
-            Debug.Log(i + ": " + positions[i].x + ", " + positions[i].y + ", " + positions[i].z);
+            Ray ray = new Ray(pos, dir);
+            RaycastHit hitinfo;
+
+            if(Physics.Raycast(ray, out hitinfo, dir.magnitude * Time.deltaTime))
+            {
+                isGround = true;
+                linePositions.Add(hitinfo.point);
+            }
+            else
+            {
+                pos = pos + (Time.deltaTime * dir);
+                linePositions.Add(pos);
+
+
+                dir = dir + (Vector3.down * 9.8f * Time.deltaTime);
+
+            }
+
+            test++;
+
+            if(test >= 500)
+            {
+                break;
+            }
         }
 
-        lineRenderer.SetPositions(positions); // 라인 렌더러 포지션 셋팅
+
+        // 라인렌더러 점 개수를 50개로 고정
+        lineRenderer.positionCount = linePositions.Count;
+
+        // t에 따른 포지션 저장
+        for (int i = 0; i < linePositions.Count; i++)
+        {
+            lineRenderer.SetPosition(i, linePositions[i]);
+        }
+
+        //SetPositions(positions); // 라인 렌더러 포지션 셋팅
     }
 
     // 마우스 클릭된 위치 반환
@@ -99,6 +162,8 @@ public class ArrowMove_HMJ : MonoBehaviour
         tValue = 0.0f;
     }
 
+    float myPower = 0;
+
     // Update is called once per frame
     void Update()
     {
@@ -106,13 +171,22 @@ public class ArrowMove_HMJ : MonoBehaviour
         if (Input.GetMouseButton(0)) 
         {
             // 화살 이동
-            MoveArrow();
+            //MoveArrow();
             // 화살 해당 방향으로 회전
             RotationArrow();
             // 마우스를 클릭하면
             DestPosition();
 
+            myPower += Time.deltaTime * 10f;
+
+            myPower = Mathf.Clamp(myPower, 0, 50f);
+
             DrawCurve();
+        }
+
+        if(Input.GetMouseButtonUp(0))
+        {
+            myPower = 0;
         }
     }
 }

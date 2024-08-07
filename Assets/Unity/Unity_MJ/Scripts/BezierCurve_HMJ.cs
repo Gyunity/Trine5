@@ -5,8 +5,11 @@ using UnityEngine.Apple.ReplayKit;
 
 public class BezierCurve_HMJ : MonoBehaviour
 {
-    public Vector3 point0, point1, point2, point3;
+    public Vector3 point0, point1, point2, point3, point3Data;
 
+    float moveValue = 0.0f;
+    float moveValue1 = 0.0f;
+    float moveValue2 = 0.0f;
     // 베지어 곡선 점을 계산 - t(시간)에 따른 점 계산
     public Vector3 GetPoint(float t)
     {
@@ -29,13 +32,34 @@ public class BezierCurve_HMJ : MonoBehaviour
 
     public void SetPoint(Vector3 lastPosition)
     {
-        point3 = lastPosition;
+        point3Data = lastPosition;
     }
 
     public void UpdatePoint()
     {
-        point1 = (point0 + point3) * 0.3f;
-        point1 = new Vector3(point1.x, point1.y + 5.0f, point1.z);
-        point2 = new Vector3(point1.x, point1.y + 10.0f, point1.z);
+        Vector3 point1Data = (point0 + point3) * 0.3f;
+        Vector3 point2Data = (point0 + point3) * 0.7f;
+
+        point1 = new Vector3(point1Data.x, point1Data.y + 3.0f - moveValue1, point1Data.z);
+        point2 = new Vector3(point2Data.x, point2Data.y + 2.0f - moveValue2, point2Data.z);
+
+        UpdateLastPoint();
+    }
+
+    void UpdateLastPoint()
+    {
+        point3 = new Vector3(point3Data.x, point3Data.y - 5.0f + moveValue, point3Data.z);
+
+        if (Input.GetMouseButton(0))
+        {
+            moveValue += Time.deltaTime * 5.0f;
+            moveValue = Mathf.Clamp(moveValue, 0.0f, 5.0f);
+
+            moveValue1 += Time.deltaTime * 3.0f;
+            moveValue1 = Mathf.Clamp(moveValue, 0.0f, 3.0f);
+
+            moveValue2 += Time.deltaTime * 2.0f;
+            moveValue2 = Mathf.Clamp(moveValue, 0.0f, 2.0f);
+        }
     }
 }
