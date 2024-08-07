@@ -18,7 +18,7 @@ public class Trigger_L : MonoBehaviour
     {
         
     }
-    private void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
