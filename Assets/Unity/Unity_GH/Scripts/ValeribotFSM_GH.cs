@@ -255,8 +255,7 @@ public class ValeribotFSM_GH : MonoBehaviour
         {
             case EValeribotState.IDLE:
 
-                randBoss = 3;
-                    //Random.Range(1, 7);
+                randBoss = Random.Range(1, 7);
                 break;
 
             case EValeribotState.JUMP:

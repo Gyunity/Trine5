@@ -16,7 +16,7 @@ public class Shield_GH : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "shell")
+        if (other.gameObject.tag == "Shell")
         {
             other.gameObject.SetActive(false);
             ValeribotManager_GH.instance.onShield = false;

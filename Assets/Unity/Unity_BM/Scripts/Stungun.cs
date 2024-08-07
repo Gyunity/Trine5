@@ -14,18 +14,30 @@ public class Stungun : MonoBehaviour
     public float move = 2;
     public float moveSpeed = 2f;
 
+    Trigger_L tl;
+    Trigger_R tr;
+
+    //플레이어 도구가 오면 반응하는 트리거
+    public GameObject stunTrigger;
+    
+
     // Start is called before the first frame update
     void Start()
     {
         sg= trigger_Stungun.GetComponent<StongunButton>();
-        
-       
+        tl= trigger_L.GetComponent<Trigger_L>();
+        tr= trigger_R.GetComponent<Trigger_R>();
+
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
         StungunMove();
+       // OnSwitch();
+        OnSwitch2();
     }
 
     void StungunMove()
@@ -43,6 +55,20 @@ public class Stungun : MonoBehaviour
                 sg.isMove = false;
             }
             transform.position += Vector3.down * moveSpeed * Time.deltaTime;
+        }
+    }
+    private void OnSwitch()
+    {
+        if(sg.isOn == true)
+        {
+            stunTrigger.SetActive(true);
+        }
+    }
+    void OnSwitch2()
+    {
+        if (tl.isOn && tr.isOn)
+        {
+            stunTrigger.SetActive(true);
         }
     }
 }

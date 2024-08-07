@@ -86,7 +86,7 @@ public class ValeribotPhase_GH : MonoBehaviour
 
     void HPPhase()
     {
-        if(valeriHP.currHP <= valeriHP.maxHP * 0.8)
+        if(valeriHP.currHP <= valeriHP.maxHP * 0.8 && valeribotFSM.bossPhase == 1)
         {
             ChangeState(EValeribotPhase.PHASE_2);
         }
