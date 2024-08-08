@@ -25,9 +25,9 @@ TagManager:
   - 
   - PlayerHead
   - SummonedObject
-  - 
-  - 
-  - 
+  - HangObject
+  - ArrowReflection
+  - Arrow
   - 
   - 
   - 

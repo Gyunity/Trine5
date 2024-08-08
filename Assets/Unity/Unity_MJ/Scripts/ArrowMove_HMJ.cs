@@ -1,15 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static ArrowMove_HMJ;
+using static UnityEditor.PlayerSettings;
 
 public class ArrowMove_HMJ : MonoBehaviour
 {
     public enum ArrowState
     {
         ArrowMove,
-        ArrowNon,
+        ArrowDirection,
         ArrowDraw,
         ArrowStateEnd
     }
@@ -37,6 +39,8 @@ public class ArrowMove_HMJ : MonoBehaviour
 
     public float myPower = 0;
 
+    float powerSpeed = 10.0f;
+
     public GameObject arrowObject;
 
     float lifeTime = 0.0f;
@@ -56,6 +60,8 @@ public class ArrowMove_HMJ : MonoBehaviour
         lifeTime = 3.0f;
 
         smoothStep = -0.3f;
+
+        arrowObject = FindBoneManager_HMJ.Instance.FindBone(GameObject.Find("Player").transform, "ArrowPosition").transform.gameObject;
     }
 
     void ArrowMove()
@@ -75,12 +81,13 @@ public class ArrowMove_HMJ : MonoBehaviour
                     ArrowMove();
                 }
                 break;
-            case ArrowState.ArrowNon:
+            case ArrowState.ArrowDirection:
                 {
                 }
                 break;
             case ArrowState.ArrowDraw:
                 {
+                    transform.position = arrowObject.transform.position;
                     linePositions.Clear();
                     LineRender_On();
                 }
@@ -93,7 +100,7 @@ public class ArrowMove_HMJ : MonoBehaviour
 
         }
     }
-    void ChangeState(ArrowState arrowState)
+    public void ChangeState(ArrowState arrowState)
     {
         if (m_eCurArrowState != arrowState)
         {
@@ -111,8 +118,13 @@ public class ArrowMove_HMJ : MonoBehaviour
                     break;
                 case ArrowState.ArrowDraw:
                     {
-                        transform.position = arrowObject.transform.position;
+
                         //curAnim.SetTrigger("ArrowDraw");
+                    }
+                    break;
+                case ArrowState.ArrowDirection:
+                    {
+
                     }
                     break;
                 case ArrowState.ArrowStateEnd:
@@ -134,7 +146,7 @@ public class ArrowMove_HMJ : MonoBehaviour
 
     void MoveArrow()
     {
-        if (moveIndex + 1 > linePositions.Count)
+        if (moveIndex + 2 > linePositions.Count)
         {
             dir = new Vector3(0.0f, 0.0f, 0.0f);
             return;
@@ -144,8 +156,6 @@ public class ArrowMove_HMJ : MonoBehaviour
 
         //Debug.Log("Dir: " + dir.x + ", " + dir.y + ", " + dir.z);
         // 현재 위치가 목표 지점보다 오른쪽에 있으면 다음 인덱스로 
-
-        
 
         if(Vector3.Distance(transform.position, linePositions[moveIndex + 1]) + smoothStep <= Vector3.Distance(linePositions[moveIndex], linePositions[moveIndex + 1]))
         {
@@ -186,6 +196,36 @@ public class ArrowMove_HMJ : MonoBehaviour
         // 해당 방향으로 로테이션 설정
         transform.rotation = Quaternion.LookRotation(forwadVector, upVector);
     }
+
+    //void DrawReflection()
+    //{
+    //    linePositions.Clear();
+
+    //    Vector3 position = transform.position;
+    //    Vector3 velocity = new Vector3(0.0f, 9.8f, 0.0f);
+
+    //    for (int i = 0; i < 100; i++)
+    //    {
+    //        lineRenderer.SetPosition(i, position);
+
+    //        // 물리적 시뮬레이션 (이 예제에서는 단순화된 물리 계산 사용)
+    //        position += velocity * Time.fixedDeltaTime;
+
+    //        // 반사 처리
+    //        if (Physics.Raycast(position, velocity.normalized, out RaycastHit hit, velocity.magnitude * Time.fixedDeltaTime))
+    //        {
+    //            Vector3 normal = hit.normal;
+    //            velocity = Vector3.Reflect(velocity, normal);
+
+    //            // 궤적이 너무 길어지면 멈춤
+    //            if (i >= 100 - 1) break;
+    //        }
+
+    //        // 단순 중력 적용 (옵션)
+    //        velocity += Physics.gravity * Time.fixedDeltaTime;
+    //    }
+    //}
+
 
     void DrawCurve()
     {
@@ -233,6 +273,57 @@ public class ArrowMove_HMJ : MonoBehaviour
         }
     }
 
+    void DrawTrajectory()
+    {
+        Vector3 pos = transform.position;
+        Vector3 dir = transform.forward * myPower;
+
+        int reflections = 0;
+
+        // 레이어 이름을 기반으로 레이어 인덱스 얻기
+        int layerIndex = LayerMask.NameToLayer("ArrowReflection");
+
+        // 레이어 마스크를 설정 (단일 레이어)
+        LayerMask collisionMask = 1 << layerIndex;
+
+        linePositions.Clear();
+        linePositions.Add(pos);
+
+        while (true)
+        {
+            if ((reflections > 50) || (linePositions.Count > 500))
+                break;
+            Ray ray = new Ray(pos, dir);
+            RaycastHit hitinfo;
+
+            // 레이어 마스크를 사용하여 특정 레이어와만 충돌
+            if (Physics.Raycast(ray, out hitinfo, dir.magnitude * Time.deltaTime, collisionMask))
+            {
+                linePositions.Add(hitinfo.point);
+                dir = Vector3.Reflect(dir, hitinfo.normal); // 반사 처리
+                pos = hitinfo.point;
+                linePositions.Add(pos);
+                reflections++;
+                powerSpeed = 50.0f;
+            }
+            else
+            {
+                pos += dir * Time.deltaTime;
+                dir += Vector3.down * 9.8f * Time.deltaTime; // 중력 적용
+                linePositions.Add(pos);
+            }
+        }
+
+        // 라인렌더러 점 개수를 최대 포인트 수로 조정
+        lineRenderer.positionCount = Mathf.Min(linePositions.Count, 500);
+
+        // 궤적 포지션 저장
+        for (int i = 0; i < lineRenderer.positionCount; i++)
+        {
+            lineRenderer.SetPosition(i, linePositions[i]);
+        }
+    }
+
     // 마우스 클릭된 위치 반환
     Vector3 MouseClickPosition()
     {
@@ -257,11 +348,12 @@ public class ArrowMove_HMJ : MonoBehaviour
         // 화살 해당 방향으로 회전
         RotationArrow();
 
-        myPower += Time.deltaTime * 10f;
-
+        myPower += Time.deltaTime * powerSpeed;
+ 
         myPower = Mathf.Clamp(myPower, 0, 90f);
 
-        DrawCurve();
+        DrawTrajectory();
+        //DrawCurve();
     }
 
     void ResetArrowValue()
@@ -286,7 +378,7 @@ public class ArrowMove_HMJ : MonoBehaviour
             ChangeState(ArrowState.ArrowDraw);
         }
 
-        if (Input.GetMouseButtonUp(0) && (m_eCurArrowState != ArrowState.ArrowMove))
+        if (Input.GetMouseButtonUp(0) && (m_eCurArrowState == ArrowState.ArrowDraw))
             ChangeState(ArrowState.ArrowMove);
 
         UpdateState();
