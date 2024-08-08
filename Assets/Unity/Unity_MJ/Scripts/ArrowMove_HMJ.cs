@@ -28,6 +28,7 @@ public class ArrowMove_HMJ : MonoBehaviour
 
     public List<Vector3> linePositions = new List<Vector3>();
     public int moveIndex = 0;
+    public int moveIndexAdd = 2;
 
     public ArrowState m_eCurArrowState;
     public ArrowState m_ePreArrowState;
@@ -38,14 +39,23 @@ public class ArrowMove_HMJ : MonoBehaviour
 
     public GameObject arrowObject;
 
+    float lifeTime = 0.0f;
+
+    Animator curAnim;
+
+    float smoothStep = 0.0f;
     private void Awake()
     {
         lineRenderer = GetComponentInChildren<LineRenderer>();
         bezierCurve = GetComponentInChildren<BezierCurve_HMJ>();
-        speed = 0.1f;
+        speed = 5.0f;
 
         m_eCurArrowState = ArrowState.ArrowStateEnd;
         m_ePreArrowState = ArrowState.ArrowStateEnd;
+
+        lifeTime = 3.0f;
+
+        smoothStep = -0.3f;
     }
 
     void ArrowMove()
@@ -61,7 +71,6 @@ public class ArrowMove_HMJ : MonoBehaviour
         {
             case ArrowState.ArrowMove:
                 {
-                    //RotationArrow();
                     MoveArrow();
                     ArrowMove();
                 }
@@ -84,7 +93,7 @@ public class ArrowMove_HMJ : MonoBehaviour
 
         }
     }
-        void ChangeState(ArrowState arrowState)
+    void ChangeState(ArrowState arrowState)
     {
         if (m_eCurArrowState != arrowState)
         {
@@ -92,17 +101,18 @@ public class ArrowMove_HMJ : MonoBehaviour
             {
                 case ArrowState.ArrowMove:
                     {
-                        transform.position = arrowObject.transform.position;
+                        //curAnim.SetTrigger("ArrowShoot");
                         Debug.Log("화살 위치: 현재 화살 위치 설정");
                         moveIndex = 0;
                         dir = new Vector3(0.0f, 0.0f, 0.0f);
-                        //transform.position = ;
                         myPower = 0;
                         lineRenderer.enabled = false;
                     }
                     break;
                 case ArrowState.ArrowDraw:
                     {
+                        transform.position = arrowObject.transform.position;
+                        //curAnim.SetTrigger("ArrowDraw");
                     }
                     break;
                 case ArrowState.ArrowStateEnd:
@@ -130,19 +140,25 @@ public class ArrowMove_HMJ : MonoBehaviour
             return;
         }
             
-
         dir = (linePositions[moveIndex] - transform.position).normalized;
 
         //Debug.Log("Dir: " + dir.x + ", " + dir.y + ", " + dir.z);
         // 현재 위치가 목표 지점보다 오른쪽에 있으면 다음 인덱스로 
 
-        transform.rotation = Quaternion.LookRotation(dir);
+        
 
-        if (Vector3.Distance(linePositions[moveIndex], transform.position) < 1.0f)
+        if(Vector3.Distance(transform.position, linePositions[moveIndex + 1]) + smoothStep <= Vector3.Distance(linePositions[moveIndex], linePositions[moveIndex + 1]))
         {
+            // 방향 바꾸는 것을 이후 궤적 포인트로 계산 (2번째 도달지 - 1번째 도달지).normalized
+            transform.rotation = Quaternion.LookRotation((linePositions[moveIndex + 1] - linePositions[moveIndex]).normalized);
+
             moveIndex++;
             print(moveIndex);
         }
+        //if (Vector3.Distance(linePositions[moveIndex], transform.position) < 1.0f)
+        //{
+
+        //}
     }
 
     // 화살 회전 방향
@@ -243,9 +259,22 @@ public class ArrowMove_HMJ : MonoBehaviour
 
         myPower += Time.deltaTime * 10f;
 
-        myPower = Mathf.Clamp(myPower, 0, 50f);
+        myPower = Mathf.Clamp(myPower, 0, 90f);
 
         DrawCurve();
+    }
+
+    void ResetArrowValue()
+    {
+        myPower = 0.0f;
+        moveIndex = 0;
+
+        m_eCurArrowState = ArrowState.ArrowStateEnd;
+        m_ePreArrowState = ArrowState.ArrowStateEnd;
+
+        speed = 0.1f;
+
+        numPoints = 4;
     }
 
     // Update is called once per frame
@@ -253,13 +282,12 @@ public class ArrowMove_HMJ : MonoBehaviour
     {
         if (Input.GetMouseButton(0) && (m_eCurArrowState != ArrowState.ArrowDraw))
         {
+            ResetArrowValue();
             ChangeState(ArrowState.ArrowDraw);
         }
 
         if (Input.GetMouseButtonUp(0) && (m_eCurArrowState != ArrowState.ArrowMove))
-        {
             ChangeState(ArrowState.ArrowMove);
-        }
 
         UpdateState();
     }
