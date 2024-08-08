@@ -165,10 +165,6 @@ public class ArrowMove_HMJ : MonoBehaviour
             moveIndex++;
             print(moveIndex);
         }
-        //if (Vector3.Distance(linePositions[moveIndex], transform.position) < 1.0f)
-        //{
-
-        //}
     }
 
     // 화살 회전 방향
@@ -304,7 +300,7 @@ public class ArrowMove_HMJ : MonoBehaviour
                 pos = hitinfo.point;
                 linePositions.Add(pos);
                 reflections++;
-                powerSpeed = 50.0f;
+                powerSpeed = 100.0f;
             }
             else
             {
@@ -372,13 +368,13 @@ public class ArrowMove_HMJ : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0) && (m_eCurArrowState != ArrowState.ArrowDraw))
+        if (Input.GetMouseButton(0) && (m_eCurArrowState != ArrowState.ArrowDraw) && (m_eCurArrowState != ArrowState.ArrowMove))
         {
             ResetArrowValue();
             ChangeState(ArrowState.ArrowDraw);
         }
 
-        if (Input.GetMouseButtonUp(0) && (m_eCurArrowState == ArrowState.ArrowDraw))
+        if (Input.GetMouseButtonUp(0) && (m_eCurArrowState == ArrowState.ArrowDraw) && (m_eCurArrowState != ArrowState.ArrowMove))
             ChangeState(ArrowState.ArrowMove);
 
         UpdateState();
