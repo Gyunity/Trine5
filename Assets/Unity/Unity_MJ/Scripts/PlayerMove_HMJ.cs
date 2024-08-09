@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static ArrowMove_HMJ;
 using static PlayerState_HMJ;
 
 public class PlayerMove_HMJ : MonoBehaviour
@@ -73,8 +74,9 @@ public class PlayerMove_HMJ : MonoBehaviour
         // -1 ~ 0 // 왼쪽 1 `
         // 0 ~ 1
 
+        // DrawArrow
         // 벡터 크기가 0보다 크면
-        if(movement.magnitude > 0)
+        if (movement.magnitude > 0 && playerState.GetState() != PlayerState.DrawArrow)
         {
             // 이동 방향으로 캐릭터 회전
             Quaternion newRotation = Quaternion.LookRotation(movement);
@@ -82,8 +84,6 @@ public class PlayerMove_HMJ : MonoBehaviour
             anim.SetFloat("MoveSpeed", Mathf.Abs(horizontal));
         }
 
-
-        
 
         Jump();
         PlayerMove();
@@ -93,7 +93,21 @@ public class PlayerMove_HMJ : MonoBehaviour
         }
         // Dash();
 
+        if (Input.GetMouseButton(0))
+        {
+            Debug.Log("드로우 에셋");
+            playerState.SetState(PlayerState.DrawArrow);
+        }
+           
 
+        if (Input.GetMouseButtonUp(0) && playerState.GetState() == PlayerState.DrawArrow) 
+                playerState.SetState(PlayerState.ShootArrow);
+
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            playerState.SetState(PlayerState.Dash);
+        }  
         //z축 고정 추가 (규현)
         transform.position = new Vector3(transform.position.x, transform.position.y, 0);
         
@@ -118,7 +132,7 @@ public class PlayerMove_HMJ : MonoBehaviour
     {
 
         // 땅에 있음
-        if (cc.isGrounded)
+        if (cc.isGrounded && (playerState.GetState() != PlayerState.DrawArrow))
         {
             JumpCurN = 0;
             yVelocity = 0.0f;
@@ -144,25 +158,15 @@ public class PlayerMove_HMJ : MonoBehaviour
     }
     void PlayerMove()
     {
-        if (playerState.GetState() == PlayerState.Grap) // 무a언가를 잡고 있을때
+        if (playerState.GetState() == PlayerState.Grap) // 무언가를 잡고 있을때
         {
             yVelocity = 0.0f;
             JumpCurN = 0;
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                //playerState.SetState(PlayerState.Climb);
-                //cc.Move(new Vector3(10.0f, 30.0f, 0.0f) * moveSpeed * Time.deltaTime);
-                //yVelocity = 0.0f;
-            }
         }
         else
         {
-            cc.Move((movement * moveSpeed + new Vector3(0.0f, yVelocity, 0.0f)) * Time.deltaTime);
-        }
-
-        if (playerState.GetState() == PlayerState.Climb) // 올라가는 것
-        {
-            
+            if(playerState.GetState() != PlayerState.DrawArrow)
+                cc.Move((movement * moveSpeed + new Vector3(0.0f, yVelocity, 0.0f)) * Time.deltaTime);
         }
     }
     void GrabMove()
@@ -178,7 +182,6 @@ public class PlayerMove_HMJ : MonoBehaviour
 
     private void FixedUpdate()
     {
-       //PlayerMove();
     }
 
     public void SetCollisionCollider(Collider collider)

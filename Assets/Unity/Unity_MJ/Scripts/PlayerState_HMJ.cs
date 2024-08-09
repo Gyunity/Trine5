@@ -12,6 +12,8 @@ public class PlayerState_HMJ : MonoBehaviour
         Dash,
         Grap,
         Climb,
+        DrawArrow,
+        ShootArrow,
         PlayerStateEnd
 
     }
@@ -25,10 +27,13 @@ public class PlayerState_HMJ : MonoBehaviour
 
     PlayerMove_HMJ playerMove;
 
+    GameObject arrowManager;
+
     private void Awake()
     {
         anim = GetComponentInChildren<Animator>();
         playerMove = GetComponentInChildren<PlayerMove_HMJ>();
+        arrowManager = GameObject.Find("ArrowManager");
     }
     // Start is called before the first frame update
     void Start()
@@ -68,6 +73,13 @@ public class PlayerState_HMJ : MonoBehaviour
                 Debug.Log("Climb State");
                 transform.position = new Vector3(transform.position.x, grabyPos, transform.position.z);
                 break;
+            case PlayerState.ShootArrow:
+                Debug.Log("Shoot State");
+                break;
+            case PlayerState.DrawArrow:
+
+                Debug.Log("Draw State");
+                break;
         }
     }
 
@@ -81,22 +93,37 @@ public class PlayerState_HMJ : MonoBehaviour
             {
                 case PlayerState.Idle:
                     anim.SetTrigger("Idle");
+                    Debug.Log("Test: Idle State");
                     break;
                 case PlayerState.Walk:
                     break;
                 case PlayerState.Jump:
                     anim.SetTrigger("Jump");
+                    Debug.Log("Test: Jump State");
                     break;
                 case PlayerState.Dash:
                     anim.SetTrigger("Dash");
+                    Debug.Log("Test: Dash State");
                     break;
                 case PlayerState.Grap:
                     anim.SetTrigger("Hanging");
+                    Debug.Log("Test: Hanging State");
                     grabyPos = 1.8f;
                     break;
                 case PlayerState.Climb:
                     anim.SetTrigger("Climb");
+                    Debug.Log("Test: Climb State");
                     grabyPos = 1.4f;
+                    break;
+                case PlayerState.DrawArrow:
+                    arrowManager.GetComponentInChildren<ArrowManager_HMJ>().SpawnArrow();
+                    Debug.Log("SpawnArrow~~~");
+                    anim.SetTrigger("ArrowDraw");
+                    Debug.Log("Test: ArrowDraw State");
+                    break;
+                case PlayerState.ShootArrow:
+                    anim.SetTrigger("ArrowShoot");
+                    Debug.Log("Test: ArrowShoot State");
                     break;
             }
 

@@ -16,6 +16,8 @@ public class ChangeCharacter : MonoBehaviour
 {
     List<GameObject> objectList = new List<GameObject>();
     List<Avatar> avatarList = new List<Avatar>();
+
+    List<RuntimeAnimatorController> animControllerList = new List<RuntimeAnimatorController>();
     PlayerCharacterType curPlayerCharacterType = PlayerCharacterType.PlayerCharacterTypeEnd;
     Animator animator;
 
@@ -65,7 +67,7 @@ public class ChangeCharacter : MonoBehaviour
             curPlayerCharacterType = PlayerCharacterMeshType;
             SetMeshActive(curPlayerCharacterType, true);
             animator.avatar = avatarList[(int)PlayerCharacterMeshType];
-
+            animator.runtimeAnimatorController = animControllerList[(int)PlayerCharacterMeshType];
         }
     }
 
@@ -98,9 +100,13 @@ public class ChangeCharacter : MonoBehaviour
     void LoadAnimData()
     {
         // 
-
+        // 추후에 리소스 로드로 변경할 예정 - 에디터 전용 함수: LoadAssetAtPath
         animator = GetComponentInChildren<Animator>();
         avatarList.Add(AssetDatabase.LoadAssetAtPath<Avatar>("Assets/Unity/Unity_MJ/Assets/Mesh/Download/Knight D Pelegrini.fbx"));
         avatarList.Add(AssetDatabase.LoadAssetAtPath<Avatar>("Assets/Unity/Unity_MJ/Assets/Character/Erika Archer With Bow Arrow.fbx"));
+
+        animControllerList.Add(AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Unity/Unity_MJ/Assets/Animation/Animation Active/Player_Wizard.controller"));
+        animControllerList.Add(AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Unity/Unity_MJ/Assets/Animation/Animation Active/Player_Archer.controller"));
     }
 }
+ 
