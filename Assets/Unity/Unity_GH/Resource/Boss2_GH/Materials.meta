@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Unity/Unity_GH/Resource/Boss2_GH/Materials.meta
 guid: 448eef4a6de8fa64f9d37da755ce10f9
+========
+guid: 4ca2bc0227503a44182d40f9c16c7408
+>>>>>>>> TA:Assets/TA/KHG/Scenes/PROTO_KHG.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
