@@ -14,6 +14,7 @@ public class PlayerState_HMJ : MonoBehaviour
         Climb,
         DrawArrow,
         ShootArrow,
+        Swinging,
         PlayerStateEnd
 
     }
@@ -77,13 +78,17 @@ public class PlayerState_HMJ : MonoBehaviour
                 Debug.Log("Shoot State");
                 break;
             case PlayerState.DrawArrow:
-
                 Debug.Log("Draw State");
+                break;
+            case PlayerState.Swinging:
+                playerMove.SelectHangingObject();
+                //playerMove.MoveWithBounce();
+                Debug.Log("Swinging State");
                 break;
         }
     }
 
-    public void SetState(PlayerState playerState)
+    public bool SetState(PlayerState playerState)
     {
         if(curPlayerState != playerState)
         {
@@ -106,8 +111,8 @@ public class PlayerState_HMJ : MonoBehaviour
                     Debug.Log("Test: Dash State");
                     break;
                 case PlayerState.Grap:
-                    anim.SetTrigger("Hanging");
-                    Debug.Log("Test: Hanging State");
+                    anim.SetTrigger("Grap");
+                    Debug.Log("Test: Grap State");
                     grabyPos = 1.8f;
                     break;
                 case PlayerState.Climb:
@@ -125,11 +130,18 @@ public class PlayerState_HMJ : MonoBehaviour
                     anim.SetTrigger("ArrowShoot");
                     Debug.Log("Test: ArrowShoot State");
                     break;
+                case PlayerState.Swinging:
+                    anim.SetTrigger("Swinging");
+                    Debug.Log("Test: Swinging State");
+                    break;
             }
 
             prePlayerState = curPlayerState;
             curPlayerState = playerState;
+
+            return true;
         }
+        return false;
     }
 
     public PlayerState GetState()
