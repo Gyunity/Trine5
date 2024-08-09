@@ -19,7 +19,6 @@ public class Bomb_GH : MonoBehaviour
 
     }
 
-    // Update is called once per frame
     void Update()
     {
         bombCurrTime += Time.deltaTime;

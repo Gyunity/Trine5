@@ -19,6 +19,7 @@ public class ValeribotFSM_GH : MonoBehaviour
         GROUNDLAGER,
         MACHINELAGER,
         BOMBKICK,
+        TAILATTACK,
         STAYDELAY,
         DAMAGE,
         DIE
@@ -245,6 +246,9 @@ public class ValeribotFSM_GH : MonoBehaviour
             case EValeribotState.BOMBKICK:
                 BombShoot();
                 break;
+            case EValeribotState.TAILATTACK:
+
+                break;
             case EValeribotState.STAYDELAY:
                 StateDelay();
                 break;
@@ -284,9 +288,8 @@ public class ValeribotFSM_GH : MonoBehaviour
         {
             case EValeribotState.IDLE:
 
-                randBoss = Random.Range(1, 7);
+                randBoss = Random.Range(1, 8);
                 break;
-
             case EValeribotState.JUMP:
                 jumpState = true;
                 dragonAni.SetTrigger("Jump");
@@ -328,7 +331,6 @@ public class ValeribotFSM_GH : MonoBehaviour
                     }
                 }
                 break;
-
             case EValeribotState.GROUNDLAGER:
                 if (currBossPosState == 0)
                 {
@@ -359,10 +361,11 @@ public class ValeribotFSM_GH : MonoBehaviour
 
 
                 break;
-
             case EValeribotState.MACHINELAGER:
                 if (currBossPosState == 1 && bossPhase > 2)
                 {
+                    dragonAni.SetTrigger("Machine");
+
                     laserMachines[0].transform.position = transform.position + Vector3.up * 2;
                     laserMachines[1].transform.position = transform.position + Vector3.up * 2;
 
@@ -381,12 +384,19 @@ public class ValeribotFSM_GH : MonoBehaviour
                     ChangeState(EValeribotState.IDLE);
                 }
                 break;
-
             case EValeribotState.BOMBKICK:
                 if (bossPhase < 3)
                 {
                     ChangeState(EValeribotState.IDLE);
                 }
+                break;
+            case EValeribotState.TAILATTACK:
+                dragonAni.SetTrigger("TailAttack");
+                ChangeState(EValeribotState.STAYDELAY);
+                break;
+            case EValeribotState.DIE:
+                dragonAni.SetTrigger("Die");
+
                 break;
         }
     }
@@ -802,6 +812,11 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     void Damaged()
     {
+        if(valeriHP.currHP <= 0)
+        {
+            ChangeState(EValeribotState.DIE);
+        }
+
         if (Input.GetKeyDown(KeyCode.M)&& !onShield)
         {
             valeriHP.UpdateHP(-30);
