@@ -8,22 +8,30 @@ public class FirePilarFactory : MonoBehaviour
     public float delay = 1f;
     public float padding = 2f;
     public int pilarCount = 8;
+    public GameObject firePilarFactoryPos;
 
     // Start is called before the first frame update
     void Start()
     {
         //StartCoroutine(PilarGo());
-        
+        EnemyMove enemyMove = GetComponent<EnemyMove>();
+        enemyMove.GoPilar = GoPilar;
+
     }
 
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            StartCoroutine(PilarGo());
-        }
+        //if (Input.GetKeyDown(KeyCode.K))
+        //{
+        //    StartCoroutine(PilarGo());
+        //}
+
+    }
+    void GoPilar()
+    {
+        StartCoroutine(PilarGo());
     }
 
     IEnumerator PilarGo()

@@ -7,20 +7,27 @@ public class BoxFactory : MonoBehaviour
     public GameObject boxPrefab;
     public float delay = 1f;
     public int boxCount = 3;
+    public GameObject boxFactoryPos;
 
     // Start is called before the first frame update
     void Start()
     {
         //StartCoroutine(BoxGo());
+        EnemyMove enemyMove = GetComponent<EnemyMove>();
+        enemyMove.GoBox = GoBox;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            StartCoroutine(BoxGo());
-        }
+        //if (Input.GetKeyDown(KeyCode.L))
+        //{
+        //    StartCoroutine(BoxGo());
+        //}
+    }
+    void GoBox()
+    {
+        StartCoroutine(BoxGo());
     }
     IEnumerator BoxGo()
     {

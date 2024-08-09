@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LaserFire_GH : MonoBehaviour
 {
@@ -33,6 +34,9 @@ public class LaserFire_GH : MonoBehaviour
     bool onFlash = true;
     bool onFlash2 = true;
 
+    int playerlay = 0;
+
+    public float shellGageup = 0.3f;
 
     void Start()
     {
@@ -46,14 +50,17 @@ public class LaserFire_GH : MonoBehaviour
 
     void Update()
     {
+        playerlay = valeribotSC.onReadyLaser ? 0 : 1;
+
 
         //라인렌더 위치
         if (laserLine != null && updateSaver == false)
         {
+
             laserLine.SetPosition(0, transform.position);
             RaycastHit rayHit;
             //플레이어와 그라운드만 레이를 쏜다.
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out rayHit, maxLength, 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Thorn") | 1 << LayerMask.NameToLayer("SummonedObject")))
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out rayHit, maxLength, playerlay << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Thorn") | 1 << LayerMask.NameToLayer("SummonedObject")))
             {
                 //끝 레이저 위치가 오브젝트이면
                 laserLine.SetPosition(1, rayHit.point);
@@ -61,6 +68,7 @@ public class LaserFire_GH : MonoBehaviour
 
                 if (!valeribotSC.onReadyLaser)
                 {
+                    playerlay = 1;
                     if (onFlash)
                     {
                         Flash.Play();
@@ -77,6 +85,16 @@ public class LaserFire_GH : MonoBehaviour
                         thorn.transform.position = rayHit.point + rayHit.normal * hitOffset;
                         thorn.transform.up = rayHit.normal;
                         Destroy(thorn, 5);
+                    }
+
+                    if (rayHit.transform.gameObject.tag == "Cabbage")
+                    {
+                        Image shell2Gage = rayHit.transform.gameObject.GetComponentInChildren<Image>();
+                        if (shell2Gage != null)
+                        {
+
+                            shell2Gage.fillAmount += shellGageup * Time.deltaTime;
+                        }
                     }
                 }
                 else
@@ -169,21 +187,29 @@ public class LaserFire_GH : MonoBehaviour
 
     public void LaserDone()
     {
-        foreach (var allPs in effects)
+        if (effects != null)
         {
-            if (allPs.isPlaying)
+            foreach (var allPs in effects)
             {
-                allPs.Stop();
+                if (allPs.isPlaying)
+                {
+                    allPs.Stop();
+                }
+
             }
         }
 
-        foreach (var allPs in hit)
+        if (hit != null)
         {
-            if (allPs.isPlaying)
+            foreach (var allPs in hit)
             {
-                allPs.Stop();
+                if (allPs.isPlaying)
+                {
+                    allPs.Stop();
 
+                }
             }
+
         }
         laserLine.enabled = false;
         laserSaver = false;

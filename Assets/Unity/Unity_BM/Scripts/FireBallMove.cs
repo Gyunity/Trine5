@@ -7,14 +7,15 @@ public class FireBallMove : MonoBehaviour
 {
     //Player
     GameObject target;
-    public string targetName = "Player_Dummy";
+    public string targetName = "Player";
     Vector3 dir;
     public float speed = 4f;
 
     // Start is called before the first frame update
     void Start()
     {
-        target = GameObject.Find(targetName);
+        //target = GameObject.Find(targetName);
+        target = GameObject.FindWithTag(targetName);
         dir =target.transform.position - transform.position;
         dir.Normalize();
         

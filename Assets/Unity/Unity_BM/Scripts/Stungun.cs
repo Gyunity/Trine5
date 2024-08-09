@@ -35,9 +35,11 @@ public class Stungun : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //순서대로 진행
         StungunMove();
-       // OnSwitch();
+        OnSwitch();
         OnSwitch2();
+        
     }
 
     void StungunMove()
@@ -62,6 +64,7 @@ public class Stungun : MonoBehaviour
         if(sg.isOn == true)
         {
             stunTrigger.SetActive(true);
+            Debug.Log("OnSwitch");
         }
     }
     void OnSwitch2()
@@ -69,6 +72,7 @@ public class Stungun : MonoBehaviour
         if (tl.isOn && tr.isOn)
         {
             stunTrigger.SetActive(true);
+            Debug.Log("OnSwitch2");
         }
     }
 }

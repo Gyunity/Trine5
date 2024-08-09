@@ -133,7 +133,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: e67ce431a5547fe479aba26fb8f3d7ed,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e67ce431a5547fe479aba26fb8f3d7ed,
         type: 3}
@@ -143,7 +143,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: e67ce431a5547fe479aba26fb8f3d7ed,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e67ce431a5547fe479aba26fb8f3d7ed,
         type: 3}
@@ -183,12 +183,17 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: e67ce431a5547fe479aba26fb8f3d7ed,
         type: 3}
       propertyPath: m_Name
-      value: doctor_octopus
+      value: Boss_BM
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e67ce431a5547fe479aba26fb8f3d7ed,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e67ce431a5547fe479aba26fb8f3d7ed,
+        type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: e67ce431a5547fe479aba26fb8f3d7ed,
         type: 3}
@@ -199,6 +204,26 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e67ce431a5547fe479aba26fb8f3d7ed,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 665326147}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e67ce431a5547fe479aba26fb8f3d7ed,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 665326151}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e67ce431a5547fe479aba26fb8f3d7ed,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 665326152}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e67ce431a5547fe479aba26fb8f3d7ed,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 665326154}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e67ce431a5547fe479aba26fb8f3d7ed,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 665326153}
     - targetCorrespondingSourceObject: {fileID: -1702606398490673151, guid: e67ce431a5547fe479aba26fb8f3d7ed,
         type: 3}
       insertIndex: -1
@@ -554,7 +579,12 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: bffbd16aa31b78c4883b6eff2786e9bf,
         type: 3}
       propertyPath: m_Name
-      value: Boss
+      value: Boss_Dummy
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bffbd16aa31b78c4883b6eff2786e9bf,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -875,7 +905,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 594f07bbc77ab314da2bcaaf94d019b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stt: {fileID: 580826210}
 --- !u!1 &625043830
 GameObject:
   m_ObjectHideFlags: 0
@@ -885,7 +914,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 625043832}
-  - component: {fileID: 625043831}
   m_Layer: 0
   m_Name: FireBallHand
   m_TagString: Untagged
@@ -893,21 +921,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &625043831
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 625043830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da7e50a817a61a94f85a679ea6338116, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireBallprefab: {fileID: 845971431132652189, guid: b0411565f97ccd94695a8f1e0549f273,
-    type: 3}
-  delay: 1
 --- !u!4 &625043832
 Transform:
   m_ObjectHideFlags: 0
@@ -923,6 +936,92 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &665326144 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: e67ce431a5547fe479aba26fb8f3d7ed,
+    type: 3}
+  m_PrefabInstance: {fileID: 194618437}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &665326147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 665326144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03321af11488113479fe12b7f3e5d296, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currState: 0
+--- !u!114 &665326151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 665326144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adfb428e79a4f3646bbf780cc9148fe7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ballprefab: {fileID: 7579861992970591444, guid: 6358a82713d91594eb11bb2d5254c3a5,
+    type: 3}
+  delay: 1
+  ballFactoryPos: {fileID: 1794054673}
+--- !u!114 &665326152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 665326144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da7e50a817a61a94f85a679ea6338116, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fireBallprefab: {fileID: 845971431132652189, guid: b0411565f97ccd94695a8f1e0549f273,
+    type: 3}
+  delay: 1
+  fireBallFactoryPos: {fileID: 625043830}
+--- !u!114 &665326153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 665326144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e210523d31d43cf47bc08103758f18ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firePilarPrefab: {fileID: 3545336539562102466, guid: 4e76712514ffd1642996460fb075fb96,
+    type: 3}
+  delay: 1
+  padding: 2
+  pilarCount: 8
+  firePilarFactoryPos: {fileID: 7539467407680332329}
+--- !u!114 &665326154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 665326144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46b03143ed8125c4b9f3ec189312a437, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boxPrefab: {fileID: 4590395897698983481, guid: 67beb065fd805cc4791a75a70eb04436,
+    type: 3}
+  delay: 1
+  boxCount: 3
+  boxFactoryPos: {fileID: 2541493771345509502}
 --- !u!1 &906113135
 GameObject:
   m_ObjectHideFlags: 0
@@ -2186,7 +2285,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1794054675}
-  - component: {fileID: 1794054674}
   m_Layer: 0
   m_Name: BallFactory
   m_TagString: Untagged
@@ -2194,21 +2292,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1794054674
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1794054673}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adfb428e79a4f3646bbf780cc9148fe7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ballprefab: {fileID: 7579861992970591444, guid: 6358a82713d91594eb11bb2d5254c3a5,
-    type: 3}
-  delay: 1
 --- !u!4 &1794054675
 Transform:
   m_ObjectHideFlags: 0
@@ -2354,7 +2437,7 @@ Transform:
   m_GameObject: {fileID: 1993641080}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.73, y: -0.64, z: 1.79}
+  m_LocalPosition: {x: -1.43, y: -0.64, z: 1.79}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2489,7 +2572,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3864584264864543422}
-  - component: {fileID: 8596487627077510859}
   m_Layer: 0
   m_Name: BoxFactory
   m_TagString: Untagged
@@ -2512,23 +2594,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7019104646942713702
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7539467407680332329}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e210523d31d43cf47bc08103758f18ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  firePilarPrefab: {fileID: 3545336539562102466, guid: 4e76712514ffd1642996460fb075fb96,
-    type: 3}
-  delay: 1
-  padding: 2
-  pilarCount: 8
 --- !u!1 &7539467407680332329
 GameObject:
   m_ObjectHideFlags: 0
@@ -2538,7 +2603,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2235023065140920310}
-  - component: {fileID: 7019104646942713702}
   m_Layer: 0
   m_Name: FirePilarFactory
   m_TagString: Untagged
@@ -2546,22 +2610,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &8596487627077510859
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2541493771345509502}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46b03143ed8125c4b9f3ec189312a437, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boxPrefab: {fileID: 4590395897698983481, guid: 67beb065fd805cc4791a75a70eb04436,
-    type: 3}
-  delay: 1
-  boxCount: 10
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

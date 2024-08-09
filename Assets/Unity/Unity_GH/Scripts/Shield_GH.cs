@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Shield_GH : MonoBehaviour
 {
+    ValeribotFSM_GH valeribotFSM;
     void Start()
     {
-        
+        valeribotFSM = GetComponentInParent<ValeribotFSM_GH>();
     }
 
     void Update()
@@ -19,7 +20,7 @@ public class Shield_GH : MonoBehaviour
         if (other.gameObject.tag == "Shell")
         {
             other.gameObject.SetActive(false);
-            ValeribotManager_GH.instance.onShield = false;
+            valeribotFSM.onShield = false;
         }
     }
 }

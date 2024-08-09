@@ -7,10 +7,12 @@ using UnityEngine.UI;
 public class HPSystem : MonoBehaviour
 {
     // 최대 HP
-    public float maxHP = 3;
+    public float maxHP = 1000;
     // 현재 HP
     public float currHP;
 
+    //HPBar
+    public Image hpBar;
 
     void Start()
     {
@@ -27,6 +29,9 @@ public class HPSystem : MonoBehaviour
     {
         // 현재 HP를 value만큼 더하자
         currHP += value;
+
+        hpBar.fillAmount = currHP / maxHP;
+
         // 만약 현재 HP가 0보다 작거나 같으면
         if (currHP <= 0)
         {
