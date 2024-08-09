@@ -27,4 +27,13 @@ public class StongunButton : MonoBehaviour
             isMove = true;
         }
     }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            isOn = false;
+            isMove = false;
+        }
+    }
 }
