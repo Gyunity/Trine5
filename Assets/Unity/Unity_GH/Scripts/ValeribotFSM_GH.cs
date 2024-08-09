@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
+using static UnityEngine.Rendering.DebugUI;
+using static ValeribotPhase_GH;
 
 public class ValeribotFSM_GH : MonoBehaviour
 {
@@ -30,11 +33,21 @@ public class ValeribotFSM_GH : MonoBehaviour
     // 보스 페이즈
     public int bossPhase = 1;
 
+    ValeribotPhase_GH valeribotPhase;
 
     public GameObject player;
 
-
     public float stateDelayTime = 3;
+
+    //보스 쉴드
+    Shield_GH shield;
+    public bool onShield = true;
+
+    //hp시스템
+    HPSystem valeriHP;
+
+    //3페이즈 캐논 부시기
+    bool phase3_Cannon_Break = false;
 
     #region 점프 전역 변수
     //점프 포인트
@@ -126,6 +139,9 @@ public class ValeribotFSM_GH : MonoBehaviour
     // 폭탄 프리팹
     public GameObject bombFactory;
 
+    public GameObject bombEffect;
+
+
     GameObject bomb;
     // 폭탄의 발사 위치
     public Transform[] bombPoints;
@@ -144,6 +160,11 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     void Start()
     {
+        valeribotPhase = GetComponent<ValeribotPhase_GH>();
+
+        valeriHP = GetComponent<HPSystem>();
+
+        shield = GetComponentInChildren<Shield_GH>();
 
         chicken = GetComponent<Chicken_GH>();
 
@@ -151,8 +172,8 @@ public class ValeribotFSM_GH : MonoBehaviour
 
         currState = EValeribotState.STAYDELAY;
 
+        //레이저 오브젝트 풀
         lasers = new GameObject[12];
-
         for (int i = 0; i < lasers.Length; i++)
         {
             lasers[i] = Instantiate(laserPrefab, firePoint.transform.position, firePoint.transform.rotation);
@@ -161,8 +182,8 @@ public class ValeribotFSM_GH : MonoBehaviour
             lasers[i].SetActive(false);
         }
 
+        //레이저머신 오브젝트 풀
         laserMachines = new GameObject[3];
-
         for (int i = 0; i < laserMachines.Length; i++)
         {
             laserMachines[i] = Instantiate(laserMachineFactory);
@@ -175,6 +196,9 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     void Update()
     {
+        OnShield();
+        Damaged();
+
         //z축 고정
         transform.position = new Vector3(transform.position.x, transform.position.y, 0);
 
@@ -231,6 +255,8 @@ public class ValeribotFSM_GH : MonoBehaviour
     //상태가 전환 될 때 한 번만 실행하는 동작
     public void ChangeState(EValeribotState state)
     {
+        HPPhase();
+
         print(currState + "---->" + state);
 
         // 현재 상태를 state 값으로 설정
@@ -255,7 +281,8 @@ public class ValeribotFSM_GH : MonoBehaviour
         {
             case EValeribotState.IDLE:
 
-                randBoss = Random.Range(1, 7);
+                randBoss = 3;
+                //Random.Range(1, 7);
                 break;
 
             case EValeribotState.JUMP:
@@ -481,8 +508,9 @@ public class ValeribotFSM_GH : MonoBehaviour
             laserCurrTime += Time.deltaTime;
             for (int i = 0; i < bossPhase + 1; i++)
             {
-                lasers[i].transform.position = firePoint.transform.position;
-                lasers[i].transform.forward = Quaternion.Euler(0, 0, 0 + i * (360 / (bossPhase + 1))) * firePoint.transform.right;
+                    lasers[i].transform.position = firePoint.transform.position;
+                    lasers[i].transform.forward = Quaternion.Euler(0, 0, 0 + i * (360 / (bossPhase + 1))) * firePoint.transform.right;
+                
             }
 
             if (laserCurrTime >= rotateLaserReadyTime && laserCurrTime < rotateLaserDuraTime)
@@ -494,7 +522,8 @@ public class ValeribotFSM_GH : MonoBehaviour
             {
                 for (int i = 0; i < bossPhase + 1; i++)
                 {
-                    lasers[i].GetComponent<LaserFire_GH>().LaserDone();
+                    if (lasers[i].activeInHierarchy)
+                        lasers[i].GetComponent<LaserFire_GH>().LaserDone();
                 }
 
 
@@ -565,8 +594,8 @@ public class ValeribotFSM_GH : MonoBehaviour
                 }
                 else
                 {
-                    laserMachines[0].transform.position += ((Vector3.down * 3) + (Vector3.left * 3)) * Time.deltaTime;
-                    laserMachines[1].transform.position += ((Vector3.down * 3) + (Vector3.right * 3)) * Time.deltaTime;
+                    laserMachines[0].transform.position += ((Vector3.down * 2) + (Vector3.left * 3)) * Time.deltaTime;
+                    laserMachines[1].transform.position += ((Vector3.down * 2) + (Vector3.right * 3)) * Time.deltaTime;
                     laserMachines[2].transform.position += (Vector3.up * 3) * Time.deltaTime;
 
                 }
@@ -664,8 +693,8 @@ public class ValeribotFSM_GH : MonoBehaviour
                     }
                     else
                     {
-                        laserMachines[0].transform.position -= ((Vector3.down * 3) + (Vector3.left * 3)) * Time.deltaTime;
-                        laserMachines[1].transform.position -= ((Vector3.down * 3) + (Vector3.right * 3)) * Time.deltaTime;
+                        laserMachines[0].transform.position -= ((Vector3.down * 2) + (Vector3.left * 3)) * Time.deltaTime;
+                        laserMachines[1].transform.position -= ((Vector3.down * 2) + (Vector3.right * 3)) * Time.deltaTime;
                         laserMachines[2].transform.position -= (Vector3.up * 3) * Time.deltaTime;
 
                     }
@@ -739,11 +768,49 @@ public class ValeribotFSM_GH : MonoBehaviour
         else
         {
             ChangeState(EValeribotState.IDLE);
-
         }
 
         if (bomb != null)
+        {
             Destroy(bomb, bombTime);
+        }
 
+    }
+
+    void OnShield()
+    {
+        if (onShield)
+        {
+            shield.gameObject.SetActive(true);
+        }
+        else
+        {
+            shield.gameObject.SetActive(false);
+        }
+    }
+
+    void Damaged()
+    {
+        if (Input.GetKeyDown(KeyCode.M)&& !onShield)
+        {
+            valeriHP.UpdateHP(-30);
+        }
+    }
+
+    void HPPhase()
+    {
+        if (valeriHP.currHP <= valeriHP.maxHP * 0.8 && bossPhase == 1)
+        {
+            valeribotPhase.ChangeState(EValeribotPhase.PHASE_2);
+        }
+        else if (valeriHP.currHP <= valeriHP.maxHP * 0.6 && bossPhase == 2)
+        {
+            valeribotPhase.ChangeState(EValeribotPhase.PHASE_3);
+
+        }
+        else if (valeriHP.currHP <= valeriHP.maxHP * 0.4 && bossPhase == 3)
+        {
+            valeribotPhase.ChangeState(EValeribotPhase.PHASE_4);
+        }
     }
 }

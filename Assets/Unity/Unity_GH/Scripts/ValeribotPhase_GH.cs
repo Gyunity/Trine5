@@ -21,16 +21,25 @@ public class ValeribotPhase_GH : MonoBehaviour
 
     ValeribotFSM_GH valeribotFSM;
 
-    public GameObject phase2_Shell;
-    Rigidbody rd_phase2_Shell;
+    //페이즈 2
+    public Rigidbody[] phase2_Shell;
+
+    //페이즈 3
+    public GameObject phase3_cannonShield;
 
     void Start()
     {
+        phase3_cannonShield.SetActive(false);
+
         valeriHP = GetComponent<HPSystem>();
 
         currPhase = EValeribotPhase.PHASE_1;
 
-        rd_phase2_Shell = phase2_Shell.GetComponent<Rigidbody>();
+        for (int i = 0; i < phase2_Shell.Length; i++)
+        {
+            phase2_Shell[i].useGravity = false;
+
+        }
 
         valeribotFSM = GetComponent<ValeribotFSM_GH>();
     }
@@ -38,15 +47,32 @@ public class ValeribotPhase_GH : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         switch (currPhase)
         {
             case EValeribotPhase.PHASE_1:
+                if (valeriHP.currHP < valeriHP.maxHP * 0.8f)
+                {
+                    valeriHP.currHP = valeriHP.maxHP * 0.8f;
+                }
                 break;
             case EValeribotPhase.PHASE_2:
+                if (valeriHP.currHP < valeriHP.maxHP * 0.6f)
+                {
+                    valeriHP.currHP = valeriHP.maxHP * 0.6f;
+                }
                 break;
             case EValeribotPhase.PHASE_3:
+                if (valeriHP.currHP < valeriHP.maxHP * 0.4f)
+                {
+                    valeriHP.currHP = valeriHP.maxHP * 0.4f;
+                }
                 break;
             case EValeribotPhase.PHASE_4:
+                if (valeriHP.currHP < 0)
+                {
+                    valeriHP.currHP = 0;
+                }
                 break;
         }
 
@@ -65,32 +91,25 @@ public class ValeribotPhase_GH : MonoBehaviour
                 valeribotFSM.bossPhase = 1;
                 break;
             case EValeribotPhase.PHASE_2:
-                ValeribotManager_GH.instance.onShield = true;
-                rd_phase2_Shell.useGravity = true;
+                valeribotFSM.onShield = true;
+                for (int i = 0; i < phase2_Shell.Length; i++)
+                {
+                    phase2_Shell[i].useGravity = true;
+                    phase2_Shell[i].constraints = RigidbodyConstraints.None;
+                }
                 valeribotFSM.bossPhase = 2;
                 break;
             case EValeribotPhase.PHASE_3:
-                ValeribotManager_GH.instance.onShield = true;
+                valeribotFSM.onShield = true;
+                phase3_cannonShield.SetActive(true);
 
                 valeribotFSM.bossPhase = 3;
                 break;
             case EValeribotPhase.PHASE_4:
-                ValeribotManager_GH.instance.onShield = true;
-
                 valeribotFSM.bossPhase = 4;
-
                 break;
 
         }
     }
-
-    void HPPhase()
-    {
-        if(valeriHP.currHP <= valeriHP.maxHP * 0.8 && valeribotFSM.bossPhase == 1)
-        {
-            ChangeState(EValeribotPhase.PHASE_2);
-        }
-    }
-
 
 }
