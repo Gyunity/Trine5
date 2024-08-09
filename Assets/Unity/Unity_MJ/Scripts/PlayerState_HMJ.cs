@@ -116,7 +116,7 @@ public class PlayerState_HMJ : MonoBehaviour
                     grabyPos = 1.4f;
                     break;
                 case PlayerState.DrawArrow:
-                    arrowManager.GetComponentInChildren<ArrowManager_HMJ>().SpawnArrow();
+                    //arrowManager.GetComponentInChildren<ArrowManager_HMJ>().SpawnArrow();
                     Debug.Log("SpawnArrow~~~");
                     anim.SetTrigger("ArrowDraw");
                     Debug.Log("Test: ArrowDraw State");

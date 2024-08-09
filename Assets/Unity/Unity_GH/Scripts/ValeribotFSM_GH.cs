@@ -24,6 +24,10 @@ public class ValeribotFSM_GH : MonoBehaviour
         DIE
     }
 
+
+    public Animator dragonAni;
+
+
     //현재 상태
     public EValeribotState currState;
 
@@ -139,7 +143,6 @@ public class ValeribotFSM_GH : MonoBehaviour
     // 폭탄 프리팹
     public GameObject bombFactory;
 
-    public GameObject bombEffect;
 
 
     GameObject bomb;
@@ -281,18 +284,20 @@ public class ValeribotFSM_GH : MonoBehaviour
         {
             case EValeribotState.IDLE:
 
-                randBoss = 3;
-                //Random.Range(1, 7);
+                randBoss = Random.Range(1, 7);
                 break;
 
             case EValeribotState.JUMP:
                 jumpState = true;
+                dragonAni.SetTrigger("Jump");
                 chicken.ControllChicken();
                 break;
             case EValeribotState.TARGETLAGER:
                 targetLaserCount = 0;
                 if (bossPhase < 3)
                 {
+                    dragonAni.SetTrigger("Laser");
+
                     onTargetingLaser = true;
                     lasers[0].transform.position = firePoint.transform.position;
                     lasers[0].SetActive(true);
@@ -306,6 +311,8 @@ public class ValeribotFSM_GH : MonoBehaviour
                 {
                     if (currBossPosState == 1)
                     {
+                        dragonAni.SetTrigger("Laser");
+
                         for (int i = 0; i < bossPhase + 1; i++)
                         {
                             lasers[i].transform.position = firePoint.transform.position;
@@ -325,6 +332,8 @@ public class ValeribotFSM_GH : MonoBehaviour
             case EValeribotState.GROUNDLAGER:
                 if (currBossPosState == 0)
                 {
+                    dragonAni.SetTrigger("Laser");
+
                     firePoint.transform.localEulerAngles = new Vector3(0, 0, -30);
                     lasers[0].transform.position = firePoint.transform.position;
                     lasers[0].SetActive(true);
@@ -334,6 +343,8 @@ public class ValeribotFSM_GH : MonoBehaviour
                 }
                 else if (currBossPosState == 2)
                 {
+                    dragonAni.SetTrigger("Laser");
+
                     firePoint.transform.localEulerAngles = new Vector3(0, 0, 30);
                     lasers[0].transform.position = firePoint.transform.position;
                     lasers[0].SetActive(true);
@@ -770,10 +781,10 @@ public class ValeribotFSM_GH : MonoBehaviour
             ChangeState(EValeribotState.IDLE);
         }
 
-        if (bomb != null)
-        {
-            Destroy(bomb, bombTime);
-        }
+        //if (bomb != null)
+        //{
+        //    Destroy(bomb, bombTime);
+        //}
 
     }
 
