@@ -16,6 +16,8 @@ public class PlayerWayPoint_HMJ : MonoBehaviour
     void Start()
     {
         player = GameObject.Find("Player");
+                Vector3 targetPosition = waypoints[currentWaypointIndex].position;
+        moveDirection = (targetPosition - player.transform.position).normalized * 5.0f;
     }
 
     // Update is called once per frame
@@ -23,9 +25,15 @@ public class PlayerWayPoint_HMJ : MonoBehaviour
     {
         if (waypoints.Length == 0)
             return;
+
+
         UpdateNextWayPoint();
 
 
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            UpdatePreWayPoint();
+        }
 
     }
 
@@ -43,7 +51,7 @@ public class PlayerWayPoint_HMJ : MonoBehaviour
 
         Debug.Log("현재 웨이 포인트 방향: " + moveDirection);
 
-        if (Vector3.Distance(playerPosition, targetPosition) < 0.1f)
+        if (Vector3.Distance(playerPosition, targetPosition) < 0.5f)
         {
             currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
             Debug.Log("웨이 포인트 변경: " + currentWaypointIndex);

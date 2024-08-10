@@ -155,10 +155,8 @@ public class PlayerMove_HMJ : MonoBehaviour
             horizontal = Input.GetAxis("Horizontal"); // - 1 ~ 1 * moveDirection 
 
         Vector3 Direction = wayPointData.GetMoveDirection();
-        Direction = new Vector3(horizontal * Direction.x, 0.0f, Direction.z);
+        Direction = new Vector3(horizontal * Direction.x, 0.0f, horizontal * Direction.z);
         movement = Direction;
-
-        Debug.Log("Player_FixZMove Direction: " + Direction);
     }
 
     void UpdateLineRender(Vector3 TargetPosition, Vector3 playerHandPositoin)
