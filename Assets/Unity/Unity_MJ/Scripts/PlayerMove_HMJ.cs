@@ -74,6 +74,8 @@ public class PlayerMove_HMJ : MonoBehaviour
 
     float angle = 90.0f;
 
+    PlayerWayPoint_HMJ wayPointData;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -84,26 +86,20 @@ public class PlayerMove_HMJ : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         
         playerState = GameObject.Find("Player").GetComponentInChildren<PlayerState_HMJ>();
+
+        wayPointData = GameObject.Find("RootManager").GetComponentInChildren<PlayerWayPoint_HMJ>();
+
+        playerState.SetplayerMoveState(PlayerMoveState.Player_FixZ);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(playerState.GetState() != PlayerState.Grap && playerState.GetState() != PlayerState.Climb)
-        horizontal = Input.GetAxis("Horizontal");
+        if (playerState.GetMoveState() == PlayerMoveState.Player_ZeroZ)
+            PlayerZFixZeroMove();
+        else
+            Player_FixZMove();
 
-        //if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
-        //    playerState.SetState(PlayerState.Walk);
-        //else
-        //    playerState.SetState(PlayerState.Idle);
-
-        movement = new Vector3(horizontal, 0.0f, 0.0f);
-        // -1 ~ 1
-        // -1 ~ 0 // 왼쪽 1 `
-        // 0 ~ 1
-
-        // DrawArrow
-        // 벡터 크기가 0보다 크면
         if (movement.magnitude > 0 && playerState.GetState() != PlayerState.DrawArrow && playerState.GetState() != PlayerState.Swinging)
         {
             // 이동 방향으로 캐릭터 회전
@@ -138,10 +134,31 @@ public class PlayerMove_HMJ : MonoBehaviour
             playerState.SetState(PlayerState.Dash);
         }
 
+        if (playerState.GetMoveState() == PlayerMoveState.Player_ZeroZ)
+        { 
+            //z축 고정 추가 (규현)
+            transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+        }
+    }
 
-        //z축 고정 추가 (규현)
-        transform.position = new Vector3(transform.position.x, transform.position.y, 0);
-        
+    void PlayerZFixZeroMove()
+    {
+        if (playerState.GetState() != PlayerState.Grap && playerState.GetState() != PlayerState.Climb)
+            horizontal = Input.GetAxis("Horizontal");
+        movement = new Vector3(horizontal, 0.0f, 0.0f);
+    }
+
+    // z 방향만 바꾼다.
+    void Player_FixZMove()
+    {
+        if (playerState.GetState() != PlayerState.Grap && playerState.GetState() != PlayerState.Climb)
+            horizontal = Input.GetAxis("Horizontal"); // - 1 ~ 1 * moveDirection 
+
+        Vector3 Direction = wayPointData.GetMoveDirection();
+        Direction = new Vector3(horizontal * Direction.x, 0.0f, Direction.z);
+        movement = Direction;
+
+        Debug.Log("Player_FixZMove Direction: " + Direction);
     }
 
     void UpdateLineRender(Vector3 TargetPosition, Vector3 playerHandPositoin)

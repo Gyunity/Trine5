@@ -37,7 +37,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - NoCollisionTrigger
   - Top
   - Wall
   m_SortingLayers:

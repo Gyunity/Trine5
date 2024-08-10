@@ -19,9 +19,20 @@ public class PlayerState_HMJ : MonoBehaviour
 
     }
 
+    public enum PlayerMoveState
+    {
+        Player_ZeroZ,
+        Player_FixZ,
+        PlayerMoveStateEnd
+    }
+
     public PlayerState curPlayerState;
     public PlayerState prePlayerState;
 
+
+    public PlayerMoveState curPlayerMoveState;
+    public PlayerMoveState prePlayerMoveState;
+    
     public float grabyPos;
 
     Animator anim;
@@ -41,6 +52,9 @@ public class PlayerState_HMJ : MonoBehaviour
     {
         curPlayerState = PlayerState.PlayerStateEnd;
         prePlayerState = PlayerState.PlayerStateEnd;
+
+        curPlayerMoveState = PlayerMoveState.PlayerMoveStateEnd;
+        prePlayerMoveState = PlayerMoveState.PlayerMoveStateEnd;
     }
 
     // Update is called once per frame
@@ -121,7 +135,8 @@ public class PlayerState_HMJ : MonoBehaviour
                     grabyPos = 1.4f;
                     break;
                 case PlayerState.DrawArrow:
-                    arrowManager.GetComponentInChildren<ArrowManager_HMJ>().SpawnArrow();
+                    if (arrowManager) // Test용 방어 코드
+                        arrowManager.GetComponentInChildren<ArrowManager_HMJ>().SpawnArrow();
                     Debug.Log("SpawnArrow~~~");
                     anim.SetTrigger("ArrowDraw");
                     Debug.Log("Test: ArrowDraw State");
@@ -144,8 +159,39 @@ public class PlayerState_HMJ : MonoBehaviour
         return false;
     }
 
+
+    public bool SetplayerMoveState(PlayerMoveState playerMoveState)
+    {
+        if (curPlayerMoveState != playerMoveState)
+        {
+            //playerMove.ResetDashData();
+
+            switch (playerMoveState)
+            {
+                case PlayerMoveState.Player_ZeroZ:
+
+                    break;
+                case PlayerMoveState.Player_FixZ:
+                    break;
+            }
+
+            prePlayerMoveState = curPlayerMoveState;
+            curPlayerMoveState = playerMoveState;
+
+            return true;
+        }
+        return false;
+    }
+
+    // 
+
     public PlayerState GetState()
     {
         return curPlayerState;
+    }
+
+    public PlayerMoveState GetMoveState()
+    {
+        return curPlayerMoveState;
     }
 }
