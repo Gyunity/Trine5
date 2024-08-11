@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using static ArrowMove_HMJ;
 using static PlayerState_HMJ;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerMove_HMJ : MonoBehaviour
 {
@@ -59,7 +60,7 @@ public class PlayerMove_HMJ : MonoBehaviour
     float startTime;
 
     public float swingSpeed = 20.0f;      // 흔들림 속도 (스윙 속도)
-    public float boundingSpeed = 100.0f;      // 반동 속도 (반동 속도)
+    public float boundingSpeed = 1.0f;      // 반동 속도 (반동 속도)
     public float swingRadius = 5.0f;     // 흔들림 반지름 (밧줄의 길이)
     public float swingAngle = 90.0f;     // 흔들림 각도 (최대 각도)
 
@@ -88,7 +89,7 @@ public class PlayerMove_HMJ : MonoBehaviour
     float moveFirstAngle = 0.0f;
     float moveAngle = 0.0f;
 
-
+    ChangeCharacter changeCharacter;
     // Start is called before the first frame update
     void Start()
     {
@@ -99,7 +100,7 @@ public class PlayerMove_HMJ : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         
         playerState = GameObject.Find("Player").GetComponentInChildren<PlayerState_HMJ>();
-
+        changeCharacter = GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>();
         //wayPointData = GameObject.Find("RootManager").GetComponentInChildren<PlayerWayPoint_HMJ>();
 
         //playerState.SetplayerMoveState(PlayerMoveState.Player_ZeroZ);
@@ -248,6 +249,7 @@ public class PlayerMove_HMJ : MonoBehaviour
                 moveFirstAngle -= 2.0f;
 
                 moveAngle = moveFirstAngle;
+                moveAngle = Mathf.Clamp(moveAngle, 90.0f, 270.0f);
             }
         }
         else
@@ -260,7 +262,9 @@ public class PlayerMove_HMJ : MonoBehaviour
             {
                 left = true;
                 moveFirstAngle -= 2.0f;
+  
                 moveAngle = moveFirstAngle;
+                moveAngle = Mathf.Clamp(moveAngle, 90.0f, 270.0f);
             }
         }
     }
@@ -313,7 +317,8 @@ public class PlayerMove_HMJ : MonoBehaviour
 
     void Swinging()
     {
-        if (Input.GetMouseButtonDown(1) && SelectHangingObject())
+
+        if (Input.GetMouseButtonDown(1) && SelectHangingObject() && (changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.ArcherType))
         {
             startTime = Time.time;
             if(playerState.SetState(PlayerState.Swinging)) // 스테이트가 바뀌었으면
@@ -330,15 +335,17 @@ public class PlayerMove_HMJ : MonoBehaviour
                     currentAngle = angle;
                 }
 
+                // 90 ~ 270
                 if (currentAngle >= 180.0f)
                 {
+                    
                     left = true;
-                    moveFirstAngle = currentAngle - 180.0f;
+                    moveFirstAngle = Mathf.Clamp(currentAngle - 180.0f, 90.0f, 180.0f);
                 }
                 else
                 { 
                     left = false;
-                    moveFirstAngle = currentAngle;
+                    moveFirstAngle = Mathf.Clamp(currentAngle, 90.0f, 180.0f); 
                 }
 
             }
@@ -382,7 +389,7 @@ public class PlayerMove_HMJ : MonoBehaviour
             if(playerState.SetState(PlayerState.Jump))
             {
                 swingSpeed = 20.0f;      // 흔들림 속도 (스윙 속도)
-                boundingSpeed = 100.0f;      // 반동 속도 (반동 속도)
+                boundingSpeed = 30.0f;      // 반동 속도 (반동 속도)
                 swingRadius = 5.0f;     // 흔들림 반지름 (밧줄의 길이)
                 swingAngle = 90.0f;     // 흔들림 각도 (최대 각도)
                 currentAngle = 0.0f;

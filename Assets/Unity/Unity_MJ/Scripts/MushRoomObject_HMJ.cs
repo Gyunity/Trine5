@@ -78,4 +78,15 @@ public class mushRoomObject_HMJ : MonoBehaviour
             scaleTime = 0.0f;
         }
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.name.Contains("Player") && !bScaleMove)
+        {
+            bScaleMove = true;
+
+            m_ePlayerScaleState = PlayerScaleState.BigState;
+            scaleTime = 0.0f;
+        }
+    }
 }
