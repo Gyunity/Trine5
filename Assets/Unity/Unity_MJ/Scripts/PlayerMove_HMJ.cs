@@ -109,7 +109,7 @@ public class PlayerMove_HMJ : MonoBehaviour
     {
         PlayerZFixZeroMove();
 
-        if (movement.magnitude > 0 && playerState.GetState() != PlayerState.DrawArrow && playerState.GetState() != PlayerState.Swinging)
+        if (movement.magnitude > 0 /*&& playerState.GetState() != PlayerState.DrawArrow*/ && playerState.GetState() != PlayerState.Swinging)
         {
             // 이동 방향으로 캐릭터 회전
             Quaternion newRotation = Quaternion.LookRotation(movement);
