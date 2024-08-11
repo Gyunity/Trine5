@@ -59,22 +59,36 @@ public class PlayerMove_HMJ : MonoBehaviour
     float startTime;
 
     public float swingSpeed = 20.0f;      // 흔들림 속도 (스윙 속도)
+    public float boundingSpeed = 100.0f;      // 반동 속도 (반동 속도)
     public float swingRadius = 5.0f;     // 흔들림 반지름 (밧줄의 길이)
     public float swingAngle = 90.0f;     // 흔들림 각도 (최대 각도)
 
     private float currentAngle = 0f;   // 현재 각도
+
+    float boundingAngle = 0.0f;
     private bool isSwingingLeft = false;  // 왼쪽으로 스윙 중인지 여부
     private bool isSwingingRight = false; // 오른쪽으로 스윙 중인지 여부
 
-    float SwingingmoveSpeed = 10.0f;
+    // 260 ~ 100
 
 
+    float swingingmoveSpeed = 10.0f;
+
+    float swingMaxAngle = 260.0f;
+    float swingMinAngle = 100.0f;
+
+    // angleFloat
     Vector3 originPos;
     Vector3 grapPos;
 
     float angle = 90.0f;
 
     PlayerWayPoint_HMJ wayPointData;
+
+    bool left = false;
+    float moveFirstAngle = 0.0f;
+    float moveAngle = 0.0f;
+
 
     // Start is called before the first frame update
     void Start()
@@ -95,10 +109,7 @@ public class PlayerMove_HMJ : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerState.GetMoveState() == PlayerMoveState.Player_ZeroZ)
-            PlayerZFixZeroMove();
-        else
-            Player_FixZMove();
+        PlayerZFixZeroMove();
 
         if (movement.magnitude > 0 && playerState.GetState() != PlayerState.DrawArrow && playerState.GetState() != PlayerState.Swinging)
         {
@@ -139,6 +150,11 @@ public class PlayerMove_HMJ : MonoBehaviour
             //z축 고정 추가 (규현)
             transform.position = new Vector3(transform.position.x, transform.position.y, 0);
         }
+    }
+
+    void ReboundHang()
+    {
+
     }
 
     void PlayerZFixZeroMove()
@@ -185,29 +201,12 @@ public class PlayerMove_HMJ : MonoBehaviour
             Vector3 PlayerGrap = new Vector3(swingingPlayerObject.transform.position.x, swingingPlayerObject.transform.position.y, 0.0f);
             swingRadius = Vector3.Distance(GameObject.Find("Player").transform.position, grapPos);
 
-
+            startTime = Time.time;
             return true;
         }
 
         return false;
     }
-
-
-
-    //public void MoveWithBounce()
-    //{
-    //    // 반동 효과 계산
-    //    float bounceX = Mathf.Sin((Time.time - startTime) * bounceSpeed) * bounceAmount;
-    //    float bounceY = Mathf.Cos((Time.time - startTime) * bounceSpeed) * bounceAmount * 0.5f; // Y축 반동은 약간 줄임
-    //    transform.position += new Vector3(bounceX, bounceY, 0);
-
-    //    //// 키를 떼면 이동 중지
-    //    //if ((horizontal < 0 && Input.GetKeyUp(KeyCode.LeftArrow)) ||
-    //    //    (horizontal > 0 && Input.GetKeyUp(KeyCode.RightArrow)))
-    //    //{
-
-    //    //}
-    //}
 
     void UpdateKey()
     {
@@ -236,29 +235,59 @@ public class PlayerMove_HMJ : MonoBehaviour
             isSwingingLeft = false;
             isSwingingRight = false;
         }
+
+        if (moveFirstAngle <= 0.0f)
+            return;
+        if (left) // 왼쪽
+        {
+            moveAngle -= boundingSpeed * Time.deltaTime;
+            currentAngle -= boundingSpeed * Time.deltaTime;
+            UpdateSwing();
+
+            if(moveAngle <= 0.0f)
+            {
+                left = false;
+                moveFirstAngle -= 2.0f;
+
+                moveAngle = moveFirstAngle;
+            }
+        }
+        else
+        {
+            moveAngle -= boundingSpeed * Time.deltaTime;
+            currentAngle += boundingSpeed * Time.deltaTime;
+            UpdateSwing();
+
+            if (moveAngle <= 0.0f)
+            {
+                left = true;
+                moveFirstAngle -= 2.0f;
+                moveAngle = moveFirstAngle;
+            }
+        }
     }
 
-    static float aaag = 0.0f;
     void Swing()
     {
         // 현재 각도 업데이트 (왼쪽 또는 오른쪽에 따라 증가 또는 감소)
         if (isSwingingLeft)
         {
-            aaag -= swingSpeed * Time.deltaTime;
             currentAngle -= swingSpeed * Time.deltaTime;
             //currentAngle = Mathf.Clamp(currentAngle, -200, -90); // Define minAngle and maxAngle
             UpdateSwing();
-            Debug.Log("현재 각도에서 더한 값: " + aaag);
         }
         else if (isSwingingRight)
         {
-            aaag += swingSpeed * Time.deltaTime;
             currentAngle += swingSpeed * Time.deltaTime;
             //currentAngle = Mathf.Clamp(currentAngle, -200, -90); // Define minAngle and maxAngle
             UpdateSwing();
-            Debug.Log("현재 각도에서 더한 값: " + aaag);
-
         }
+
+
+
+        // currentAngle
+
+
     }
 
     void UpdateSwing()
@@ -302,6 +331,18 @@ public class PlayerMove_HMJ : MonoBehaviour
                     angle += 360.0f;
                     currentAngle = angle;
                 }
+
+                if (currentAngle >= 180.0f)
+                {
+                    left = true;
+                    moveFirstAngle = currentAngle - 180.0f;
+                }
+                else
+                { 
+                    left = false;
+                    moveFirstAngle = currentAngle;
+                }
+
             }
                 
         }
