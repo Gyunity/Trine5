@@ -195,6 +195,15 @@ public class EnemyMove : MonoBehaviour
             else { return; }
         }    
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Arrow"))
+        {
+            print("현재 화살과 충돌~~");
+            hpSystem.UpdateHp(-10);
+            // damage
+        }
+    }
 
-   
+
 }

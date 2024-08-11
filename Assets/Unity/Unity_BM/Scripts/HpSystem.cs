@@ -60,11 +60,6 @@ public class HpSystem: MonoBehaviour
         //    //}
         //}
     }
-    void Phase_01()
-    { }
-    void Phase_02()
-    { }
-    void Phase_03()
-    { }
+   
    
 }

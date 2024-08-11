@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1447560884826807014}
   - component: {fileID: 1870134049557906995}
   - component: {fileID: 4641929376001434364}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: FireBall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,6 +161,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: M_Fireball_01_withTrails
+      objectReference: {fileID: 0}
+    - target: {fileID: 765511271821131592, guid: 3e0a192079d838344972feec1d3ce762,
+        type: 3}
+      propertyPath: m_Layer
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 765511271821131607, guid: 3e0a192079d838344972feec1d3ce762,
         type: 3}
