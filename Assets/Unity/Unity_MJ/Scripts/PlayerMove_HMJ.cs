@@ -277,7 +277,7 @@ public class PlayerMove_HMJ : MonoBehaviour
         GameObject swingingPlayerObject = FindBoneManager_HMJ.Instance.FindBone(GameObject.Find("Player").transform, "SwingingObject").transform.gameObject;
         UpdateLineRender(grapPos, swingingPlayerObject.transform.position);
 
-        transform.position = grapPos + new Vector3(x, -y, 0.0f);
+        transform.position = grapPos + new Vector3(x, y, 0.0f);
 
         Debug.Log("Swing - Distance: " + swingRadius);
         Debug.Log("Distance-Grap - Player:" + Vector3.Distance(grapPos, transform.position));
