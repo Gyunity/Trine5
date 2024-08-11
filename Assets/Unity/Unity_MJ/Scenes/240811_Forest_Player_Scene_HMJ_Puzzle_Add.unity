@@ -35238,6 +35238,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arrowPrefab: {fileID: 837910157668433267, guid: e2ee232e2ebd0f743be1a94e63be4bf8,
     type: 3}
+  player: {fileID: 0}
+  playerChangeState: {fileID: 0}
 --- !u!4 &1068113960
 Transform:
   m_ObjectHideFlags: 0
