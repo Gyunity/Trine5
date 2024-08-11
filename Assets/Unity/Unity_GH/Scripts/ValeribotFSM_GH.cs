@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
+using UnityEngine.UIElements;
 using static UnityEngine.Rendering.DebugUI;
 using static ValeribotPhase_GH;
 
@@ -54,6 +55,7 @@ public class ValeribotFSM_GH : MonoBehaviour
     //3페이즈 캐논 부시기
     bool phase3_Cannon_Break = false;
 
+    float currTime;
     #region 점프 전역 변수
     //점프 포인트
     public Transform pointL, pointC, pointR, pointLC, pointRC;
@@ -63,16 +65,20 @@ public class ValeribotFSM_GH : MonoBehaviour
     Vector3 currentPoint;
     //점프 시간
     public float jumpDuration = 0.5f;
+    public float jumpReadyTime = 1.5f;
 
-    float currTime;
+    float jumpCurrTime = 0;
+
+    float jumprotateValue = 0;
 
     Vector3 currPosition;
 
     bool jumpState = false;
+    bool jumping = false;
 
     //보스가 있는 위치
     //보스가 지금 왼쪽 - 0, 가운데 - 1, 오른쪽 - 2에 있을 때 움직임
-    int currBossPosState = 1;
+    public int currBossPosState = 1;
 
     int RandMove = 0;
     #endregion
@@ -159,7 +165,7 @@ public class ValeribotFSM_GH : MonoBehaviour
     #endregion
 
     //닭 점프 스크립트
-    Chicken_GH chicken;
+    //Chicken_GH chicken;
 
 
     void Start()
@@ -170,7 +176,7 @@ public class ValeribotFSM_GH : MonoBehaviour
 
         shield = GetComponentInChildren<Shield_GH>();
 
-        chicken = GetComponent<Chicken_GH>();
+        //chicken = GetComponent<Chicken_GH>();
 
         transform.position = pointC.position;
 
@@ -206,21 +212,6 @@ public class ValeribotFSM_GH : MonoBehaviour
         //z축 고정
         transform.position = new Vector3(transform.position.x, transform.position.y, 0);
 
-        if (!jumpState)
-        {
-            switch (currBossPosState)
-            {
-                case 0:
-                    transform.position = pointL.transform.position;
-                    break;
-                case 1:
-                    transform.position = pointC.transform.position;
-                    break;
-                case 2:
-                    transform.position = pointR.transform.position;
-                    break;
-            }
-        }
 
 
         switch (currState)
@@ -288,12 +279,17 @@ public class ValeribotFSM_GH : MonoBehaviour
         {
             case EValeribotState.IDLE:
 
-                randBoss = Random.Range(1, 8);
+                randBoss = 1;
+                //Random.Range(1, 8);
                 break;
             case EValeribotState.JUMP:
                 jumpState = true;
+                jumping = true;
+                if (currBossPosState == 1)
+                    RandMove = Random.Range(0, 2);
+
                 dragonAni.SetTrigger("Jump");
-                chicken.ControllChicken();
+                //chicken.ControllChicken();
                 break;
             case EValeribotState.TARGETLAGER:
                 targetLaserCount = 0;
@@ -422,52 +418,150 @@ public class ValeribotFSM_GH : MonoBehaviour
     {
         if (jumpState)
         {
+            print(currTime);
             currTime += Time.deltaTime;
 
             previousPoint = pointC.position;
 
-            //보스가 지금 왼쪽 - 0, 가운데 - 1, 오른쪽 - 2에 있을 때 움직임
-            switch (currBossPosState)
+            if (currTime < jumpReadyTime)
             {
-                case 0:
-                    currentPoint = CalculateBezierPoint(currTime / jumpDuration, pointL.position, pointLC.position, pointC.position);
-                    break;
-                case 1:
-                    if (RandMove == 0)
+                //보스가 지금 왼쪽 - 0, 가운데 - 1, 오른쪽 - 2에 있을 때 움직임
+                switch (currBossPosState)
+                {
+                    case 0:
+                        if (jumprotateValue <= 70f)
+                        {
+                            jumprotateValue += Time.deltaTime * 80f;
+                            transform.localEulerAngles = new Vector3(0, -jumprotateValue, 0);
+                        }
+                        break;
+                    case 1:
+                        if (RandMove == 0)
+                        {
+                            if (jumprotateValue <= 70f)
+                            {
+                                jumprotateValue += Time.deltaTime * 80f;
+                                transform.localEulerAngles = new Vector3(0, jumprotateValue, 0);
+                            }
+                        }
+                        else
+                        {
+                            if (jumprotateValue <= 70f)
+                            {
+                                jumprotateValue += Time.deltaTime * 80f;
+                                transform.localEulerAngles = new Vector3(0, -jumprotateValue, 0);
+                            }
+                        }
+                        break;
+
+                    case 2:
+                        if (jumprotateValue <= 70f)
+                        {
+                            jumprotateValue += Time.deltaTime * 80f;
+                            transform.localEulerAngles = new Vector3(0, jumprotateValue, 0);
+                        }
+                        break;
+                }
+
+            }
+
+            if (currTime > jumpReadyTime)
+            {
+                if (jumping)
+                {
+                    jumpCurrTime += Time.deltaTime;
+
+                    //보스가 지금 왼쪽 - 0, 가운데 - 1, 오른쪽 - 2에 있을 때 움직임
+                    switch (currBossPosState)
                     {
-                        currentPoint = CalculateBezierPoint(currTime / jumpDuration, pointC.position, pointLC.position, pointL.position);
+                        case 0:
+                            currentPoint = CalculateBezierPoint(jumpCurrTime / jumpDuration, pointL.position, pointLC.position, pointC.position);
+                            break;
+                        case 1:
+                            if (RandMove == 0)
+                            {
+                                currentPoint = CalculateBezierPoint(jumpCurrTime / jumpDuration, pointC.position, pointLC.position, pointL.position);
+                            }
+                            else
+                            {
+                                currentPoint = CalculateBezierPoint(jumpCurrTime / jumpDuration, pointC.position, pointRC.position, pointR.position);
+                            }
+                            break;
+
+                        case 2:
+                            currentPoint = CalculateBezierPoint(jumpCurrTime / jumpDuration, pointR.position, pointRC.position, pointC.position);
+                            break;
                     }
-                    else
+
+                    previousPoint = currentPoint;
+                    transform.position = currentPoint;
+
+                    if (jumpCurrTime > jumpDuration)
                     {
-                        currentPoint = CalculateBezierPoint(currTime / jumpDuration, pointC.position, pointRC.position, pointR.position);
+                        jumping = false;
+
                     }
-                    break;
+                }
 
-                case 2:
-                    currentPoint = CalculateBezierPoint(currTime / jumpDuration, pointR.position, pointRC.position, pointC.position);
-                    break;
-            }
-            previousPoint = currentPoint;
-            transform.position = currentPoint;
+                if (currTime > 3.8)
+                {
+                    switch (currBossPosState)
+                    {
+                        case 0:
+                            if (jumprotateValue >= 0f)
+                            {
+                                jumprotateValue -= Time.deltaTime * 100f;
+                                transform.localEulerAngles = new Vector3(0, jumprotateValue, 0);
+                            }
+                            break;
+                        case 1:
+                            if (RandMove == 0)
+                            {
+                                if (jumprotateValue >= 0f)
+                                {
+                                    jumprotateValue -= Time.deltaTime * 100f;
+                                    transform.localEulerAngles = new Vector3(0, -jumprotateValue, 0);
+                                }
+                            }
+                            else
+                            {
+                                if (jumprotateValue >= 0f)
+                                {
+                                    jumprotateValue -= Time.deltaTime * 100f;
+                                    transform.localEulerAngles = new Vector3(0, jumprotateValue, 0);
+                                }
+                            }
+                            break;
 
-            if (currTime > jumpDuration)
-            {
-                RandMove = Random.Range(0, 2);
-                ChangeState(EValeribotState.STAYDELAY);
-                jumpState = false;
-            }
+                        case 2:
+                            if (jumprotateValue >= 0f)
+                            {
+                                jumprotateValue -= Time.deltaTime * 100f;
+                                transform.localEulerAngles = new Vector3(0, -jumprotateValue, 0);
+                            }
+                            break;
+                    }
+                }
 
-            if (transform.position == pointC.position)
-            {
-                currBossPosState = 1;
-            }
-            else if (transform.position == pointL.position)
-            {
-                currBossPosState = 0;
-            }
-            else if (transform.position == pointR.position)
-            {
-                currBossPosState = 2;
+                if (currTime > 5)
+                {
+
+                    ChangeState(EValeribotState.STAYDELAY);
+                    jumpState = false;
+                    jumpCurrTime = 0;
+                }
+                if (transform.position == pointC.position)
+                {
+                    currBossPosState = 1;
+                }
+                else if (transform.position == pointL.position)
+                {
+                    currBossPosState = 0;
+                }
+                else if (transform.position == pointR.position)
+                {
+                    currBossPosState = 2;
+                }
             }
         }
 
@@ -529,9 +623,9 @@ public class ValeribotFSM_GH : MonoBehaviour
             laserCurrTime += Time.deltaTime;
             for (int i = 0; i < bossPhase + 1; i++)
             {
-                    lasers[i].transform.position = firePoint.transform.position;
-                    lasers[i].transform.forward = Quaternion.Euler(0, 0, 0 + i * (360 / (bossPhase + 1))) * firePoint.transform.right;
-                
+                lasers[i].transform.position = firePoint.transform.position;
+                lasers[i].transform.forward = Quaternion.Euler(0, 0, 0 + i * (360 / (bossPhase + 1))) * firePoint.transform.right;
+
             }
 
             if (laserCurrTime >= rotateLaserReadyTime && laserCurrTime < rotateLaserDuraTime)
@@ -812,12 +906,12 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     void Damaged()
     {
-        if(valeriHP.currHP <= 0)
+        if (valeriHP.currHP <= 0 && currState != EValeribotState.DIE)
         {
             ChangeState(EValeribotState.DIE);
         }
 
-        if (Input.GetKeyDown(KeyCode.M)&& !onShield)
+        if (Input.GetKeyDown(KeyCode.M) && !onShield)
         {
             valeriHP.UpdateHP(-30);
         }

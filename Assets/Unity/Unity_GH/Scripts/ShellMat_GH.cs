@@ -13,6 +13,8 @@ public class ShellMat_GH : MonoBehaviour
 
     MeshRenderer shellcurrMat;
 
+    float currTime = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,6 +41,11 @@ public class ShellMat_GH : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        currTime += Time.deltaTime;
 
+        if(currTime > 1)
+        {
+            gameObject.tag = "Shell";
+        }
     }
 }
