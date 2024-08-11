@@ -52,7 +52,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _Cell_Density: 15.48
-    - _Cell_Power: 3.62
+    - _Cell_Power: 5
     - _Fresnel_Power: 4.47
     - _QueueControl: 0
     - _QueueOffset: 0

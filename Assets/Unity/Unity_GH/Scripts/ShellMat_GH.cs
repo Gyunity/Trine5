@@ -43,7 +43,7 @@ public class ShellMat_GH : MonoBehaviour
     {
         currTime += Time.deltaTime;
 
-        if(currTime > 1)
+        if(currTime > 2)
         {
             gameObject.tag = "Shell";
         }

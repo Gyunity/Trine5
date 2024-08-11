@@ -5,6 +5,7 @@ using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 using UnityEngine.UIElements;
+using static UnityEngine.ParticleSystem;
 using static UnityEngine.Rendering.DebugUI;
 using static ValeribotPhase_GH;
 
@@ -29,12 +30,13 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     public Animator dragonAni;
 
+    public GameObject draModel;
 
     //현재 상태
     public EValeribotState currState;
 
     // 보스 행동 랜덤 변수
-    int randBoss;
+    int randBoss = 0;
 
     // 보스 페이즈
     public int bossPhase = 1;
@@ -164,12 +166,15 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     #endregion
 
-    //닭 점프 스크립트
-    //Chicken_GH chicken;
+    #region 꼬리 치기
+    TailCollider_GH tailSc;
+    #endregion
 
 
     void Start()
     {
+        tailSc = GetComponentInChildren<TailCollider_GH>();
+
         valeribotPhase = GetComponent<ValeribotPhase_GH>();
 
         valeriHP = GetComponent<HPSystem>();
@@ -206,11 +211,12 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     void Update()
     {
+
         OnShield();
         Damaged();
 
         //z축 고정
-        transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+        //transform.position = new Vector3(transform.position.x, transform.position.y, 0);
 
 
 
@@ -278,9 +284,15 @@ public class ValeribotFSM_GH : MonoBehaviour
         switch (currState)
         {
             case EValeribotState.IDLE:
-
-                randBoss = 1;
-                //Random.Range(1, 8);
+                if (randBoss < 6)
+                {
+                    randBoss++;
+                }
+                else
+                {
+                    randBoss = 0;
+                }
+                //randBoss = Random.Range(1, 7);
                 break;
             case EValeribotState.JUMP:
                 jumpState = true;
@@ -295,7 +307,7 @@ public class ValeribotFSM_GH : MonoBehaviour
                 targetLaserCount = 0;
                 if (bossPhase < 3)
                 {
-                    dragonAni.SetTrigger("Laser");
+                    dragonAni.SetTrigger("LaTarget");
 
                     onTargetingLaser = true;
                     lasers[0].transform.position = firePoint.transform.position;
@@ -310,7 +322,7 @@ public class ValeribotFSM_GH : MonoBehaviour
                 {
                     if (currBossPosState == 1)
                     {
-                        dragonAni.SetTrigger("Laser");
+                        dragonAni.SetTrigger("LaRotate");
 
                         for (int i = 0; i < bossPhase + 1; i++)
                         {
@@ -330,7 +342,7 @@ public class ValeribotFSM_GH : MonoBehaviour
             case EValeribotState.GROUNDLAGER:
                 if (currBossPosState == 0)
                 {
-                    dragonAni.SetTrigger("Laser");
+                    dragonAni.SetTrigger("LaGround");
 
                     firePoint.transform.localEulerAngles = new Vector3(0, 0, -30);
                     lasers[0].transform.position = firePoint.transform.position;
@@ -341,7 +353,7 @@ public class ValeribotFSM_GH : MonoBehaviour
                 }
                 else if (currBossPosState == 2)
                 {
-                    dragonAni.SetTrigger("Laser");
+                    dragonAni.SetTrigger("LaGround");
 
                     firePoint.transform.localEulerAngles = new Vector3(0, 0, 30);
                     lasers[0].transform.position = firePoint.transform.position;
@@ -403,7 +415,15 @@ public class ValeribotFSM_GH : MonoBehaviour
 
         if (currTime > stateDelayTime)
         {
-            ChangeState(EValeribotState.IDLE);
+            if (tailSc.tailFind)
+            {
+                ChangeState(EValeribotState.TAILATTACK);
+
+            }
+            else
+            {
+                ChangeState(EValeribotState.IDLE);
+            }
 
         }
     }
@@ -432,7 +452,7 @@ public class ValeribotFSM_GH : MonoBehaviour
                         if (jumprotateValue <= 70f)
                         {
                             jumprotateValue += Time.deltaTime * 80f;
-                            transform.localEulerAngles = new Vector3(0, -jumprotateValue, 0);
+                            draModel.transform.localEulerAngles = new Vector3(0, -jumprotateValue, 0);
                         }
                         break;
                     case 1:
@@ -441,7 +461,7 @@ public class ValeribotFSM_GH : MonoBehaviour
                             if (jumprotateValue <= 70f)
                             {
                                 jumprotateValue += Time.deltaTime * 80f;
-                                transform.localEulerAngles = new Vector3(0, jumprotateValue, 0);
+                                draModel.transform.localEulerAngles = new Vector3(0, jumprotateValue, 0);
                             }
                         }
                         else
@@ -449,7 +469,7 @@ public class ValeribotFSM_GH : MonoBehaviour
                             if (jumprotateValue <= 70f)
                             {
                                 jumprotateValue += Time.deltaTime * 80f;
-                                transform.localEulerAngles = new Vector3(0, -jumprotateValue, 0);
+                                draModel.transform.localEulerAngles = new Vector3(0, -jumprotateValue, 0);
                             }
                         }
                         break;
@@ -458,7 +478,7 @@ public class ValeribotFSM_GH : MonoBehaviour
                         if (jumprotateValue <= 70f)
                         {
                             jumprotateValue += Time.deltaTime * 80f;
-                            transform.localEulerAngles = new Vector3(0, jumprotateValue, 0);
+                            draModel.transform.localEulerAngles = new Vector3(0, jumprotateValue, 0);
                         }
                         break;
                 }
@@ -511,7 +531,7 @@ public class ValeribotFSM_GH : MonoBehaviour
                             if (jumprotateValue >= 0f)
                             {
                                 jumprotateValue -= Time.deltaTime * 100f;
-                                transform.localEulerAngles = new Vector3(0, jumprotateValue, 0);
+                                draModel.transform.localEulerAngles = new Vector3(0, jumprotateValue, 0);
                             }
                             break;
                         case 1:
@@ -520,7 +540,7 @@ public class ValeribotFSM_GH : MonoBehaviour
                                 if (jumprotateValue >= 0f)
                                 {
                                     jumprotateValue -= Time.deltaTime * 100f;
-                                    transform.localEulerAngles = new Vector3(0, -jumprotateValue, 0);
+                                    draModel.transform.localEulerAngles = new Vector3(0, -jumprotateValue, 0);
                                 }
                             }
                             else
@@ -528,7 +548,7 @@ public class ValeribotFSM_GH : MonoBehaviour
                                 if (jumprotateValue >= 0f)
                                 {
                                     jumprotateValue -= Time.deltaTime * 100f;
-                                    transform.localEulerAngles = new Vector3(0, jumprotateValue, 0);
+                                    draModel.transform.localEulerAngles = new Vector3(0, jumprotateValue, 0);
                                 }
                             }
                             break;
@@ -537,7 +557,7 @@ public class ValeribotFSM_GH : MonoBehaviour
                             if (jumprotateValue >= 0f)
                             {
                                 jumprotateValue -= Time.deltaTime * 100f;
-                                transform.localEulerAngles = new Vector3(0, -jumprotateValue, 0);
+                                draModel.transform.localEulerAngles = new Vector3(0, -jumprotateValue, 0);
                             }
                             break;
                     }

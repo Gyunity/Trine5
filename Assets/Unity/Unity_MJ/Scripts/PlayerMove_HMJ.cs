@@ -129,10 +129,10 @@ public class PlayerMove_HMJ : MonoBehaviour
             playerState.SetState(PlayerState.Dash);
         }
 
-        if (playerState.GetMoveState() == PlayerMoveState.Player_ZeroZ)
-        { 
             //z축 고정 추가 (규현)
             transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+        if (playerState.GetMoveState() == PlayerMoveState.Player_ZeroZ)
+        { 
         }
     }
 
