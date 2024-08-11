@@ -20,7 +20,7 @@ public class BoxMove : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //PlayerWeapon에도
-        if (other.gameObject.tag == "Player" || other.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        if (other.gameObject.tag == "Player" || other.gameObject.layer == LayerMask.NameToLayer("Ground") || other.gameObject.tag == "Player_equipment")
         {
             //공격
             Debug.Log("박스 공격");

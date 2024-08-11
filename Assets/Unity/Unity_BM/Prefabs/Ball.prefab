@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3539205435917192916}
   - component: {fileID: 1166889873250580716}
   - component: {fileID: 2062606199227165505}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: Ball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -157,6 +157,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8913632499380627855}
     m_Modifications:
+    - target: {fileID: 2473854092229048081, guid: e1be9bc308ed2b041950de1e87576fe3,
+        type: 3}
+      propertyPath: m_Layer
+      value: 28
+      objectReference: {fileID: 0}
     - target: {fileID: 5319247985718138451, guid: e1be9bc308ed2b041950de1e87576fe3,
         type: 3}
       propertyPath: m_LocalPosition.y
@@ -181,6 +186,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5388987779079232653, guid: e1be9bc308ed2b041950de1e87576fe3,
+        type: 3}
+      propertyPath: m_Layer
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 6397766798938932347, guid: e1be9bc308ed2b041950de1e87576fe3,
         type: 3}
@@ -211,6 +221,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Ball_final
+      objectReference: {fileID: 0}
+    - target: {fileID: 7050460518108065722, guid: e1be9bc308ed2b041950de1e87576fe3,
+        type: 3}
+      propertyPath: m_Layer
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 7679645414530692352, guid: e1be9bc308ed2b041950de1e87576fe3,
         type: 3}
@@ -276,6 +291,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7956183594687694506, guid: e1be9bc308ed2b041950de1e87576fe3,
+        type: 3}
+      propertyPath: m_Layer
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 8229968877025813719, guid: e1be9bc308ed2b041950de1e87576fe3,
         type: 3}
