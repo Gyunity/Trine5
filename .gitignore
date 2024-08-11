@@ -1,7 +1,10 @@
+# Created by https://www.toptal.com/developers/gitignore/api/unity
+# Edit at https://www.toptal.com/developers/gitignore?templates=unity
+
+### Unity ###
 # This .gitignore file should be placed at the root of your Unity project directory
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
-#
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
@@ -70,4 +73,13 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# End of https://www.toptal.com/developers/gitignore/api/unity
+
+# Temporary auto-generated Android Assets
+/[Aa]ssets/[Ss]treamingAssets/aa.meta
+/[Aa]ssets/[Ss]treamingAssets/aa/*
 Assets/Unity/Unity_GH/Resource/Boss2_GH/Dragon.fbx
+Assets/TA/YJM/Assets/Dragon/Dragon.fbx
+Assets/TA/YJM\ASssets/Dragon_test/Dragon/Dragon. fbx
+Assets/TA/YJM/Pa.. /. Fantasy Forest Environment v2.3.2 (17 Jul 2024) .unitypackage Assets\TA\YJM\Package\P_240807 _Forest_Player_Scene_YJM, unitypackage Library\PackageCache\com . unity.burst@1.8.16\. Runtime\l ibburst -1lvm-16. dylib

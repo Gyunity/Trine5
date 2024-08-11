@@ -17,7 +17,7 @@ public class Shield_GH : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Shell")
+        if (other.gameObject.tag == "ShieldBreaker")
         {
             other.gameObject.SetActive(false);
             valeribotFSM.onShield = false;

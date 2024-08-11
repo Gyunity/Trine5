@@ -7,6 +7,7 @@ TagManager:
   - Player_equipment
   - Shell
   - Cabbage
+  - ShieldBreaker
   layers:
   - Default
   - TransparentFX
@@ -29,15 +30,15 @@ TagManager:
   - HangObject
   - ArrowReflection
   - Arrow
+  - CannonShield
+  - Collectible
+  - ArrowCollision
   - 
   - 
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
+  - NoCollisionTrigger
   - Top
   - Wall
   m_SortingLayers:
