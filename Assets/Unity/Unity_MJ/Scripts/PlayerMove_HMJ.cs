@@ -58,15 +58,15 @@ public class PlayerMove_HMJ : MonoBehaviour
 
     float startTime;
 
-    public float swingSpeed = 10.0f;      // 흔들림 속도 (스윙 속도)
+    public float swingSpeed = 20.0f;      // 흔들림 속도 (스윙 속도)
     public float swingRadius = 5.0f;     // 흔들림 반지름 (밧줄의 길이)
-    public float swingAngle = 180.0f;     // 흔들림 각도 (최대 각도)
+    public float swingAngle = 90.0f;     // 흔들림 각도 (최대 각도)
 
     private float currentAngle = 0f;   // 현재 각도
     private bool isSwingingLeft = false;  // 왼쪽으로 스윙 중인지 여부
     private bool isSwingingRight = false; // 오른쪽으로 스윙 중인지 여부
 
-    float SwingingmoveSpeed = 0.1f;
+    float SwingingmoveSpeed = 10.0f;
 
 
     Vector3 originPos;
@@ -87,9 +87,9 @@ public class PlayerMove_HMJ : MonoBehaviour
         
         playerState = GameObject.Find("Player").GetComponentInChildren<PlayerState_HMJ>();
 
-        wayPointData = GameObject.Find("RootManager").GetComponentInChildren<PlayerWayPoint_HMJ>();
+        //wayPointData = GameObject.Find("RootManager").GetComponentInChildren<PlayerWayPoint_HMJ>();
 
-        playerState.SetplayerMoveState(PlayerMoveState.Player_FixZ);
+        playerState.SetplayerMoveState(PlayerMoveState.Player_ZeroZ);
     }
 
     // Update is called once per frame
@@ -177,12 +177,19 @@ public class PlayerMove_HMJ : MonoBehaviour
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, targetLayer))
         {
             // 일단 궁수일때라고 가정(나중에 궁수일때만 그랩할 수 있도록 수정해야할 듯)
-
-
             grapPos = hit.collider.transform.position;
+
+            GameObject swingingPlayerObject = FindBoneManager_HMJ.Instance.FindBone(GameObject.Find("Player").transform, "SwingingObject").transform.gameObject;
+
+            grapPos.z = 0;
+            Vector3 PlayerGrap = new Vector3(swingingPlayerObject.transform.position.x, swingingPlayerObject.transform.position.y, 0.0f);
+            swingRadius = Vector3.Distance(GameObject.Find("Player").transform.position, grapPos);
+
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 
 
@@ -213,12 +220,16 @@ public class PlayerMove_HMJ : MonoBehaviour
             isSwingingRight = false;
             Swing();
 
+            Debug.Log("회전중 오른쪽~");
+
         }
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
             isSwingingRight = true;
             isSwingingLeft = false;
             Swing();
+
+            Debug.Log("회전중 왼쪽~");
         }
         else
         {
@@ -227,20 +238,26 @@ public class PlayerMove_HMJ : MonoBehaviour
         }
     }
 
+    static float aaag = 0.0f;
     void Swing()
     {
         // 현재 각도 업데이트 (왼쪽 또는 오른쪽에 따라 증가 또는 감소)
         if (isSwingingLeft)
         {
-            angle += SwingingmoveSpeed * Time.deltaTime;
-            //currentAngle = Mathf.Clamp(currentAngle + swingSpeed * Time.deltaTime, -swingAngle, swingAngle);
+            aaag -= swingSpeed * Time.deltaTime;
+            currentAngle -= swingSpeed * Time.deltaTime;
+            //currentAngle = Mathf.Clamp(currentAngle, -200, -90); // Define minAngle and maxAngle
             UpdateSwing();
+            Debug.Log("현재 각도에서 더한 값: " + aaag);
         }
         else if (isSwingingRight)
         {
-            angle -= SwingingmoveSpeed * Time.deltaTime;
-            //currentAngle = Mathf.Clamp(currentAngle - swingSpeed * Time.deltaTime, -swingAngle, swingAngle);
+            aaag += swingSpeed * Time.deltaTime;
+            currentAngle += swingSpeed * Time.deltaTime;
+            //currentAngle = Mathf.Clamp(currentAngle, -200, -90); // Define minAngle and maxAngle
             UpdateSwing();
+            Debug.Log("현재 각도에서 더한 값: " + aaag);
+
         }
     }
 
@@ -249,42 +266,42 @@ public class PlayerMove_HMJ : MonoBehaviour
         // 스윙 각도에 따른 X, Y 좌표 계산
         float radianAngle = currentAngle * Mathf.Deg2Rad;
 
-        float x = Mathf.Sin(radianAngle) * swingRadius;
-        float y = Mathf.Cos(radianAngle) * swingRadius;
+        float x = Mathf.Cos(radianAngle) * swingRadius;
+        float y = Mathf.Sin(radianAngle) * swingRadius;
 
-        Debug.Log("각도 y각도 이상!: x: " + x + "y: " + y);
-        // 새로운 위치로 이동
-        transform.position = originPos + new Vector3(x, y, 0.0f);
 
+        Debug.Log("중심점: " + grapPos);
 
         lineRenderer = GetComponentInChildren<LineRenderer>();
 
         GameObject swingingPlayerObject = FindBoneManager_HMJ.Instance.FindBone(GameObject.Find("Player").transform, "SwingingObject").transform.gameObject;
         UpdateLineRender(grapPos, swingingPlayerObject.transform.position);
 
+        transform.position = grapPos + new Vector3(x, -y, 0.0f);
+
         Debug.Log("Swing - Distance: " + swingRadius);
-        Debug.Log("SwingData-test: x: " + transform.position.x + "y: " + transform.position.y + "z: " + transform.position.z);
+        Debug.Log("Distance-Grap - Player:" + Vector3.Distance(grapPos, transform.position));
         // MOVE~~~~
     }
 
     void Swinging()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1) && SelectHangingObject())
         {
             startTime = Time.time;
             if(playerState.SetState(PlayerState.Swinging)) // 스테이트가 바뀌었으면
             {
-                originPos = transform.position;
-                GameObject swingingPlayerObject = FindBoneManager_HMJ.Instance.FindBone(GameObject.Find("Player").transform, "SwingingObject").transform.gameObject;
-                swingRadius = Vector3.Distance(swingingPlayerObject.transform.position, grapPos);
+                originPos = grapPos;
+                // 초기 그랩 시 각도 계산
+                Vector3 direction = GameObject.Find("Player").transform.position - originPos;
 
-                Vector3 direction = grapPos - swingingPlayerObject.transform.position;
-
-                // 벡터의 각도를 구함 (y축 기준
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                if (angle < 0) angle += 360.0f;
 
-                currentAngle = angle;
+                if (angle < 0)
+                {
+                    angle += 360.0f;
+                    currentAngle = angle;
+                }
             }
                 
         }

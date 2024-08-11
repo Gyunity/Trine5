@@ -95,7 +95,7 @@ public class PlayerState_HMJ : MonoBehaviour
                 Debug.Log("Draw State");
                 break;
             case PlayerState.Swinging:
-                playerMove.SelectHangingObject();
+
                 //playerMove.MoveWithBounce();
                 Debug.Log("Swinging State");
                 break;
@@ -147,6 +147,7 @@ public class PlayerState_HMJ : MonoBehaviour
                     break;
                 case PlayerState.Swinging:
                     anim.SetTrigger("Swinging");
+                    playerMove.SelectHangingObject();
                     Debug.Log("Test: Swinging State");
                     break;
             }
