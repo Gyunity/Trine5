@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 public class EnemyMove : MonoBehaviour
@@ -8,6 +9,7 @@ public class EnemyMove : MonoBehaviour
     public enum EEnemyState
     {
         Idle,
+        Idle_2,
         Stun,
         Sleep,
         Die
@@ -27,22 +29,32 @@ public class EnemyMove : MonoBehaviour
     //FirePilarFactory
     public Action GoPilar;
 
+    HpSystem hpSystem;
+
+    int bossPhase = 1;
+
     // Start is called before the first frame update
     void Start()
     {
         anim = GetComponent<Animator>();
 
-        HpSystem hpSystem = GetComponent<HpSystem>();
-        hpSystem.onDie = OnDie;
+        hpSystem = GetComponent<HpSystem>();
+        //hpSystem.onDie = OnDie;
     }
 
     // Update is called once per frame
     void Update()
     {
+        OnDamaged();
+
         switch (currState)
         {
             case EEnemyState.Idle:
                 UpdateIdle();
+                break;
+
+            case EEnemyState.Idle_2:
+                UpdateIdle_2();
                 break;
 
             case EEnemyState.Stun:
@@ -67,11 +79,18 @@ public class EnemyMove : MonoBehaviour
             case EEnemyState.Idle:
                 anim.SetTrigger("Idle");
                 break;
+            case EEnemyState.Idle_2:
+                anim.SetTrigger("Idle_2");
+                break;
             case EEnemyState.Stun:
                 anim.SetTrigger("Stun");
                 break;
             case EEnemyState.Sleep:
-                canAttack = true;
+                //print("체인지 슬립");
+                //anim.SetTrigger("Sleep");
+                //anim.SetTrigger("Idle");
+                //anim.SetTrigger("Die");
+                
                 break;
 
             case EEnemyState.Die:
@@ -79,18 +98,44 @@ public class EnemyMove : MonoBehaviour
                 break;
         }
     }
+
+    float currentTime = 0;
+    float attackTime = 5f;
     void UpdateIdle()
     {
-        //파이어볼 쏘고 전기공 굴리고
-        //GoBall();
-        //FireGo();
+        print("공볼");
+        currentTime += Time.deltaTime;
 
-        //불기둥 만들고 박스 내리고
-
-
-        //if(스턴당하면)
-        //ChangeState(EEnemyState.Stun);
+        if (currentTime > attackTime)
+        {
+            GoBall();
+            FireGo();
+            currentTime = 0;
+        }
     }
+
+    //float currentTime = 0;
+    float Pilar_attackTime = 10f;
+    float Box_attackTime = 15f;
+    void UpdateIdle_2()
+    {
+        currentTime += Time.deltaTime;
+
+        if (currentTime > Pilar_attackTime)
+        {
+            currentTime = 0;
+
+            GoPilar();   
+        }
+        else if (currentTime > Box_attackTime)
+        {
+            currentTime = 0;
+
+            GoBox();
+        }
+    }
+
+
     void UpdateStun()
     {
         //하는 거 없음 찌릿찌릿
@@ -98,17 +143,58 @@ public class EnemyMove : MonoBehaviour
     }
     void UpdateSleep()
     {
-        //두들겨 맞음 
-        //if 피가 남아 있으면 ChangeState(EEnemyState.Idle)
-        // 피가 없으면 ChangeState(EEnemyState.Die)
+        
+        print("업데이트 슬립");
+        if (hpSystem.currHp <= 90f && bossPhase == 1)
+        {
+            ChangeState(EEnemyState.Idle);
+            print("1");
+            bossPhase++;
+        }
+        else if (hpSystem.currHp <= 60f && bossPhase  == 2)
+        {
+            ChangeState(EEnemyState.Idle_2);
+            print("2");
+            bossPhase++;
+
+        }
+        else if (hpSystem.currHp <= 30f && bossPhase == 3)
+        {
+            ChangeState(EEnemyState.Idle);
+            print("3");
+            bossPhase++;
+
+        }
+        else if (hpSystem.currHp <= 0 && bossPhase == 4)
+        {
+            ChangeState(EEnemyState.Die);
+            print("4");
+            bossPhase++;
+
+        }
+        
+
     }
     void OnDie()
     {
-        
+        ChangeState(EEnemyState.Die);
     }
     public void OnDamaged()
     {
-        HpSystem hpSystem = GetComponent<HpSystem>();
-        hpSystem.UpdateHp(-1);
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            //if(currState == EEnemyState.Sleep)
+            //{
+            //    return;
+            //}
+            if (currState == EEnemyState.Sleep)
+            {
+            HpSystem hpSystem = GetComponent<HpSystem>();
+            hpSystem.UpdateHp(-10);
+            }
+            else { return; }
+        }    
     }
+
+   
 }

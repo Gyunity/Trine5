@@ -19,14 +19,15 @@ public class BallFactory : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.H))
-        //{
-        //    StartCoroutine(BallGo());
-        //}
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            StartCoroutine(BallGoCo());
+        }
     }
-    //IEnumerator BallGo()
+
     void BallGo()
     {
+        
         StartCoroutine(BallGoCo());
     }
 
