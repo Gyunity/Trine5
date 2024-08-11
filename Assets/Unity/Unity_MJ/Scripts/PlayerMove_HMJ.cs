@@ -83,7 +83,6 @@ public class PlayerMove_HMJ : MonoBehaviour
 
     float angle = 90.0f;
 
-    PlayerWayPoint_HMJ wayPointData;
 
     bool left = false;
     float moveFirstAngle = 0.0f;
@@ -103,9 +102,8 @@ public class PlayerMove_HMJ : MonoBehaviour
 
         //wayPointData = GameObject.Find("RootManager").GetComponentInChildren<PlayerWayPoint_HMJ>();
 
-        playerState.SetplayerMoveState(PlayerMoveState.Player_ZeroZ);
+        //playerState.SetplayerMoveState(PlayerMoveState.Player_ZeroZ);
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -145,10 +143,10 @@ public class PlayerMove_HMJ : MonoBehaviour
             playerState.SetState(PlayerState.Dash);
         }
 
-        if (playerState.GetMoveState() == PlayerMoveState.Player_ZeroZ)
-        { 
             //z축 고정 추가 (규현)
             transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+        if (playerState.GetMoveState() == PlayerMoveState.Player_ZeroZ)
+        { 
         }
     }
 
@@ -170,9 +168,9 @@ public class PlayerMove_HMJ : MonoBehaviour
         if (playerState.GetState() != PlayerState.Grap && playerState.GetState() != PlayerState.Climb)
             horizontal = Input.GetAxis("Horizontal"); // - 1 ~ 1 * moveDirection 
 
-        Vector3 Direction = wayPointData.GetMoveDirection();
-        Direction = new Vector3(horizontal * Direction.x, 0.0f, horizontal * Direction.z);
-        movement = Direction;
+        //Vector3 Direction = wayPointData.GetMoveDirection();
+        //Direction = new Vector3(horizontal * Direction.x, 0.0f, horizontal * Direction.z);
+       // movement = Direction;
     }
 
     void UpdateLineRender(Vector3 TargetPosition, Vector3 playerHandPositoin)
