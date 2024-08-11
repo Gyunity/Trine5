@@ -381,7 +381,17 @@ public class PlayerMove_HMJ : MonoBehaviour
 
         if (Input.GetButtonDown("Jump"))
         {
-            playerState.SetState(PlayerState.Jump);
+            if(playerState.SetState(PlayerState.Jump))
+            {
+                swingSpeed = 20.0f;      // 흔들림 속도 (스윙 속도)
+                boundingSpeed = 100.0f;      // 반동 속도 (반동 속도)
+                swingRadius = 5.0f;     // 흔들림 반지름 (밧줄의 길이)
+                swingAngle = 90.0f;     // 흔들림 각도 (최대 각도)
+                currentAngle = 0.0f;
+                boundingAngle = 0.0f;
+                isSwingingLeft = false;
+                isSwingingRight = false;
+}
             // 만약에 현재 점프 횟수가 최대 점프 횟수보다 작으면
             if (JumpCurN < maxJumpN)
             {
