@@ -9,7 +9,7 @@ public class PlatformDrop_HMJ : MonoBehaviour
     public float rotationSpeed = 1.0f;  // 회전 속도
     private Quaternion targetRotation;  // 목표 회전
     private bool shouldRotate = false;  // 회전을 할지 여부
-
+    bool playerObjectCollision = false;
 
     void Start()
     {
@@ -36,7 +36,7 @@ public class PlatformDrop_HMJ : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.name.Contains("Player"))
+        if ((other.name.Contains("Player") && !playerObjectCollision) || other.gameObject.layer == LayerMask.NameToLayer("SummonedObject"))
         {
 
             // 충돌한 위치가 나무통의 왼쪽인지 오른쪽인지 확인
@@ -60,5 +60,20 @@ public class PlatformDrop_HMJ : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("SummonedObject")) // 사용자 오브젝트 우선
+        {
+            playerObjectCollision = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("SummonedObject")) // 사용자 오브젝트 우선
+        {
+            playerObjectCollision = false;
+        }
+    }
 }
                                             
