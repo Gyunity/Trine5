@@ -28,4 +28,5 @@ public class Trigger_L : MonoBehaviour
 
         }
     }
+
 }

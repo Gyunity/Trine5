@@ -32,6 +32,7 @@ public class StunTrigger : MonoBehaviour
                 Debug.Log("공격가능");
                 //스턴 애니메이션
                 boss.ChangeState(EEnemyState.Stun);
+                currTime = 0;
                 //hitsystem On
                 gameObject.SetActive(false);
                 
