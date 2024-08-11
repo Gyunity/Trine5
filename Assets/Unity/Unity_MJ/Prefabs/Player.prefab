@@ -4093,6 +4093,7 @@ GameObject:
   - component: {fileID: 2348775456660865116}
   - component: {fileID: 393728938756937033}
   - component: {fileID: 6389642768162379479}
+  - component: {fileID: 979972085446106405}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -4136,6 +4137,7 @@ MonoBehaviour:
   bounceAmount: 0.2
   bounceSpeed: 0.5
   swingSpeed: 10
+  boundingSpeed: 20
   swingRadius: 5
   swingAngle: 180
 --- !u!143 &5274490338614777279
@@ -4189,7 +4191,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6407679672307255247}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 100
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -4265,6 +4267,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6185bb31b7649df44bf86513f55b664c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &979972085446106405
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6407679672307255247}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.5, y: 2, z: 0.5}
+  m_Center: {x: 0, y: 0.94, z: 0}
 --- !u!1 &6669794038922635299
 GameObject:
   m_ObjectHideFlags: 0
@@ -4849,7 +4872,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6745691144688172184}
   - component: {fileID: 7241463685382655759}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
