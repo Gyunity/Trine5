@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HPSystem : MonoBehaviour
+public class HPSystem_GH : MonoBehaviour
 {
     // 최대 HP
     public float maxHP = 1000;

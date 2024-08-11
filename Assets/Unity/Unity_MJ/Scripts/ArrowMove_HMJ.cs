@@ -163,7 +163,7 @@ public class ArrowMove_HMJ : MonoBehaviour
             transform.rotation = Quaternion.LookRotation((linePositions[moveIndex + 1] - linePositions[moveIndex]).normalized);
 
             moveIndex++;
-            print(moveIndex);
+            //print(moveIndex);
         }
     }
 

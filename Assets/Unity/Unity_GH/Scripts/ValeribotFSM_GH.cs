@@ -52,7 +52,7 @@ public class ValeribotFSM_GH : MonoBehaviour
     public bool onShield = true;
 
     //hp시스템
-    HPSystem valeriHP;
+    HPSystem_GH valeriHP;
 
     //3페이즈 캐논 부시기
     bool phase3_Cannon_Break = false;
@@ -169,15 +169,17 @@ public class ValeribotFSM_GH : MonoBehaviour
     #region 꼬리 치기
     TailCollider_GH tailSc;
     #endregion
-
-
+    #region 공격력
+    public float tailAttackValue = 50;
+    public float laserAttackValue = 1f;
+    #endregion
     void Start()
     {
         tailSc = GetComponentInChildren<TailCollider_GH>();
 
         valeribotPhase = GetComponent<ValeribotPhase_GH>();
 
-        valeriHP = GetComponent<HPSystem>();
+        valeriHP = GetComponent<HPSystem_GH>();
 
         shield = GetComponentInChildren<Shield_GH>();
 
@@ -438,7 +440,6 @@ public class ValeribotFSM_GH : MonoBehaviour
     {
         if (jumpState)
         {
-            print(currTime);
             currTime += Time.deltaTime;
 
             previousPoint = pointC.position;
@@ -953,4 +954,13 @@ public class ValeribotFSM_GH : MonoBehaviour
             valeribotPhase.ChangeState(EValeribotPhase.PHASE_4);
         }
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.layer == LayerMask.NameToLayer("Arrow"))
+        {
+
+        }
+    }
+
 }

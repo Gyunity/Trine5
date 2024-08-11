@@ -18,7 +18,7 @@ public class ValeribotPhase_GH : MonoBehaviour
     public EValeribotPhase currPhase;
 
     //HPSystem
-    HPSystem valeriHP;
+    HPSystem_GH valeriHP;
 
     ValeribotFSM_GH valeribotFSM;
 
@@ -35,7 +35,7 @@ public class ValeribotPhase_GH : MonoBehaviour
     {
         phase3_cannonShield.SetActive(false);
 
-        valeriHP = GetComponent<HPSystem>();
+        valeriHP = GetComponent<HPSystem_GH>();
 
         currPhase = EValeribotPhase.PHASE_1;
 

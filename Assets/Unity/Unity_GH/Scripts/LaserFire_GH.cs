@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class LaserFire_GH : MonoBehaviour
 {
+    GameObject player;
+    HPSystem_HMJ playerHP;
     GameObject valeribot;
     ValeribotFSM_GH valeribotSC;
 
@@ -38,6 +40,8 @@ public class LaserFire_GH : MonoBehaviour
 
     public float shellGageup = 0.3f;
 
+
+
     void Start()
     {
         valeribot = GameObject.Find("Valeribot_GH");
@@ -46,6 +50,10 @@ public class LaserFire_GH : MonoBehaviour
         effects = GetComponentsInChildren<ParticleSystem>();
         hit = hitEffect.GetComponentsInChildren<ParticleSystem>();
         Flash = transform.GetChild(0).gameObject.GetComponent<ParticleSystem>();
+
+        player = GameObject.Find("Player");
+        playerHP = player.GetComponent<HPSystem_HMJ>();
+
     }
 
     void Update()
@@ -84,7 +92,6 @@ public class LaserFire_GH : MonoBehaviour
                         GameObject thorn = Instantiate(thornFactory);
                         thorn.transform.position = rayHit.point + rayHit.normal * hitOffset;
                         thorn.transform.up = rayHit.normal;
-                        Destroy(thorn, 5);
                     }
 
                     if (rayHit.transform.gameObject.tag == "Cabbage")
@@ -95,6 +102,11 @@ public class LaserFire_GH : MonoBehaviour
 
                             shell2Gage.fillAmount += shellGageup * Time.deltaTime;
                         }
+                    }
+
+                    if (rayHit.transform.gameObject.layer == LayerMask.NameToLayer("Player"))
+                    {
+                        playerHP.UpdateHP(-valeribotSC.laserAttackValue);
                     }
                 }
                 else
@@ -107,113 +119,113 @@ public class LaserFire_GH : MonoBehaviour
 
                 }
 
-                //foreach (var allPs in effects)
-                //{
-                //    if (allPs.isPlaying)
-                //    {
-                //        if (!valeribotSC.onReadyLaser)
-                //        {
-                //            //여기서 플래쉬 빼고 시작하게
-                //            //allPs.Play();
-                //        }
-                //    }
-                //}
-                //텍스처 틸팅
-                length[0] = mainTextureLength * (Vector3.Distance(transform.position, rayHit.point));
-                length[2] = noiseTextureLength * (Vector3.Distance(transform.position, rayHit.point));
+                    //foreach (var allPs in effects)
+                    //{
+                    //    if (allPs.isPlaying)
+                    //    {
+                    //        if (!valeribotSC.onReadyLaser)
+                    //        {
+                    //            //여기서 플래쉬 빼고 시작하게
+                    //            //allPs.Play();
+                    //        }
+                    //    }
+                    //}
+                    //텍스처 틸팅
+                    length[0] = mainTextureLength * (Vector3.Distance(transform.position, rayHit.point));
+                    length[2] = noiseTextureLength * (Vector3.Distance(transform.position, rayHit.point));
+
+                }
+                else
+                {
+                    //레이저의 끝에 아무것도 없으면
+                    var endPos = transform.position + transform.forward * maxLength;
+                    laserLine.SetPosition(1, endPos);
+                    hitEffect.transform.position = endPos;
+                    foreach (var allPs in hit)
+                    {
+                        if (allPs.isPlaying)
+                        {
+
+                            if (!valeribotSC.onReadyLaser)
+                            {
+                                allPs.Play();
+
+                            }
+                        }
+                    }
+                    length[0] = mainTextureLength * (Vector3.Distance(transform.position, endPos));
+                    length[2] = noiseTextureLength * (Vector3.Distance(transform.position, endPos));
+
+                    if (!valeribotSC.onReadyLaser)
+                    {
+                        if (onFlash2)
+                        {
+                            Flash.Play();
+                            onFlash2 = false;
+                        }
+                        laserLine.material = laserMat[0];
+                        laserLine.textureScale = new Vector2(1, 1);
+
+                    }
+
+                    else
+                    {
+                        Flash.Stop();
+                        onFlash2 = true;
+                        laserLine.material = laserMat[1];
+                        laserLine.textureScale = new Vector2(2, 1.5f);
+
+                    }
+
+                }
+
+
+                //텍스처 크기
+                laserLine.material.SetTextureScale("_MainTex", new Vector2(length[0], length[1]));
+                laserLine.material.SetTextureScale("_Noise", new Vector2(length[2], length[3]));
+
+
+
+                if (laserLine.enabled == false && laserSaver == false)
+                {
+                    laserSaver = true;
+                    laserLine.enabled = true;
+                }
+
 
             }
-            else
+
+        }
+
+        public void LaserDone()
+        {
+            if (effects != null)
             {
-                //레이저의 끝에 아무것도 없으면
-                var endPos = transform.position + transform.forward * maxLength;
-                laserLine.SetPosition(1, endPos);
-                hitEffect.transform.position = endPos;
+                foreach (var allPs in effects)
+                {
+                    if (allPs.isPlaying)
+                    {
+                        allPs.Stop();
+                    }
+
+                }
+            }
+
+            if (hit != null)
+            {
                 foreach (var allPs in hit)
                 {
                     if (allPs.isPlaying)
                     {
+                        allPs.Stop();
 
-                        if (!valeribotSC.onReadyLaser)
-                        {
-                            allPs.Play();
-
-                        }
                     }
-                }
-                length[0] = mainTextureLength * (Vector3.Distance(transform.position, endPos));
-                length[2] = noiseTextureLength * (Vector3.Distance(transform.position, endPos));
-
-                if (!valeribotSC.onReadyLaser)
-                {
-                    if (onFlash2)
-                    {
-                        Flash.Play();
-                        onFlash2 = false;
-                    }
-                    laserLine.material = laserMat[0];
-                    laserLine.textureScale = new Vector2(1, 1);
-
-                }
-
-                else
-                {
-                    Flash.Stop();
-                    onFlash2 = true;
-                    laserLine.material = laserMat[1];
-                    laserLine.textureScale = new Vector2(2, 1.5f);
-
                 }
 
             }
-
-
-            //텍스처 크기
-            laserLine.material.SetTextureScale("_MainTex", new Vector2(length[0], length[1]));
-            laserLine.material.SetTextureScale("_Noise", new Vector2(length[2], length[3]));
-
-
-
-            if (laserLine.enabled == false && laserSaver == false)
-            {
-                laserSaver = true;
-                laserLine.enabled = true;
-            }
-
-
+            laserLine.enabled = false;
+            laserSaver = false;
+            gameObject.SetActive(false);
         }
 
     }
-
-    public void LaserDone()
-    {
-        if (effects != null)
-        {
-            foreach (var allPs in effects)
-            {
-                if (allPs.isPlaying)
-                {
-                    allPs.Stop();
-                }
-
-            }
-        }
-
-        if (hit != null)
-        {
-            foreach (var allPs in hit)
-            {
-                if (allPs.isPlaying)
-                {
-                    allPs.Stop();
-
-                }
-            }
-
-        }
-        laserLine.enabled = false;
-        laserSaver = false;
-        gameObject.SetActive(false);
-    }
-
-}
