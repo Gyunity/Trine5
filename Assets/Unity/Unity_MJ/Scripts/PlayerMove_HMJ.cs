@@ -1,7 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 using static ArrowMove_HMJ;
 using static PlayerState_HMJ;
 
@@ -47,6 +50,32 @@ public class PlayerMove_HMJ : MonoBehaviour
     Rigidbody rb;
     Animator anim;
     float horizontal = 0.0f;
+
+    public float bounceAmount = 0.2f; // 반동의 크기
+    public float bounceSpeed = 0.5f;   // 반동의 속도
+
+    LineRenderer lineRenderer;
+
+    float startTime;
+
+    public float swingSpeed = 20.0f;      // 흔들림 속도 (스윙 속도)
+    public float swingRadius = 5.0f;     // 흔들림 반지름 (밧줄의 길이)
+    public float swingAngle = 90.0f;     // 흔들림 각도 (최대 각도)
+
+    private float currentAngle = 0f;   // 현재 각도
+    private bool isSwingingLeft = false;  // 왼쪽으로 스윙 중인지 여부
+    private bool isSwingingRight = false; // 오른쪽으로 스윙 중인지 여부
+
+    float SwingingmoveSpeed = 10.0f;
+
+
+    Vector3 originPos;
+    Vector3 grapPos;
+
+    float angle = 90.0f;
+
+    PlayerWayPoint_HMJ wayPointData;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -55,28 +84,23 @@ public class PlayerMove_HMJ : MonoBehaviour
         cc = GetComponent<CharacterController>();
         rb = GetComponentInChildren<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
+        
         playerState = GameObject.Find("Player").GetComponentInChildren<PlayerState_HMJ>();
+
+        //wayPointData = GameObject.Find("RootManager").GetComponentInChildren<PlayerWayPoint_HMJ>();
+
+        playerState.SetplayerMoveState(PlayerMoveState.Player_ZeroZ);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(playerState.GetState() != PlayerState.Grap && playerState.GetState() != PlayerState.Climb)
-        horizontal = Input.GetAxis("Horizontal");
+        if (playerState.GetMoveState() == PlayerMoveState.Player_ZeroZ)
+            PlayerZFixZeroMove();
+        else
+            Player_FixZMove();
 
-        //if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
-        //    playerState.SetState(PlayerState.Walk);
-        //else
-        //    playerState.SetState(PlayerState.Idle);
-
-        movement = new Vector3(horizontal, 0.0f, 0.0f);
-        // -1 ~ 1
-        // -1 ~ 0 // 왼쪽 1 `
-        // 0 ~ 1
-
-        // DrawArrow
-        // 벡터 크기가 0보다 크면
-        if (movement.magnitude > 0 && playerState.GetState() != PlayerState.DrawArrow)
+        if (movement.magnitude > 0 && playerState.GetState() != PlayerState.DrawArrow && playerState.GetState() != PlayerState.Swinging)
         {
             // 이동 방향으로 캐릭터 회전
             Quaternion newRotation = Quaternion.LookRotation(movement);
@@ -84,9 +108,10 @@ public class PlayerMove_HMJ : MonoBehaviour
             anim.SetFloat("MoveSpeed", Mathf.Abs(horizontal));
         }
 
-
+        UpdateKey(); // 반동 업데이트 키
         Jump();
         PlayerMove();
+        Swinging();
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             playerState.SetState(PlayerState.Dash);
@@ -107,10 +132,185 @@ public class PlayerMove_HMJ : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             playerState.SetState(PlayerState.Dash);
-        }  
-        //z축 고정 추가 (규현)
-        transform.position = new Vector3(transform.position.x, transform.position.y, 0);
-        
+        }
+
+        if (playerState.GetMoveState() == PlayerMoveState.Player_ZeroZ)
+        { 
+            //z축 고정 추가 (규현)
+            transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+        }
+    }
+
+    void PlayerZFixZeroMove()
+    {
+        if (playerState.GetState() != PlayerState.Grap && playerState.GetState() != PlayerState.Climb)
+            horizontal = Input.GetAxis("Horizontal");
+        movement = new Vector3(horizontal, 0.0f, 0.0f);
+    }
+
+    // z 방향만 바꾼다.
+    void Player_FixZMove()
+    {
+        if (playerState.GetState() != PlayerState.Grap && playerState.GetState() != PlayerState.Climb)
+            horizontal = Input.GetAxis("Horizontal"); // - 1 ~ 1 * moveDirection 
+
+        Vector3 Direction = wayPointData.GetMoveDirection();
+        Direction = new Vector3(horizontal * Direction.x, 0.0f, horizontal * Direction.z);
+        movement = Direction;
+    }
+
+    void UpdateLineRender(Vector3 TargetPosition, Vector3 playerHandPositoin)
+    {
+        lineRenderer.positionCount = 2;
+        lineRenderer.SetPosition(0, playerHandPositoin);
+        lineRenderer.SetPosition(1, TargetPosition);
+    }
+
+    public bool SelectHangingObject()
+    {
+        LayerMask targetLayer = 1 << LayerMask.NameToLayer("HangObject");
+        // 마우스 포지션을 얻기 위해 Ray를 생성
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        // 특정 레이어에 속한 오브젝트만 Raycast를 통해 검출
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, targetLayer))
+        {
+            // 일단 궁수일때라고 가정(나중에 궁수일때만 그랩할 수 있도록 수정해야할 듯)
+            grapPos = hit.collider.transform.position;
+
+            GameObject swingingPlayerObject = FindBoneManager_HMJ.Instance.FindBone(GameObject.Find("Player").transform, "SwingingObject").transform.gameObject;
+
+            grapPos.z = 0;
+            Vector3 PlayerGrap = new Vector3(swingingPlayerObject.transform.position.x, swingingPlayerObject.transform.position.y, 0.0f);
+            swingRadius = Vector3.Distance(GameObject.Find("Player").transform.position, grapPos);
+
+
+            return true;
+        }
+
+        return false;
+    }
+
+
+
+    //public void MoveWithBounce()
+    //{
+    //    // 반동 효과 계산
+    //    float bounceX = Mathf.Sin((Time.time - startTime) * bounceSpeed) * bounceAmount;
+    //    float bounceY = Mathf.Cos((Time.time - startTime) * bounceSpeed) * bounceAmount * 0.5f; // Y축 반동은 약간 줄임
+    //    transform.position += new Vector3(bounceX, bounceY, 0);
+
+    //    //// 키를 떼면 이동 중지
+    //    //if ((horizontal < 0 && Input.GetKeyUp(KeyCode.LeftArrow)) ||
+    //    //    (horizontal > 0 && Input.GetKeyUp(KeyCode.RightArrow)))
+    //    //{
+
+    //    //}
+    //}
+
+    void UpdateKey()
+    {
+        if (playerState.GetState() != PlayerState.Swinging)
+            return;
+        // 왼쪽 또는 오른쪽 이동 입력 감지
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            isSwingingLeft = true;
+            isSwingingRight = false;
+            Swing();
+
+            Debug.Log("회전중 오른쪽~");
+
+        }
+        else if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            isSwingingRight = true;
+            isSwingingLeft = false;
+            Swing();
+
+            Debug.Log("회전중 왼쪽~");
+        }
+        else
+        {
+            isSwingingLeft = false;
+            isSwingingRight = false;
+        }
+    }
+
+    static float aaag = 0.0f;
+    void Swing()
+    {
+        // 현재 각도 업데이트 (왼쪽 또는 오른쪽에 따라 증가 또는 감소)
+        if (isSwingingLeft)
+        {
+            aaag -= swingSpeed * Time.deltaTime;
+            currentAngle -= swingSpeed * Time.deltaTime;
+            //currentAngle = Mathf.Clamp(currentAngle, -200, -90); // Define minAngle and maxAngle
+            UpdateSwing();
+            Debug.Log("현재 각도에서 더한 값: " + aaag);
+        }
+        else if (isSwingingRight)
+        {
+            aaag += swingSpeed * Time.deltaTime;
+            currentAngle += swingSpeed * Time.deltaTime;
+            //currentAngle = Mathf.Clamp(currentAngle, -200, -90); // Define minAngle and maxAngle
+            UpdateSwing();
+            Debug.Log("현재 각도에서 더한 값: " + aaag);
+
+        }
+    }
+
+    void UpdateSwing()
+    {
+        // 스윙 각도에 따른 X, Y 좌표 계산
+        float radianAngle = currentAngle * Mathf.Deg2Rad;
+
+        float x = Mathf.Cos(radianAngle) * swingRadius;
+        float y = Mathf.Sin(radianAngle) * swingRadius;
+
+
+        Debug.Log("중심점: " + grapPos);
+
+        lineRenderer = GetComponentInChildren<LineRenderer>();
+
+        GameObject swingingPlayerObject = FindBoneManager_HMJ.Instance.FindBone(GameObject.Find("Player").transform, "SwingingObject").transform.gameObject;
+        UpdateLineRender(grapPos, swingingPlayerObject.transform.position);
+
+        transform.position = grapPos + new Vector3(x, -y, 0.0f);
+
+        Debug.Log("Swing - Distance: " + swingRadius);
+        Debug.Log("Distance-Grap - Player:" + Vector3.Distance(grapPos, transform.position));
+        // MOVE~~~~
+    }
+
+    void Swinging()
+    {
+        if (Input.GetMouseButtonDown(1) && SelectHangingObject())
+        {
+            startTime = Time.time;
+            if(playerState.SetState(PlayerState.Swinging)) // 스테이트가 바뀌었으면
+            {
+                originPos = grapPos;
+                // 초기 그랩 시 각도 계산
+                Vector3 direction = GameObject.Find("Player").transform.position - originPos;
+
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+                if (angle < 0)
+                {
+                    angle += 360.0f;
+                    currentAngle = angle;
+                }
+            }
+                
+        }
+
+        if (Input.GetMouseButton(1))
+        {
+            Swing();
+            Debug.Log("Swing~~");
+        }
     }
 
     public void Dash()
@@ -121,7 +321,6 @@ public class PlayerMove_HMJ : MonoBehaviour
         moveSpeed = Mathf.Lerp(moveSpeed, dashMaxSpeed, playDashTime / dashTime);
         // moveSpeed -> dashMaxSpeed로 값 변경 
         cc.Move(dashDir * moveSpeed * Time.deltaTime);
-
         if(playDashTime >= dashTime)
         {
             playerState.SetState(PlayerState.Idle);
@@ -130,9 +329,8 @@ public class PlayerMove_HMJ : MonoBehaviour
 
     void Jump()
     {
-
         // 땅에 있음
-        if (cc.isGrounded && (playerState.GetState() != PlayerState.DrawArrow))
+        if (cc.isGrounded && (playerState.GetState() != PlayerState.DrawArrow) && (playerState.GetState() != PlayerState.Swinging))
         {
             JumpCurN = 0;
             yVelocity = 0.0f;
@@ -165,7 +363,7 @@ public class PlayerMove_HMJ : MonoBehaviour
         }
         else
         {
-            if(playerState.GetState() != PlayerState.DrawArrow)
+            if(playerState.GetState() != PlayerState.DrawArrow && playerState.GetState() != PlayerState.Swinging)
                 cc.Move((movement * moveSpeed + new Vector3(0.0f, yVelocity, 0.0f)) * Time.deltaTime);
         }
     }
