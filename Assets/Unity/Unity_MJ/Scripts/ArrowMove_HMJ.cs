@@ -39,7 +39,7 @@ public class ArrowMove_HMJ : MonoBehaviour
 
     public float myPower = 0;
 
-    float powerSpeed = 10.0f;
+    float powerSpeed = 50.0f;
 
     public GameObject arrowObject;
 
