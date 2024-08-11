@@ -3,15 +3,10 @@ guid: 913d6bbb6575bc44a8c1b25f4f1f8aa4
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: No Name
-    second: {fileID: 2100000, guid: beb919488dbc8e5479449bbc36b64626, type: 2}
+  externalObjects: {}
   materials:
-    materialImportMode: 1
-    materialName: 1
+    materialImportMode: 2
+    materialName: 0
     materialSearch: 1
     materialLocation: 1
   animations:
@@ -331,8 +326,8 @@ ModelImporter:
       name: Qishilong_skill02
       takeName: Qishilong_skill02
       internalID: 6826597370919330143
-      firstFrame: 50
-      lastFrame: 171
+      firstFrame: 0
+      lastFrame: 50
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -542,7 +537,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -629,7 +624,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -853,8 +848,8 @@ ModelImporter:
       name: Qishilong_skill02 (1)
       takeName: Qishilong_skill02
       internalID: -2800970383119392365
-      firstFrame: 0
-      lastFrame: 49
+      firstFrame: 50
+      lastFrame: 171
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
