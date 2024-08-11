@@ -15,6 +15,7 @@ public class PlayerState_HMJ : MonoBehaviour
         DrawArrow,
         ShootArrow,
         Swinging,
+        Damaged,
         PlayerStateEnd
 
     }
@@ -32,7 +33,7 @@ public class PlayerState_HMJ : MonoBehaviour
 
     public PlayerMoveState curPlayerMoveState;
     public PlayerMoveState prePlayerMoveState;
-    
+
     public float grabyPos;
 
     Animator anim;
@@ -41,11 +42,13 @@ public class PlayerState_HMJ : MonoBehaviour
 
     GameObject arrowManager;
 
+    HPSystem_HMJ hpSystem;
     private void Awake()
     {
         anim = GetComponentInChildren<Animator>();
         playerMove = GetComponentInChildren<PlayerMove_HMJ>();
         arrowManager = GameObject.Find("ArrowManager");
+        hpSystem = GameObject.Find("Player").GetComponentInChildren<HPSystem_HMJ>();
     }
     // Start is called before the first frame update
     void Start()
@@ -61,11 +64,13 @@ public class PlayerState_HMJ : MonoBehaviour
     void Update()
     {
         UpdateState();
+        if (Input.GetKeyDown(KeyCode.B))
+            hpSystem.UpdateHP(-100.0f);
     }
 
     void UpdateState()
     {
-        switch(curPlayerState)
+        switch (curPlayerState)
         {
             case PlayerState.Idle:
                 Debug.Log("Idle State");
@@ -99,12 +104,16 @@ public class PlayerState_HMJ : MonoBehaviour
                 //playerMove.MoveWithBounce();
                 Debug.Log("Swinging State");
                 break;
+            case PlayerState.Damaged:
+                //anim.SetTrigger("Swinging");
+
+                break;
         }
     }
 
     public bool SetState(PlayerState playerState)
     {
-        if(curPlayerState != playerState)
+        if (curPlayerState != playerState)
         {
             playerMove.ResetDashData();
 
@@ -149,6 +158,10 @@ public class PlayerState_HMJ : MonoBehaviour
                     anim.SetTrigger("Swinging");
                     playerMove.SelectHangingObject();
                     Debug.Log("Test: Swinging State");
+                    break;
+                case PlayerState.Damaged:
+                    //anim.SetTrigger("Swinging");
+                    hpSystem.UpdateHP(100.0f);
                     break;
             }
 
