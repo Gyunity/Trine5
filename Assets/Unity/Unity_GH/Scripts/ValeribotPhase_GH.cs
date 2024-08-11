@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using static UnityEditor.Rendering.InspectorCurveEditor;
 using static ValeribotFSM_GH;
 
@@ -27,6 +28,9 @@ public class ValeribotPhase_GH : MonoBehaviour
     //페이즈 3
     public GameObject phase3_cannonShield;
 
+    //페이즈 실드
+    public Image[] ShieldHPs;
+
     void Start()
     {
         phase3_cannonShield.SetActive(false);
@@ -51,24 +55,40 @@ public class ValeribotPhase_GH : MonoBehaviour
         switch (currPhase)
         {
             case EValeribotPhase.PHASE_1:
+                if (!valeribotFSM.onShield)
+                {
+                    ShieldHPs[0].gameObject.SetActive(false);
+                }
                 if (valeriHP.currHP < valeriHP.maxHP * 0.8f)
                 {
                     valeriHP.currHP = valeriHP.maxHP * 0.8f;
                 }
                 break;
             case EValeribotPhase.PHASE_2:
+                if (!valeribotFSM.onShield)
+                {
+                    ShieldHPs[1].gameObject.SetActive(false);
+                }
                 if (valeriHP.currHP < valeriHP.maxHP * 0.6f)
                 {
                     valeriHP.currHP = valeriHP.maxHP * 0.6f;
                 }
                 break;
             case EValeribotPhase.PHASE_3:
+                if (!valeribotFSM.onShield)
+                {
+                    ShieldHPs[2].gameObject.SetActive(false);
+                }
                 if (valeriHP.currHP < valeriHP.maxHP * 0.4f)
                 {
                     valeriHP.currHP = valeriHP.maxHP * 0.4f;
                 }
                 break;
             case EValeribotPhase.PHASE_4:
+                if (!valeribotFSM.onShield)
+                {
+                    ShieldHPs[3].gameObject.SetActive(false);
+                }
                 if (valeriHP.currHP < 0)
                 {
                     valeriHP.currHP = 0;

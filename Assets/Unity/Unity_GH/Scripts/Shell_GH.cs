@@ -10,10 +10,15 @@ public class Shell_GH : MonoBehaviour
     Image shell2Gage;
 
     public float shellGageDown = 0.1f;
+
+     public Material cabbageMat;
+
+    MeshRenderer mat;
     void Start()
     {
         shell2Gage = GetComponentInChildren<Image>();
         shell2Gage.fillAmount = 0;
+        mat = GetComponent<MeshRenderer>();
     }
 
     void Update()
@@ -28,6 +33,8 @@ public class Shell_GH : MonoBehaviour
         else if(shell2Gage.fillAmount >= 1)
         {
             gameObject.tag = "Shell";
+            mat.material = cabbageMat;
+            shell2Gage.gameObject.SetActive(false);
         }
     }
 }
