@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 8330316736458386085}
   - component: {fileID: 7928432988158897063}
   - component: {fileID: 7373866606914416689}
+  - component: {fileID: 4039476175729542086}
   m_Layer: 17
   m_Name: Shell_GH
-  m_TagString: Shell
+  m_TagString: ShieldBreaker
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -133,3 +134,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 8
   m_CollisionDetection: 0
+--- !u!114 &4039476175729542086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 730900041467684307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2e347abf6a042540affa104f212eca4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shellMats:
+  - {fileID: 2100000, guid: e49b6230fe50d234e8b90bf3632a3180, type: 2}
+  - {fileID: 2100000, guid: fe98feb71b4160847a8931dcf31f2b6f, type: 2}
+  - {fileID: -7945493874552577657, guid: 3aa2bab9d0abb214eba129e6257801e8, type: 3}

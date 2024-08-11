@@ -19,10 +19,15 @@ public class ValeribotFSM_GH : MonoBehaviour
         GROUNDLAGER,
         MACHINELAGER,
         BOMBKICK,
+        TAILATTACK,
         STAYDELAY,
         DAMAGE,
         DIE
     }
+
+
+    public Animator dragonAni;
+
 
     //현재 상태
     public EValeribotState currState;
@@ -139,7 +144,6 @@ public class ValeribotFSM_GH : MonoBehaviour
     // 폭탄 프리팹
     public GameObject bombFactory;
 
-    public GameObject bombEffect;
 
 
     GameObject bomb;
@@ -242,6 +246,9 @@ public class ValeribotFSM_GH : MonoBehaviour
             case EValeribotState.BOMBKICK:
                 BombShoot();
                 break;
+            case EValeribotState.TAILATTACK:
+
+                break;
             case EValeribotState.STAYDELAY:
                 StateDelay();
                 break;
@@ -281,18 +288,19 @@ public class ValeribotFSM_GH : MonoBehaviour
         {
             case EValeribotState.IDLE:
 
-                randBoss = 3;
-                //Random.Range(1, 7);
+                randBoss = Random.Range(1, 8);
                 break;
-
             case EValeribotState.JUMP:
                 jumpState = true;
+                dragonAni.SetTrigger("Jump");
                 chicken.ControllChicken();
                 break;
             case EValeribotState.TARGETLAGER:
                 targetLaserCount = 0;
                 if (bossPhase < 3)
                 {
+                    dragonAni.SetTrigger("Laser");
+
                     onTargetingLaser = true;
                     lasers[0].transform.position = firePoint.transform.position;
                     lasers[0].SetActive(true);
@@ -306,6 +314,8 @@ public class ValeribotFSM_GH : MonoBehaviour
                 {
                     if (currBossPosState == 1)
                     {
+                        dragonAni.SetTrigger("Laser");
+
                         for (int i = 0; i < bossPhase + 1; i++)
                         {
                             lasers[i].transform.position = firePoint.transform.position;
@@ -321,10 +331,11 @@ public class ValeribotFSM_GH : MonoBehaviour
                     }
                 }
                 break;
-
             case EValeribotState.GROUNDLAGER:
                 if (currBossPosState == 0)
                 {
+                    dragonAni.SetTrigger("Laser");
+
                     firePoint.transform.localEulerAngles = new Vector3(0, 0, -30);
                     lasers[0].transform.position = firePoint.transform.position;
                     lasers[0].SetActive(true);
@@ -334,6 +345,8 @@ public class ValeribotFSM_GH : MonoBehaviour
                 }
                 else if (currBossPosState == 2)
                 {
+                    dragonAni.SetTrigger("Laser");
+
                     firePoint.transform.localEulerAngles = new Vector3(0, 0, 30);
                     lasers[0].transform.position = firePoint.transform.position;
                     lasers[0].SetActive(true);
@@ -348,10 +361,11 @@ public class ValeribotFSM_GH : MonoBehaviour
 
 
                 break;
-
             case EValeribotState.MACHINELAGER:
                 if (currBossPosState == 1 && bossPhase > 2)
                 {
+                    dragonAni.SetTrigger("Machine");
+
                     laserMachines[0].transform.position = transform.position + Vector3.up * 2;
                     laserMachines[1].transform.position = transform.position + Vector3.up * 2;
 
@@ -370,12 +384,19 @@ public class ValeribotFSM_GH : MonoBehaviour
                     ChangeState(EValeribotState.IDLE);
                 }
                 break;
-
             case EValeribotState.BOMBKICK:
                 if (bossPhase < 3)
                 {
                     ChangeState(EValeribotState.IDLE);
                 }
+                break;
+            case EValeribotState.TAILATTACK:
+                dragonAni.SetTrigger("TailAttack");
+                ChangeState(EValeribotState.STAYDELAY);
+                break;
+            case EValeribotState.DIE:
+                dragonAni.SetTrigger("Die");
+
                 break;
         }
     }
@@ -770,10 +791,10 @@ public class ValeribotFSM_GH : MonoBehaviour
             ChangeState(EValeribotState.IDLE);
         }
 
-        if (bomb != null)
-        {
-            Destroy(bomb, bombTime);
-        }
+        //if (bomb != null)
+        //{
+        //    Destroy(bomb, bombTime);
+        //}
 
     }
 
@@ -791,6 +812,11 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     void Damaged()
     {
+        if(valeriHP.currHP <= 0)
+        {
+            ChangeState(EValeribotState.DIE);
+        }
+
         if (Input.GetKeyDown(KeyCode.M)&& !onShield)
         {
             valeriHP.UpdateHP(-30);
