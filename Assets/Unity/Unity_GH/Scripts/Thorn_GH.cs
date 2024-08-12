@@ -7,10 +7,11 @@ public class Thorn_GH : MonoBehaviour
     public GameObject popCone;
     public GameObject model;
 
+    BoxCollider boxcoll;
     // Start is called before the first frame update
     void Start()
     {
-
+        boxcoll = GetComponent<BoxCollider>();
     }
 
     // Update is called once per frame
@@ -18,16 +19,18 @@ public class Thorn_GH : MonoBehaviour
     {
 
     }
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        
-        if (other.gameObject.layer == LayerMask.NameToLayer("Arrow"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Arrow"))
         {
+
             popCone.SetActive(true);
             model.SetActive(false);
-            Destroy(other.gameObject);
+            boxcoll.enabled = false;
+            Destroy(collision.gameObject);
             Destroy(gameObject, 5);
         }
     }
-    
+
+
 }

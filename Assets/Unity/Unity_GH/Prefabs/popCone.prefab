@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3895448505976712649}
-  m_Layer: 14
+  m_Layer: 0
   m_Name: popCone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 350335500044693040}
   - component: {fileID: 3455075690481826465}
   - component: {fileID: 206818216674268311}
-  m_Layer: 14
+  m_Layer: 0
   m_Name: Cones
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2011,7 +2011,7 @@ GameObject:
   - component: {fileID: 8992888593446798141}
   - component: {fileID: 5142185780354971950}
   - component: {fileID: 1334156595800055772}
-  m_Layer: 14
+  m_Layer: 0
   m_Name: Cones (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2095,7 +2095,7 @@ GameObject:
   - component: {fileID: 2713797809323187170}
   - component: {fileID: 5756677745894145079}
   - component: {fileID: 1002407469000908828}
-  m_Layer: 14
+  m_Layer: 0
   m_Name: Cones (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2649,7 +2649,7 @@ GameObject:
   - component: {fileID: 3556683047115098718}
   - component: {fileID: 4670917737279502787}
   - component: {fileID: 6317176351232315194}
-  m_Layer: 14
+  m_Layer: 0
   m_Name: Cones (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2733,7 +2733,7 @@ GameObject:
   - component: {fileID: 3065676718144821790}
   - component: {fileID: 2731533590285587367}
   - component: {fileID: 881265289708371055}
-  m_Layer: 14
+  m_Layer: 0
   m_Name: Cones (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

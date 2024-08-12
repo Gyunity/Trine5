@@ -50,7 +50,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: -0.19, y: 0.61, z: 0}
@@ -63,8 +63,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1747087268053593823}
-  - component: {fileID: 8944264600550805}
-  - component: {fileID: 6504800838551185014}
+  - component: {fileID: 6512606715757507325}
+  - component: {fileID: 5110259605875009875}
   m_Layer: 14
   m_Name: Thorn_GH
   m_TagString: Untagged
@@ -89,21 +89,7 @@ Transform:
   - {fileID: 8743901688067069788}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8944264600550805
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6910597052786239744}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3c6fe7752219674386a88228f302a06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  popCone: {fileID: 105314867212041363}
-  model: {fileID: 3654472408243388936}
---- !u!65 &6504800838551185014
+--- !u!65 &6512606715757507325
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,12 +104,26 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.52, y: 1.52, z: 1}
-  m_Center: {x: -0.19, y: 0.82, z: 0}
+  m_Size: {x: 1.45, y: 1.64, z: 1.7}
+  m_Center: {x: -0.26, y: 0.82, z: 0}
+--- !u!114 &5110259605875009875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6910597052786239744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3c6fe7752219674386a88228f302a06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  popCone: {fileID: 105314867212041363}
+  model: {fileID: 3654472408243388936}
 --- !u!1001 &291079753373743030
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -140,6 +140,11 @@ PrefabInstance:
     - target: {fileID: 395252637598731045, guid: a8be28840dff04248b6a5d622b9ad1aa,
         type: 3}
       propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 395252637598731045, guid: a8be28840dff04248b6a5d622b9ad1aa,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1425537019438736866, guid: a8be28840dff04248b6a5d622b9ad1aa,

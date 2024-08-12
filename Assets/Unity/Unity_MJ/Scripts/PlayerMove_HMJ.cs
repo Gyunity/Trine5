@@ -129,7 +129,7 @@ public class PlayerMove_HMJ : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
-            Debug.Log("드로우 에셋");
+          //  Debug.Log("드로우 에셋");
             playerState.SetState(PlayerState.DrawArrow);
         }
            

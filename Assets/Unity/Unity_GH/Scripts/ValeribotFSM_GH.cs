@@ -621,6 +621,7 @@ public class ValeribotFSM_GH : MonoBehaviour
                 }
                 else if (bossPhase == 2 && targetLaserCount < 1)
                 {
+                    dragonAni.SetTrigger("LaTarget");
                     laserCurrTime = 0;
                     onReadyLaser = true;
                     targetLaserCount++;
@@ -959,7 +960,7 @@ public class ValeribotFSM_GH : MonoBehaviour
     {
         if(collision.gameObject.layer == LayerMask.NameToLayer("Arrow"))
         {
-
+            valeriHP.UpdateHP(-150);
         }
     }
 
