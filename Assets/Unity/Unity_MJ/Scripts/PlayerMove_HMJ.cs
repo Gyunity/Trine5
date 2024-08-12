@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static ArrowMove_HMJ;
@@ -90,6 +91,9 @@ public class PlayerMove_HMJ : MonoBehaviour
     float moveAngle = 0.0f;
 
     ChangeCharacter changeCharacter;
+
+    ArrowManager_HMJ arrowManager;
+    // GetArrowDirection
     // Start is called before the first frame update
     void Start()
     {
@@ -104,16 +108,22 @@ public class PlayerMove_HMJ : MonoBehaviour
         //wayPointData = GameObject.Find("RootManager").GetComponentInChildren<PlayerWayPoint_HMJ>();
 
         //playerState.SetplayerMoveState(PlayerMoveState.Player_ZeroZ);
+
+        arrowManager = GameObject.Find("ArrowManager").GetComponent<ArrowManager_HMJ>();
     }
     // Update is called once per frame
     void Update()
     {
-        PlayerZFixZeroMove();
+        if(playerState.GetState() != PlayerState.DrawArrow)
+            PlayerZFixZeroMove();
 
         if (movement.magnitude > 0 /*&& playerState.GetState() != PlayerState.DrawArrow*/ && playerState.GetState() != PlayerState.Swinging)
         {
+            if (playerState.GetState() == PlayerState.DrawArrow)
+                movement = new Vector3(arrowManager.GetArrowDirection().x, 0.0f, 0.0f);
             // 이동 방향으로 캐릭터 회전
             Quaternion newRotation = Quaternion.LookRotation(movement);
+
             transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * 10.0f);
             anim.SetFloat("MoveSpeed", Mathf.Abs(horizontal));
         }
@@ -146,16 +156,7 @@ public class PlayerMove_HMJ : MonoBehaviour
             playerState.SetState(PlayerState.Dash);
         }
 
-            //z축 고정 추가 (규현)
-            transform.position = new Vector3(transform.position.x, transform.position.y, 0);
-        if (playerState.GetMoveState() == PlayerMoveState.Player_ZeroZ)
-        { 
-        }
-    }
-
-    void ReboundHang()
-    {
-
+        transform.position = new Vector3(transform.position.x, transform.position.y, 0);
     }
 
     void PlayerZFixZeroMove()
