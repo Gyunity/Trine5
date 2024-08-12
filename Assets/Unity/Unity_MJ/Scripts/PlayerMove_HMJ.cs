@@ -128,16 +128,18 @@ public class PlayerMove_HMJ : MonoBehaviour
         }
         // Dash();
 
-        if (Input.GetMouseButton(0))
+        if (changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.ArcherType)
         {
-            Debug.Log("드로우 에셋");
-            playerState.SetState(PlayerState.DrawArrow);
-        }
-           
+            if (Input.GetMouseButton(0) && (playerState.GetState() == PlayerState.Idle || playerState.GetState() == PlayerState.Walk))
+            {
+                Debug.Log("드로우 에셋");
+                playerState.SetState(PlayerState.DrawArrow);
+            }
 
-        if (Input.GetMouseButtonUp(0) && playerState.GetState() == PlayerState.DrawArrow) 
+
+            if (Input.GetMouseButtonUp(0) && playerState.GetState() == PlayerState.DrawArrow)
                 playerState.SetState(PlayerState.ShootArrow);
-
+        }
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
