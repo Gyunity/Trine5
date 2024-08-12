@@ -75,28 +75,5 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # End of https://www.toptal.com/developers/gitignore/api/unity
-
-# Temporary auto-generated Android Assets
-/[Aa]ssets/[Ss]treamingAssets/aa.meta
-/[Aa]ssets/[Ss]treamingAssets/aa/*
+Assets/Unity/Unity_GH/Resource/Boss2_GH/Dragon.fbx.meta
 Assets/Unity/Unity_GH/Resource/Boss2_GH/Dragon.fbx
-Assets/TA/YJM/Assets/Dragon/Dragon.fbx
-Assets/TA/YJM\ASssets/Dragon_test/Dragon/Dragon. fbx
-Assets/TA/YJM/Pa.. /. Fantasy Forest Environment v2.3.2 (17 Jul 2024) .unitypackage Assets\TA\YJM\Package\P_240807 _Forest_Player_Scene_YJM, unitypackage Library\PackageCache\com . unity.burst@1.8.16\. Runtime\l ibburst -1lvm-16. dylib
-Assets/Unity/Unity_GH/Resource/Boss2_GH/Dragon.fbx.meta
-Assets/SineVFX/ForceFieldEffects/Packages/SRP/ForceFieldEffects_URP_2022_3_And_Above.unitypackage.meta
-Assets/SineVFX/ForceFieldEffects/Packages/SRP/ForceFieldEffects_URP_2020_3_And_Above.unitypackage.meta
-Assets/SineVFX/ForceFieldEffects/Packages/SRP/ForceFieldEffects_URP.unitypackage.meta
-Assets/SineVFX/ForceFieldEffects/Packages/SRP/ForceFieldEffects_LWRP.unitypackage.meta
-Assets/SineVFX/ForceFieldEffects/Packages/SRP/ForceFieldEffects_HDRP_2022_2_And_Above.unitypackage.meta
-Assets/SineVFX/ForceFieldEffects/Packages/SRP/ForceFieldEffects_HDRP_2020_2_And_Above.unitypackage.meta
-Assets/SineVFX/ForceFieldEffects/Packages/SRP/ForceFieldEffects_HDRP.unitypackage.meta
-Assets/SineVFX/ForceFieldEffects/Packages/SRP.meta
-Assets/SineVFX/ForceFieldEffects/Packages/NewInputSystemPatchFix.unitypackage.meta
-Assets/SineVFX/ForceFieldEffects/Packages.meta
-Assets/SineVFX/ForceFieldEffects.meta
-Assets/SineVFX.meta
-Assets/Unity/Unity_GH/Resource/Boss2_GH/Dragon.fbx.meta
-Assets/Unity/Unity_GH/Resource/Boss2_GH/Dragon.fbx.meta
-*.meta
-Assets/Unity/Unity_GH/Resource/Boss2_GH/Dragon.fbx.meta
