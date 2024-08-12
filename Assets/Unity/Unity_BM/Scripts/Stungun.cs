@@ -36,9 +36,9 @@ public class Stungun : MonoBehaviour
     void Update()
     {
         //순서대로 진행
-        StungunMove();
-        OnSwitch();
-        OnSwitch2();
+        //StungunMove();
+        //OnSwitch();
+        //OnSwitch2();
         
     }
 
