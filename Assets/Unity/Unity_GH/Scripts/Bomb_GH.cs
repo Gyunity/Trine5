@@ -13,6 +13,7 @@ public class Bomb_GH : MonoBehaviour
     public GameObject bombRange;
 
     bool fireMode = true;
+    bool bombDamage = true;
 
     void Start()
     {
@@ -34,13 +35,20 @@ public class Bomb_GH : MonoBehaviour
             GameObject bombEff = Instantiate(bombEffect);
             bombEff.transform.position = transform.position;
 
-            Collider[] cannonShields = Physics.OverlapSphere(transform.position, 3);
+            Collider[] BombRanges = Physics.OverlapSphere(transform.position, 5);
 
-            foreach (Collider canonShield in cannonShields)
+            foreach (Collider bombAttack in BombRanges)
             {
-                if (canonShield.transform.gameObject.layer == LayerMask.NameToLayer("CannonShield"))
+                if (bombAttack.transform.gameObject.layer == LayerMask.NameToLayer("CannonShield"))
                 {
-                    canonShield.transform.gameObject.SetActive(false);
+                    bombAttack.transform.gameObject.SetActive(false);
+                }
+
+                if(bombAttack.transform.gameObject.layer == LayerMask.NameToLayer("Player") && bombDamage)
+                {
+                    HPSystem_HMJ playerHP = bombAttack.transform.gameObject.GetComponent<HPSystem_HMJ>();
+                    playerHP.UpdateHP(-500);
+                    bombDamage = false;
                 }
             }
 

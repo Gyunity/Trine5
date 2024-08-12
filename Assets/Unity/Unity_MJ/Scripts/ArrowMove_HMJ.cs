@@ -163,7 +163,7 @@ public class ArrowMove_HMJ : MonoBehaviour
             transform.rotation = Quaternion.LookRotation((linePositions[moveIndex + 1] - linePositions[moveIndex]).normalized);
 
             moveIndex++;
-            print(moveIndex);
+            //print(moveIndex);
         }
     }
 
@@ -340,7 +340,7 @@ public class ArrowMove_HMJ : MonoBehaviour
 
     void LineRender_On()
     {
-        Debug.Log("라인 렌더러 활성화o");
+        //Debug.Log("라인 렌더러 활성화o");
         lineRenderer.enabled = true;
         // 화살 이동
         MoveArrow();

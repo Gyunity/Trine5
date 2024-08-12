@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class TailAttack_GH : MonoBehaviour
 {
+    public HPSystem_HMJ playerHPSC;
+    ValeribotFSM_GH bossFSM;
+
     void Start()
     {
-        
+        bossFSM = GetComponentInParent<ValeribotFSM_GH>();
     }
 
     // Update is called once per frame
@@ -16,9 +19,10 @@ public class TailAttack_GH : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.layer == LayerMask.NameToLayer("Player"))
+
+        if(other.gameObject.layer == LayerMask.NameToLayer("Player") && bossFSM.currState != ValeribotFSM_GH.EValeribotState.JUMP)
         {
-            print("꼬리 공격 하기");
+            playerHPSC.UpdateHP(-bossFSM.tailAttackValue);
         }
     }
 }
