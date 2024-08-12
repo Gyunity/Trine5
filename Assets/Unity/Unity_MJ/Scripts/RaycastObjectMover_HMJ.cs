@@ -13,11 +13,20 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
     float rotateSpeed = 50.0f;
     bool mouseClick = false;
 
+    GameObject player;
+    ChangeCharacter changeCharacter;
 
+    private void Start()
+    {
+        player = GameObject.Find("Player");
+
+        changeCharacter = player.GetComponentInChildren<ChangeCharacter>();
+    }
     private void FixedUpdate()
     {
         // 마우스 오른쪽 버튼을 클릭했을 때만 해당되는 레이어 오브젝트의 위치가 변경되도록 수정
-        ObjectMove();
+        if (changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.WizardType)
+            ObjectMove();
     }
 
     void ObjectMove()
