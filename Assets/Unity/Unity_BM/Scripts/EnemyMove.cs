@@ -157,7 +157,7 @@ public class EnemyMove : MonoBehaviour
         }
         else if (currentTime > Box_attackTime)
         {
-            currentTime = 0;
+            currentTime = 3;
 
             GoBox();
         }
