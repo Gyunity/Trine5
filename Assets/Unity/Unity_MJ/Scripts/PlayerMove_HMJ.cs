@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static ArrowMove_HMJ;
 using static PlayerState_HMJ;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerMove_HMJ : MonoBehaviour
 {
@@ -59,7 +61,7 @@ public class PlayerMove_HMJ : MonoBehaviour
     float startTime;
 
     public float swingSpeed = 20.0f;      // 흔들림 속도 (스윙 속도)
-    public float boundingSpeed = 100.0f;      // 반동 속도 (반동 속도)
+    public float boundingSpeed = 1.0f;      // 반동 속도 (반동 속도)
     public float swingRadius = 5.0f;     // 흔들림 반지름 (밧줄의 길이)
     public float swingAngle = 90.0f;     // 흔들림 각도 (최대 각도)
 
@@ -83,13 +85,15 @@ public class PlayerMove_HMJ : MonoBehaviour
 
     float angle = 90.0f;
 
-    PlayerWayPoint_HMJ wayPointData;
 
     bool left = false;
     float moveFirstAngle = 0.0f;
     float moveAngle = 0.0f;
 
+    ChangeCharacter changeCharacter;
 
+    ArrowManager_HMJ arrowManager;
+    // GetArrowDirection
     // Start is called before the first frame update
     void Start()
     {
@@ -100,21 +104,26 @@ public class PlayerMove_HMJ : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         
         playerState = GameObject.Find("Player").GetComponentInChildren<PlayerState_HMJ>();
-
+        changeCharacter = GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>();
         //wayPointData = GameObject.Find("RootManager").GetComponentInChildren<PlayerWayPoint_HMJ>();
 
-        playerState.SetplayerMoveState(PlayerMoveState.Player_ZeroZ);
-    }
+        //playerState.SetplayerMoveState(PlayerMoveState.Player_ZeroZ);
 
+        arrowManager = GameObject.Find("ArrowManager").GetComponent<ArrowManager_HMJ>();
+    }
     // Update is called once per frame
     void Update()
     {
-        PlayerZFixZeroMove();
+        if(playerState.GetState() != PlayerState.DrawArrow)
+            PlayerZFixZeroMove();
 
-        if (movement.magnitude > 0 && playerState.GetState() != PlayerState.DrawArrow && playerState.GetState() != PlayerState.Swinging)
+        if (movement.magnitude > 0 /*&& playerState.GetState() != PlayerState.DrawArrow*/ && playerState.GetState() != PlayerState.Swinging)
         {
+            if (playerState.GetState() == PlayerState.DrawArrow)
+                movement = new Vector3(arrowManager.GetArrowDirection().x, 0.0f, 0.0f);
             // 이동 방향으로 캐릭터 회전
             Quaternion newRotation = Quaternion.LookRotation(movement);
+
             transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * 10.0f);
             anim.SetFloat("MoveSpeed", Mathf.Abs(horizontal));
         }
@@ -129,32 +138,25 @@ public class PlayerMove_HMJ : MonoBehaviour
         }
         // Dash();
 
-        if (Input.GetMouseButton(0))
+        if (changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.ArcherType)
         {
-            Debug.Log("드로우 에셋");
-            playerState.SetState(PlayerState.DrawArrow);
-        }
-           
+            if (Input.GetMouseButton(0) && (playerState.GetState() == PlayerState.Idle || playerState.GetState() == PlayerState.Walk))
+            {
+                Debug.Log("드로우 에셋");
+                playerState.SetState(PlayerState.DrawArrow);
+            }
 
-        if (Input.GetMouseButtonUp(0) && playerState.GetState() == PlayerState.DrawArrow) 
+
+            if (Input.GetMouseButtonUp(0) && playerState.GetState() == PlayerState.DrawArrow)
                 playerState.SetState(PlayerState.ShootArrow);
-
+        }
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             playerState.SetState(PlayerState.Dash);
         }
 
-        if (playerState.GetMoveState() == PlayerMoveState.Player_ZeroZ)
-        { 
-            //z축 고정 추가 (규현)
-            transform.position = new Vector3(transform.position.x, transform.position.y, 0);
-        }
-    }
-
-    void ReboundHang()
-    {
-
+        transform.position = new Vector3(transform.position.x, transform.position.y, 0);
     }
 
     void PlayerZFixZeroMove()
@@ -170,9 +172,9 @@ public class PlayerMove_HMJ : MonoBehaviour
         if (playerState.GetState() != PlayerState.Grap && playerState.GetState() != PlayerState.Climb)
             horizontal = Input.GetAxis("Horizontal"); // - 1 ~ 1 * moveDirection 
 
-        Vector3 Direction = wayPointData.GetMoveDirection();
-        Direction = new Vector3(horizontal * Direction.x, 0.0f, horizontal * Direction.z);
-        movement = Direction;
+        //Vector3 Direction = wayPointData.GetMoveDirection();
+        //Direction = new Vector3(horizontal * Direction.x, 0.0f, horizontal * Direction.z);
+       // movement = Direction;
     }
 
     void UpdateLineRender(Vector3 TargetPosition, Vector3 playerHandPositoin)
@@ -250,6 +252,7 @@ public class PlayerMove_HMJ : MonoBehaviour
                 moveFirstAngle -= 2.0f;
 
                 moveAngle = moveFirstAngle;
+                moveAngle = Mathf.Clamp(moveAngle, 90.0f, 270.0f);
             }
         }
         else
@@ -262,7 +265,9 @@ public class PlayerMove_HMJ : MonoBehaviour
             {
                 left = true;
                 moveFirstAngle -= 2.0f;
+  
                 moveAngle = moveFirstAngle;
+                moveAngle = Mathf.Clamp(moveAngle, 90.0f, 270.0f);
             }
         }
     }
@@ -315,7 +320,8 @@ public class PlayerMove_HMJ : MonoBehaviour
 
     void Swinging()
     {
-        if (Input.GetMouseButtonDown(1) && SelectHangingObject())
+
+        if (Input.GetMouseButtonDown(1) && SelectHangingObject() && (changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.ArcherType))
         {
             startTime = Time.time;
             if(playerState.SetState(PlayerState.Swinging)) // 스테이트가 바뀌었으면
@@ -332,15 +338,17 @@ public class PlayerMove_HMJ : MonoBehaviour
                     currentAngle = angle;
                 }
 
+                // 90 ~ 270
                 if (currentAngle >= 180.0f)
                 {
+                    
                     left = true;
-                    moveFirstAngle = currentAngle - 180.0f;
+                    moveFirstAngle = Mathf.Clamp(currentAngle - 180.0f, 90.0f, 180.0f);
                 }
                 else
                 { 
                     left = false;
-                    moveFirstAngle = currentAngle;
+                    moveFirstAngle = Mathf.Clamp(currentAngle, 90.0f, 180.0f); 
                 }
 
             }
@@ -384,7 +392,7 @@ public class PlayerMove_HMJ : MonoBehaviour
             if(playerState.SetState(PlayerState.Jump))
             {
                 swingSpeed = 20.0f;      // 흔들림 속도 (스윙 속도)
-                boundingSpeed = 100.0f;      // 반동 속도 (반동 속도)
+                boundingSpeed = 30.0f;      // 반동 속도 (반동 속도)
                 swingRadius = 5.0f;     // 흔들림 반지름 (밧줄의 길이)
                 swingAngle = 90.0f;     // 흔들림 각도 (최대 각도)
                 currentAngle = 0.0f;

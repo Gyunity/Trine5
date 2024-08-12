@@ -24,10 +24,10 @@ public class Bomb_GH : MonoBehaviour
         bombCurrTime += Time.deltaTime;
         transform.position = new Vector3(transform.position.x, transform.position.y, 0);
 
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            fireMode = false;
-        }
+        //if (Input.GetKeyDown(KeyCode.N))
+        //{
+        //    fireMode = false;
+        //}
 
         if (bombCurrTime > bombTime && fireMode)
         {
@@ -60,10 +60,9 @@ public class Bomb_GH : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        //얼음 화살로 변경
-        //if (collision.gameObject)
-        //{
-        //    fireMode = false;
-        //}
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Arrow"))
+        {
+            fireMode = false;
+        }
     }
 }

@@ -8,6 +8,8 @@ public class ArrowManager_HMJ : MonoBehaviour
 
     public GameObject player;
     public ChangeCharacter playerChangeState;
+
+    public GameObject arrowObject;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,6 +27,14 @@ public class ArrowManager_HMJ : MonoBehaviour
     public void SpawnArrow()
     {
         if(playerChangeState.GetPlayerCharacterType() == PlayerCharacterType.ArcherType)
-            Instantiate(arrowPrefab);
+            arrowObject = Instantiate(arrowPrefab);
+    }
+
+    public Vector3 GetArrowDirection()
+    {
+        if (arrowObject)
+            return arrowObject.transform.forward;
+        else
+            return new Vector3(0.0f, 0.0f, 0.0f);
     }
 }

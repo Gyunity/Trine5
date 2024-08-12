@@ -39,7 +39,7 @@ public class ArrowMove_HMJ : MonoBehaviour
 
     public float myPower = 0;
 
-    float powerSpeed = 10.0f;
+    float powerSpeed = 50.0f;
 
     public GameObject arrowObject;
 
@@ -68,7 +68,7 @@ public class ArrowMove_HMJ : MonoBehaviour
     {
         transform.position += dir * speed;
         //Debug.Log("화살 dir: " + dir.x + ", " + dir.y + ", " + dir.z);
-        //Debug.Log("화살 이동 중~: " + transform.position.x + ", " + transform.position.y + ", " + transform.position.z);
+        //Debug.Log("화살 이동 중~: " + transform.position.x + ", " + transform.position.y + ", " + transform.position.z);22
     }
 
     void UpdateState()
