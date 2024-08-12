@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class EnemyMove : MonoBehaviour
 {
@@ -32,6 +34,11 @@ public class EnemyMove : MonoBehaviour
     HpSystem hpSystem;
 
     int bossPhase = 1;
+
+    float currtTime = 0;
+    float dieTime = 5;
+
+    public Image[] shiledPhase;
 
     // Start is called before the first frame update
     void Start()
@@ -66,6 +73,10 @@ public class EnemyMove : MonoBehaviour
                 break;
 
             case EEnemyState.Die:
+                currtTime += Time.deltaTime;
+               
+                    SceneManager.LoadScene("Valeribot_GH");
+                
                 break;
         }
     }
@@ -86,15 +97,32 @@ public class EnemyMove : MonoBehaviour
                 anim.SetTrigger("Stun");
                 break;
             case EEnemyState.Sleep:
+                if(bossPhase == 1)
+                {
+                    shiledPhase[0].gameObject.SetActive(false);
+                }
+                else if (bossPhase == 2)
+                {
+                    shiledPhase[1].gameObject.SetActive(false);
+                }
+                else if (bossPhase == 3)
+                {
+                    shiledPhase[2].gameObject.SetActive(false);
+                }
+                else if (bossPhase == 4)
+                {
+                    shiledPhase[3].gameObject.SetActive(false);
+                }
                 //print("체인지 슬립");
                 //anim.SetTrigger("Sleep");
                 //anim.SetTrigger("Idle");
                 //anim.SetTrigger("Die");
-                
+
                 break;
 
             case EEnemyState.Die:
                 anim.SetTrigger("Die");
+                currtTime = 0;
                 break;
         }
     }
@@ -145,7 +173,7 @@ public class EnemyMove : MonoBehaviour
     {
         
         print("업데이트 슬립");
-        if (hpSystem.currHp <= 90f && bossPhase == 1)
+        if (hpSystem.currHp <= 80f && bossPhase == 1)
         {
             ChangeState(EEnemyState.Idle);
             print("1");
@@ -158,7 +186,7 @@ public class EnemyMove : MonoBehaviour
             bossPhase++;
 
         }
-        else if (hpSystem.currHp <= 30f && bossPhase == 3)
+        else if (hpSystem.currHp <= 40f && bossPhase == 3)
         {
             ChangeState(EEnemyState.Idle);
             print("3");
@@ -197,7 +225,7 @@ public class EnemyMove : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Arrow"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Arrow") && currState == EEnemyState.Sleep)
         {
             print("현재 화살과 충돌~~");
             hpSystem.UpdateHp(-10);

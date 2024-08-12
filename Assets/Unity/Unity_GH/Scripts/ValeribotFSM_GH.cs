@@ -954,6 +954,7 @@ public class ValeribotFSM_GH : MonoBehaviour
         {
             valeribotPhase.ChangeState(EValeribotPhase.PHASE_4);
         }
+        
     }
 
     private void OnCollisionEnter(Collision collision)

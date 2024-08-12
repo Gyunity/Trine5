@@ -14,8 +14,8 @@ public class FireBallMove : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //target = GameObject.Find(targetName);
-        target = GameObject.FindWithTag(targetName);
+        target = GameObject.Find(targetName);
+        //target = GameObject.FindWithTag(targetName);
         dir =target.transform.position - transform.position;
         dir.Normalize();
         

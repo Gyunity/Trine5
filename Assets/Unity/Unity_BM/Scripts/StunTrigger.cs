@@ -29,7 +29,7 @@ public class StunTrigger : MonoBehaviour
             currTime += Time.deltaTime;
             if (currTime >= creatTime)
             {
-                Debug.Log("공격가능");
+                Debug.Log("공격가능!!!!!");
                 //스턴 애니메이션
                 boss.ChangeState(EEnemyState.Stun);
                 currTime = 0;
