@@ -23,7 +23,7 @@ public class Cannon_GH : MonoBehaviour
     {
         shellLoad = false;
         //ToDO 화살 되면 바꾸기 false로
-        arrowFire = true;
+        arrowFire = false;
     }
 
     // Update is called once per frame
@@ -35,8 +35,7 @@ public class Cannon_GH : MonoBehaviour
             Invoke("shoot", 2);
             shellLoad = false;
 
-            //ToDo 화살구현되면 false로 바꾸기
-            arrowFire = true;
+            arrowFire = false;
         }
     }
 

@@ -31,6 +31,7 @@ public class StongunButton : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (other.tag == "Player")
+            print("공격가능");
         {
             isOn = false;
             isMove = false;

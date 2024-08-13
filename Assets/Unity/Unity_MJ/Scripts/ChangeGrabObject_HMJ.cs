@@ -23,16 +23,18 @@ public class ChangeGrabObject_HMJ : MonoBehaviour
     List<GameObject> objectList = new List<GameObject>();
     // Start is called before the first frame update
 
+    ChangeCharacter changeCharacter;
     private void Awake()
     {
         LoadPrefab();
         SetMeshAllActive(false); // 모든 엑티브 끄기
         curMeshType = MeshType.MeshType_End;
+
     }
 
     void Start()
     {
-
+        changeCharacter = GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>();
     }
 
     // Update is called once per frame
@@ -111,6 +113,8 @@ public class ChangeGrabObject_HMJ : MonoBehaviour
     
     void ChangeMeshPrefab()
     {
+        if (changeCharacter.GetPlayerCharacterType() != PlayerCharacterType.WizardType)
+            return;
         if (Input.GetKeyDown(KeyCode.E))
             SetMeshData(MeshType.Cube);
         else if (Input.GetKeyDown(KeyCode.F))

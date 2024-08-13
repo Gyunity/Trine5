@@ -21,8 +21,7 @@ public class ArrowFire_GH : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //ToDo 화염화살 체크
-        if(other.gameObject.layer == LayerMask.NameToLayer(""))
+        if(other.gameObject.layer == LayerMask.NameToLayer("Arrow"))
         {
             cannon_GH.arrowFire = true;
         }

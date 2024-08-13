@@ -11,14 +11,29 @@
         public GameObject fracturedCrate;
         [Header("Audio")]
         public AudioSource crashAudioClip;
-
-        private void OnTriggerEnter(Collider other)
+        private void OnCollisionEnter(Collision collision)
         {
-            wholeCrate.enabled = false;
-            boxCollider.enabled = false;
-            fracturedCrate.SetActive(true);
-            crashAudioClip.Play();
+            if (collision.gameObject.layer == LayerMask.NameToLayer("Arrow"))
+            {
+                wholeCrate.enabled = false;
+                boxCollider.enabled = false;
+                fracturedCrate.SetActive(true);
+                crashAudioClip.Play();
+
+            }
+
         }
+        //private void OnTriggerEnter(Collider other)
+        //{
+        //    if (other.gameObject.layer == LayerMask.NameToLayer("Arrow"))
+        //    {
+        //        wholeCrate.enabled = false;
+        //        boxCollider.enabled = false;
+        //        fracturedCrate.SetActive(true);
+        //        crashAudioClip.Play();
+
+        //    }
+        //}
 
         [ContextMenu("Test")]
         public void Test()

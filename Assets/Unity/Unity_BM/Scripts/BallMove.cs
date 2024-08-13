@@ -26,7 +26,7 @@ public class BallMove : MonoBehaviour
     {
         
         //만약에 부딪힌 오브젝트가 Player, Player weapon, wall 이면 
-        if (other.gameObject.tag == "Player" || other.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        if (other.gameObject.tag == "Player" || other.gameObject.layer == LayerMask.NameToLayer("Wall") || other.gameObject.tag == "Player_equipment")
         {
             Debug.Log("볼 공격");
             //GameObject explosion = Instantiate(explosionFactory);
