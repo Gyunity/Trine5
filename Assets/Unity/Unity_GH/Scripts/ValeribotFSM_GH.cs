@@ -24,7 +24,8 @@ public class ValeribotFSM_GH : MonoBehaviour
         TAILATTACK,
         STAYDELAY,
         DAMAGE,
-        DIE
+        DIE,
+        START
     }
 
 
@@ -189,7 +190,7 @@ public class ValeribotFSM_GH : MonoBehaviour
 
         transform.position = pointC.position;
 
-        currState = EValeribotState.STAYDELAY;
+        ChangeState(EValeribotState.START);
 
         //레이저 오브젝트 풀
         lasers = new GameObject[12];
@@ -260,6 +261,8 @@ public class ValeribotFSM_GH : MonoBehaviour
             case EValeribotState.DAMAGE:
                 break;
             case EValeribotState.DIE:
+                break;
+            case EValeribotState.START:
                 break;
         }
 
@@ -421,6 +424,11 @@ public class ValeribotFSM_GH : MonoBehaviour
                     lasers[i].GetComponent<LaserFire_GH>().LaserDone();
 
                 }
+
+                break;
+            case EValeribotState.START:
+                dragonAni.SetTrigger("Start");
+                StartCoroutine(StartAni());
 
                 break;
         }
@@ -963,18 +971,23 @@ public class ValeribotFSM_GH : MonoBehaviour
         else if (valeriHP.currHP <= valeriHP.maxHP * 0.5 && bossPhase == 2)
         {
             valeribotPhase.ChangeState(EValeribotPhase.PHASE_3);
-
         }
-        
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.layer == LayerMask.NameToLayer("Arrow"))
+        if(collision.gameObject.layer == LayerMask.NameToLayer("Arrow") && !onShield)
         {
             //todo
             valeriHP.UpdateHP(-150);
         }
+    }
+
+    IEnumerator StartAni()
+    {
+        yield return new WaitForSeconds(5.7f);
+        ChangeState(EValeribotState.IDLE);
+
     }
 
 }

@@ -11,7 +11,7 @@ public class CamManager_GH : MonoBehaviour
 
     CinemachineVirtualCamera deadcamtrans;
     float currTime = 0;
-    float transeTime = 5;
+    float shiftTime = 5;
     float moveTime = 7;
 
     public ValeribotFSM_GH boss;
@@ -21,38 +21,55 @@ public class CamManager_GH : MonoBehaviour
 
     bool ballCreate = false;
 
+    public Image fadeIn;
+    public Image fadeOut;
+
+
     void Start()
     {
         deadcamtrans = deadCam.GetComponent<CinemachineVirtualCamera>();
+        fadeOut.SetEnabled(false);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (boss.currState == ValeribotFSM_GH.EValeribotState.DIE)
         {
-            CamTranse();
+            StartCoroutine(CamTest());
         }
     }
+    //void CamShift()
+    //{
+    //    currTime += Time.deltaTime;
+    //    if (currTime > moveTime)
+    //    {
+    //        deadcamtrans.transform.Translate(Vector3.forward * 0.2f * Time.deltaTime, Space.Self);
 
-    void CamTranse()
+    //        if (!ballCreate)
+    //        {
+    //            Instantiate(dragonBallFac, dragonBallPos);
+    //            ballCreate = true;
+    //        }
+
+    //    }
+    //    if (currTime > shiftTime)
+    //    {
+    //        deadcamtrans.Priority = 11;
+    //    }
+    //}
+    IEnumerator CamTest()
     {
-        currTime += Time.deltaTime;
-        if (currTime > moveTime)
-        {
-            deadcamtrans.transform.Translate(Vector3.forward * 0.2f * Time.deltaTime, Space.Self);
+        yield return new WaitForSeconds(shiftTime);
+        deadcamtrans.Priority = 11;
 
-            if (!ballCreate)
-            {
-                Instantiate(dragonBallFac, dragonBallPos);
-                ballCreate = true;
-            }
-
-        }
-        if (currTime > transeTime)
+        yield return new WaitForSeconds(2);
+        deadcamtrans.transform.Translate(Vector3.forward * 0.1f * Time.deltaTime, Space.Self);
+        
+        if (!ballCreate)
         {
-            deadcamtrans.Priority = 11;
+            Instantiate(dragonBallFac, dragonBallPos);
+            ballCreate = true;
         }
+
     }
-
 }

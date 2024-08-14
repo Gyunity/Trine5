@@ -57,6 +57,7 @@ public class ValeribotPhase_GH : MonoBehaviour
                 {
                     ShieldHPs[0].gameObject.SetActive(false);
                 }
+
                 if (valeriHP.currHP < valeriHP.maxHP * 0.75f)
                 {
                     valeriHP.currHP = valeriHP.maxHP * 0.75f;
