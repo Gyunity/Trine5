@@ -5,6 +5,7 @@ using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
+using UnityEngine.ProBuilder;
 using UnityEngine.UIElements;
 using static ArrowMove_HMJ;
 using static PlayerState_HMJ;
@@ -95,6 +96,8 @@ public class PlayerMove_HMJ : MonoBehaviour
     ArrowManager_HMJ arrowManager;
 
     float attackLeftTime = 0.0f;
+
+    Vector3 incDir;
 
     // GetArrowDirection
     // Start is called before the first frame update
@@ -436,10 +439,35 @@ public class PlayerMove_HMJ : MonoBehaviour
         }
         else
         {
-            if(playerState.GetState() != PlayerState.DrawArrow && playerState.GetState() != PlayerState.Swinging)
-                cc.Move((movement * moveSpeed + new Vector3(0.0f, yVelocity, 0.0f)) * Time.deltaTime);
+            incDir = GetIncVector();
+
+            if (playerState.GetState() != PlayerState.DrawArrow && playerState.GetState() != PlayerState.Swinging)
+                cc.Move((movement * moveSpeed + new Vector3(0.0f, yVelocity, 0.0f) + incDir)  * Time.deltaTime);
         }
+
+
+
     }
+
+    Vector3 GetIncVector()
+    {
+        Vector3 result = Vector3.zero;
+
+        Ray ray = new Ray(transform.position + Vector3.up, Vector3.down);
+        RaycastHit hitinfo;
+
+        if(Physics.Raycast(ray,out hitinfo,5, 1 << LayerMask.NameToLayer("SummonedObject")))
+        {
+           float dot = -Vector3.Dot(Vector3.right, hitinfo.normal);
+
+            result = Vector3.Cross(Vector3.forward, hitinfo.normal) * dot;
+        }
+
+        return result;
+    }
+
+
+
     void GrabMove()
     {
         cc.Move(new Vector3(1.0f, 0.0f, 0.0f) * moveSpeed * Time.deltaTime);
