@@ -20,7 +20,7 @@ public class BallMove : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        rd.velocity += Vector3.right* movespeed * Time.deltaTime;
+        rd.velocity += Vector3.left* movespeed * Time.deltaTime;
     }
     void OnCollisionEnter(Collision other)
     {
