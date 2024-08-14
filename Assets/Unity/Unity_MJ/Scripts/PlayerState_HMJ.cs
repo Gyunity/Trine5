@@ -16,6 +16,9 @@ public class PlayerState_HMJ : MonoBehaviour
         ShootArrow,
         Swinging,
         Damaged,
+        Death,
+        Attack00,
+        Attack01,
         PlayerStateEnd
 
     }
@@ -106,13 +109,18 @@ public class PlayerState_HMJ : MonoBehaviour
                 break;
             case PlayerState.Damaged:
                 //anim.SetTrigger("Swinging");
-
+                break;
+            case PlayerState.Attack00:
+                break;
+            case PlayerState.Attack01:
                 break;
         }
     }
 
     public bool SetState(PlayerState playerState)
     {
+        if (curPlayerState == PlayerState.Death)
+            return false;
         if (curPlayerState != playerState)
         {
             playerMove.ResetDashData();
@@ -120,7 +128,7 @@ public class PlayerState_HMJ : MonoBehaviour
             switch (playerState)
             {
                 case PlayerState.Idle:
-                    anim.SetTrigger("Idle");
+                    //anim.SetTrigger("Idle");
                     //Debug.Log("Test: Idle State");
                     break;
                 case PlayerState.Walk:
@@ -160,8 +168,16 @@ public class PlayerState_HMJ : MonoBehaviour
                     //Debug.Log("Test: Swinging State");
                     break;
                 case PlayerState.Damaged:
-                    //anim.SetTrigger("Swinging");
-                    hpSystem.UpdateHP(100.0f);
+                    anim.SetTrigger("Hit");
+                    break;
+                case PlayerState.Death:
+                    anim.SetTrigger("Death");
+                    break;
+                case PlayerState.Attack00:
+                    anim.SetTrigger("Attack00");
+                    break;
+                case PlayerState.Attack01:
+                    anim.SetTrigger("Attack01");
                     break;
             }
 
