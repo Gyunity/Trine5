@@ -43,9 +43,11 @@ public class ChangeCharacter : MonoBehaviour
     {
         GameObject player = GameObject.Find("Player");
 
-        for(int i = 0; i < (int)PlayerCharacterType.PlayerCharacterTypeEnd; i++)
+        for(int i = 0; i < player.transform.childCount; i++)
         {
-            objectList.Add(player.transform.GetChild(i).gameObject);
+            GameObject gameObject = player.transform.GetChild(i).gameObject;
+            if(gameObject.layer == LayerMask.NameToLayer("Player"))
+                objectList.Add(gameObject);
         }
 
         //// 프리펩 정보 리스트에 미리 로드
