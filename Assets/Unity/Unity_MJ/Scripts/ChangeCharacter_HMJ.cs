@@ -108,5 +108,10 @@ public class ChangeCharacter : MonoBehaviour
         animControllerList.Add(AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Unity/Unity_MJ/Assets/Animation/Animation Active/Player_Wizard.controller"));
         animControllerList.Add(AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Unity/Unity_MJ/Assets/Animation/Animation Active/Player_Archer.controller"));
     }
+
+    public PlayerCharacterType GetPlayerCharacterType()
+    {
+        return curPlayerCharacterType;
+    }
 }
  

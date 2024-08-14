@@ -19,7 +19,7 @@ public class Trigger_R : MonoBehaviour
     }
     public void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Player" || other.tag == "Player_equipment")
         {
             //전기충격
             Debug.Log("R버튼 클릭");

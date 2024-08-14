@@ -4,13 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HpSystem : MonoBehaviour
+public class HpSystem: MonoBehaviour
 {
-    public float maxHp = 3;
-    private float currHp;
+    
+    //public float maxHp = 12;
+    public float maxHp = 120;
+    public float currHp;
     public Image hpBar;
 
-    public Action onDie;
+    //public Action onDie;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,14 +33,33 @@ public class HpSystem : MonoBehaviour
         // HPBar UI 갱신 (0 ~ 1)
         hpBar.fillAmount = currHp / maxHp;
 
-        // 만약에 현재 HP 가 0보다 작거나 같으면
-        if (currHp <= 0)
-        {
-            // onDie 에 있는 함수를 실행하자.
-            if (onDie != null)
-            {
-                onDie();
-            }
-        }
+        //if (currHp > 90f)
+        //{
+        //    Debug.Log("1");
+        //    Phase_01();
+        //}
+        //else if (currHp > 60f)
+        //{
+        //    Debug.Log("2");
+        //    Phase_02();
+        //}
+        //else if (currHp > 30f)
+        //{
+        //    Debug.Log("3");
+        //    Phase_03();
+        //}   
+        //// 만약에 현재 HP 가 0보다 작거나 같으면
+        //else if (currHp <= 0)
+        //{
+        //    Debug.Log("4");
+        //    // onDie 에 있는 함수를 실행하자.
+        //    //if (onDie != null)
+        //    //{
+        //    //    Debug.Log("5");
+        //    //    onDie();
+        //    //}
+        //}
     }
+   
+   
 }

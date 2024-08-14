@@ -14,12 +14,25 @@ public class PlayerState_HMJ : MonoBehaviour
         Climb,
         DrawArrow,
         ShootArrow,
+        Swinging,
+        Damaged,
         PlayerStateEnd
 
     }
 
+    public enum PlayerMoveState
+    {
+        Player_ZeroZ,
+        Player_FixZ,
+        PlayerMoveStateEnd
+    }
+
     public PlayerState curPlayerState;
     public PlayerState prePlayerState;
+
+
+    public PlayerMoveState curPlayerMoveState;
+    public PlayerMoveState prePlayerMoveState;
 
     public float grabyPos;
 
@@ -29,63 +42,78 @@ public class PlayerState_HMJ : MonoBehaviour
 
     GameObject arrowManager;
 
+    HPSystem_HMJ hpSystem;
     private void Awake()
     {
         anim = GetComponentInChildren<Animator>();
         playerMove = GetComponentInChildren<PlayerMove_HMJ>();
         arrowManager = GameObject.Find("ArrowManager");
+        hpSystem = GameObject.Find("Player").GetComponentInChildren<HPSystem_HMJ>();
     }
     // Start is called before the first frame update
     void Start()
     {
         curPlayerState = PlayerState.PlayerStateEnd;
         prePlayerState = PlayerState.PlayerStateEnd;
+
+        curPlayerMoveState = PlayerMoveState.PlayerMoveStateEnd;
+        prePlayerMoveState = PlayerMoveState.PlayerMoveStateEnd;
     }
 
     // Update is called once per frame
     void Update()
     {
         UpdateState();
+        if (Input.GetKeyDown(KeyCode.B))
+            hpSystem.UpdateHP(-100.0f);
     }
 
     void UpdateState()
     {
-        switch(curPlayerState)
+        switch (curPlayerState)
         {
             case PlayerState.Idle:
-                Debug.Log("Idle State");
+                //Debug.Log("Idle State");
                 break;
             case PlayerState.Walk:
-                Debug.Log("Walk State");
+                //Debug.Log("Walk State");
                 break;
             case PlayerState.Jump:
-                Debug.Log("Jump State");
+                //Debug.Log("Jump State");
                 break;
             case PlayerState.Dash:
-                Debug.Log("Dash State");
+                //Debug.Log("Dash State");
                 playerMove.Dash();
                 break;
             case PlayerState.Grap:
-                Debug.Log("Grap State");
+                //Debug.Log("Grap State");
                 transform.position = new Vector3(transform.position.x, grabyPos, transform.position.z);
                 break;
             case PlayerState.Climb:
-                Debug.Log("Climb State");
+                //Debug.Log("Climb State");
                 transform.position = new Vector3(transform.position.x, grabyPos, transform.position.z);
                 break;
             case PlayerState.ShootArrow:
-                Debug.Log("Shoot State");
+                //Debug.Log("Shoot State");
                 break;
             case PlayerState.DrawArrow:
+                //Debug.Log("Draw State");
+                break;
+            case PlayerState.Swinging:
 
-                Debug.Log("Draw State");
+                //playerMove.MoveWithBounce();
+                //Debug.Log("Swinging State");
+                break;
+            case PlayerState.Damaged:
+                //anim.SetTrigger("Swinging");
+
                 break;
         }
     }
 
-    public void SetState(PlayerState playerState)
+    public bool SetState(PlayerState playerState)
     {
-        if(curPlayerState != playerState)
+        if (curPlayerState != playerState)
         {
             playerMove.ResetDashData();
 
@@ -93,47 +121,91 @@ public class PlayerState_HMJ : MonoBehaviour
             {
                 case PlayerState.Idle:
                     anim.SetTrigger("Idle");
-                    Debug.Log("Test: Idle State");
+                    //Debug.Log("Test: Idle State");
                     break;
                 case PlayerState.Walk:
                     break;
                 case PlayerState.Jump:
                     anim.SetTrigger("Jump");
-                    Debug.Log("Test: Jump State");
+                    //Debug.Log("Test: Jump State");
                     break;
                 case PlayerState.Dash:
                     anim.SetTrigger("Dash");
-                    Debug.Log("Test: Dash State");
+                    //Debug.Log("Test: Dash State");
                     break;
                 case PlayerState.Grap:
-                    anim.SetTrigger("Hanging");
-                    Debug.Log("Test: Hanging State");
+                    anim.SetTrigger("Grap");
+                    //Debug.Log("Test: Grap State");
                     grabyPos = 1.8f;
                     break;
                 case PlayerState.Climb:
                     anim.SetTrigger("Climb");
-                    Debug.Log("Test: Climb State");
+                    //Debug.Log("Test: Climb State");
                     grabyPos = 1.4f;
                     break;
                 case PlayerState.DrawArrow:
-                    arrowManager.GetComponentInChildren<ArrowManager_HMJ>().SpawnArrow();
-                    Debug.Log("SpawnArrow~~~");
+                    if (arrowManager) // Test용 방어 코드
+                        arrowManager.GetComponentInChildren<ArrowManager_HMJ>().SpawnArrow();
+                    //Debug.Log("SpawnArrow~~~");
                     anim.SetTrigger("ArrowDraw");
-                    Debug.Log("Test: ArrowDraw State");
+                    //Debug.Log("Test: ArrowDraw State");
                     break;
                 case PlayerState.ShootArrow:
                     anim.SetTrigger("ArrowShoot");
-                    Debug.Log("Test: ArrowShoot State");
+                    //Debug.Log("Test: ArrowShoot State");
+                    break;
+                case PlayerState.Swinging:
+                    anim.SetTrigger("Swinging");
+                    playerMove.SelectHangingObject();
+                    //Debug.Log("Test: Swinging State");
+                    break;
+                case PlayerState.Damaged:
+                    //anim.SetTrigger("Swinging");
+                    hpSystem.UpdateHP(100.0f);
                     break;
             }
 
             prePlayerState = curPlayerState;
             curPlayerState = playerState;
+
+            return true;
         }
+        return false;
     }
+
+
+    public bool SetplayerMoveState(PlayerMoveState playerMoveState)
+    {
+        if (curPlayerMoveState != playerMoveState)
+        {
+            //playerMove.ResetDashData();
+
+            switch (playerMoveState)
+            {
+                case PlayerMoveState.Player_ZeroZ:
+
+                    break;
+                case PlayerMoveState.Player_FixZ:
+                    break;
+            }
+
+            prePlayerMoveState = curPlayerMoveState;
+            curPlayerMoveState = playerMoveState;
+
+            return true;
+        }
+        return false;
+    }
+
+    // 
 
     public PlayerState GetState()
     {
         return curPlayerState;
+    }
+
+    public PlayerMoveState GetMoveState()
+    {
+        return curPlayerMoveState;
     }
 }

@@ -7,6 +7,7 @@ TagManager:
   - Player_equipment
   - Shell
   - Cabbage
+  - ShieldBreaker
   layers:
   - Default
   - TransparentFX
@@ -29,18 +30,21 @@ TagManager:
   - HangObject
   - ArrowReflection
   - Arrow
+  - CannonShield
+  - Collectible
+  - ArrowCollision
   - 
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - BossSkill_BM
+  - NoCollisionTrigger
   - Top
   - Wall
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: UI
+    uniqueID: 853039217
     locked: 0

@@ -73,6 +73,8 @@ public class Stungun : MonoBehaviour
         {
             stunTrigger.SetActive(true);
             Debug.Log("OnSwitch2");
+            tl.isOn = false;
+            tr.isOn = false;
         }
     }
 }

@@ -39,7 +39,7 @@ public class ArrowMove_HMJ : MonoBehaviour
 
     public float myPower = 0;
 
-    float powerSpeed = 10.0f;
+    float powerSpeed = 50.0f;
 
     public GameObject arrowObject;
 
@@ -68,7 +68,7 @@ public class ArrowMove_HMJ : MonoBehaviour
     {
         transform.position += dir * speed;
         //Debug.Log("화살 dir: " + dir.x + ", " + dir.y + ", " + dir.z);
-        //Debug.Log("화살 이동 중~: " + transform.position.x + ", " + transform.position.y + ", " + transform.position.z);
+        //Debug.Log("화살 이동 중~: " + transform.position.x + ", " + transform.position.y + ", " + transform.position.z);22
     }
 
     void UpdateState()
@@ -163,7 +163,7 @@ public class ArrowMove_HMJ : MonoBehaviour
             transform.rotation = Quaternion.LookRotation((linePositions[moveIndex + 1] - linePositions[moveIndex]).normalized);
 
             moveIndex++;
-            print(moveIndex);
+            //print(moveIndex);
         }
     }
 
@@ -244,10 +244,13 @@ public class ArrowMove_HMJ : MonoBehaviour
             if (Physics.Raycast(ray, out hitinfo, dir.magnitude * Time.deltaTime))
             {
                 isGround = true;
-                linePositions.Add(hitinfo.point);
+                Vector3 hitPos = new Vector3(hitinfo.point.x, hitinfo.point.y, 0.0f);
+                linePositions.Add(hitPos);
             }
             else
             {
+                pos.z = 0.0f;
+                dir.z = 0.0f;
                 pos = pos + (Time.deltaTime * dir);
                 linePositions.Add(pos);
                 dir = dir + (Vector3.down * 9.8f * Time.deltaTime);
@@ -337,7 +340,7 @@ public class ArrowMove_HMJ : MonoBehaviour
 
     void LineRender_On()
     {
-        Debug.Log("라인 렌더러 활성화o");
+        //Debug.Log("라인 렌더러 활성화o");
         lineRenderer.enabled = true;
         // 화살 이동
         MoveArrow();
