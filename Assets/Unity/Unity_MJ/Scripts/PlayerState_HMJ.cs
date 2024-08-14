@@ -17,6 +17,8 @@ public class PlayerState_HMJ : MonoBehaviour
         Swinging,
         Damaged,
         Death,
+        Attack00,
+        Attack01,
         PlayerStateEnd
 
     }
@@ -107,7 +109,10 @@ public class PlayerState_HMJ : MonoBehaviour
                 break;
             case PlayerState.Damaged:
                 //anim.SetTrigger("Swinging");
-
+                break;
+            case PlayerState.Attack00:
+                break;
+            case PlayerState.Attack01:
                 break;
         }
     }
@@ -167,6 +172,12 @@ public class PlayerState_HMJ : MonoBehaviour
                     break;
                 case PlayerState.Death:
                     anim.SetTrigger("Death");
+                    break;
+                case PlayerState.Attack00:
+                    anim.SetTrigger("Attack00");
+                    break;
+                case PlayerState.Attack01:
+                    anim.SetTrigger("Attack01");
                     break;
             }
 

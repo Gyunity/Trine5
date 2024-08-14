@@ -93,6 +93,9 @@ public class PlayerMove_HMJ : MonoBehaviour
     ChangeCharacter changeCharacter;
 
     ArrowManager_HMJ arrowManager;
+
+    float attackLeftTime = 0.0f;
+
     // GetArrowDirection
     // Start is called before the first frame update
     void Start()
@@ -136,6 +139,17 @@ public class PlayerMove_HMJ : MonoBehaviour
         {
             playerState.SetState(PlayerState.Dash);
         }
+
+        if(changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.WarriorType)
+        {
+            attackLeftTime -= Time.deltaTime;
+            if (Input.GetMouseButtonDown(0) && (playerState.GetState() != PlayerState.Attack00))
+            {
+                playerState.SetState(PlayerState.Attack00);
+            }
+
+        }
+
         // Dash();
 
         if (changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.ArcherType)
@@ -379,7 +393,7 @@ public class PlayerMove_HMJ : MonoBehaviour
     void Jump()
     {
         // 땅에 있음
-        if (cc.isGrounded && (playerState.GetState() != PlayerState.DrawArrow) && (playerState.GetState() != PlayerState.Swinging))
+        if (cc.isGrounded && (playerState.GetState() != PlayerState.DrawArrow) && (playerState.GetState() != PlayerState.Swinging) && (playerState.GetState() != PlayerState.Attack00) && (playerState.GetState() != PlayerState.Attack01))
         {
             JumpCurN = 0;
             yVelocity = 0.0f;
