@@ -410,10 +410,10 @@ public class ValeribotFSM_GH : MonoBehaviour
                 else
                 {
                     dragonAni.SetTrigger("TailAttack");
+                    BombShoot();
                 }
-                BombShoot();
                 break;
-                
+
             case EValeribotState.TAILATTACK:
                 dragonAni.SetTrigger("TailAttack");
                 ChangeState(EValeribotState.STAYDELAY);
@@ -984,7 +984,7 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.layer == LayerMask.NameToLayer("Arrow") && !onShield)
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Arrow") && !onShield)
         {
             //todo
             valeriHP.UpdateHP(-150);
@@ -997,7 +997,7 @@ public class ValeribotFSM_GH : MonoBehaviour
         ChangeState(EValeribotState.IDLE);
 
     }
-    
+
     IEnumerator BoobKickA()
     {
         yield return new WaitForSeconds(1.5f);
