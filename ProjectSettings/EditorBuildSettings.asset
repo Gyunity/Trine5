@@ -6,11 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Unity/Unity_GH/Scenes/StartScene_GH.unity
-    guid: 423ce7b7ed6a1424c9596b543bdbe1ff
+    path: Assets/Main/Scenes/00_StartScene.unity
+    guid: b0461c9792b423b439f065f46195e43b
   - enabled: 1
-    path: Assets/Unity/Unity_MJ/Scenes/240811_Forest_Player_Scene_HMJ_Puzzle_Add.unity
-    guid: f4fc80775782a4e4a9eff6dcc1fde177
+    path: Assets/Main/Scenes/01_Castle.unity
+    guid: d7cb8214f4c9cbe468d52d7f61f1906d
   - enabled: 1
     path: Assets/Unity/Unity_GH/Scenes/Valeribot_GH.unity
     guid: f7630e0a93293d94e849337a40431323
