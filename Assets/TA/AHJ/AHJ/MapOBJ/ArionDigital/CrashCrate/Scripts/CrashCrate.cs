@@ -11,10 +11,14 @@
         public GameObject fracturedCrate;
         [Header("Audio")]
         public AudioSource crashAudioClip;
+
+        public GameObject cabbagesFac;
+
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.gameObject.layer == LayerMask.NameToLayer("Arrow"))
             {
+                Instantiate(cabbagesFac, transform.position, transform.rotation);
                 wholeCrate.enabled = false;
                 boxCollider.enabled = false;
                 fracturedCrate.SetActive(true);
