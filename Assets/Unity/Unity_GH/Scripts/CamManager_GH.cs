@@ -21,14 +21,14 @@ public class CamManager_GH : MonoBehaviour
 
     bool ballCreate = false;
 
-    public Image fadeIn;
-    public Image fadeOut;
+    //public Image fadeIn;
+    //public Image fadeOut;
 
 
     void Start()
     {
         deadcamtrans = deadCam.GetComponent<CinemachineVirtualCamera>();
-        fadeOut.SetEnabled(false);
+        //fadeOut.SetEnabled(false);
     }
 
     void Update()
