@@ -9,6 +9,7 @@ public enum PlayerCharacterType
 {
     WizardType,
     ArcherType,
+    WarriorType,
     PlayerCharacterTypeEnd
 }
 
@@ -19,7 +20,7 @@ public class ChangeCharacter : MonoBehaviour
 
     List<RuntimeAnimatorController> animControllerList = new List<RuntimeAnimatorController>();
     PlayerCharacterType curPlayerCharacterType = PlayerCharacterType.PlayerCharacterTypeEnd;
-    Animator animator;
+    Animator animator; 
 
     private void Awake()
     {
@@ -81,6 +82,10 @@ public class ChangeCharacter : MonoBehaviour
         {
             SetMeshData(PlayerCharacterType.ArcherType);
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            SetMeshData(PlayerCharacterType.WarriorType);
+        }
     }
 
     void SetMeshActive(PlayerCharacterType playerCharacterType, bool bActive)
@@ -104,9 +109,14 @@ public class ChangeCharacter : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         avatarList.Add(AssetDatabase.LoadAssetAtPath<Avatar>("Assets/Unity/Unity_MJ/Assets/Mesh/Download/Knight D Pelegrini.fbx"));
         avatarList.Add(AssetDatabase.LoadAssetAtPath<Avatar>("Assets/Unity/Unity_MJ/Assets/Character/Erika Archer With Bow Arrow.fbx"));
+        avatarList.Add(AssetDatabase.LoadAssetAtPath<Avatar>("Assets/Unity/Unity_MJ/Assets/Character/Warrior/Paladin WProp J Nordstrom.fbx"));
+        // 
+
 
         animControllerList.Add(AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Unity/Unity_MJ/Assets/Animation/Animation Active/Player_Wizard.controller"));
         animControllerList.Add(AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Unity/Unity_MJ/Assets/Animation/Animation Active/Player_Archer.controller"));
+        animControllerList.Add(AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Unity/Unity_MJ/Assets/Animation/Animation Active/Player_Warrior.controller"));
+        //
     }
 
     public PlayerCharacterType GetPlayerCharacterType()

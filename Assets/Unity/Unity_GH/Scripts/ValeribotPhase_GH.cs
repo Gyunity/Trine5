@@ -11,8 +11,7 @@ public class ValeribotPhase_GH : MonoBehaviour
     {
         PHASE_1,
         PHASE_2,
-        PHASE_3,
-        PHASE_4
+        PHASE_3
     }
 
     public EValeribotPhase currPhase;
@@ -33,7 +32,6 @@ public class ValeribotPhase_GH : MonoBehaviour
 
     void Start()
     {
-        phase3_cannonShield.SetActive(false);
 
         valeriHP = GetComponent<HPSystem_GH>();
 
@@ -59,9 +57,10 @@ public class ValeribotPhase_GH : MonoBehaviour
                 {
                     ShieldHPs[0].gameObject.SetActive(false);
                 }
-                if (valeriHP.currHP < valeriHP.maxHP * 0.8f)
+
+                if (valeriHP.currHP < valeriHP.maxHP * 0.75f)
                 {
-                    valeriHP.currHP = valeriHP.maxHP * 0.8f;
+                    valeriHP.currHP = valeriHP.maxHP * 0.75f;
                 }
                 break;
             case EValeribotPhase.PHASE_2:
@@ -69,29 +68,15 @@ public class ValeribotPhase_GH : MonoBehaviour
                 {
                     ShieldHPs[1].gameObject.SetActive(false);
                 }
-                if (valeriHP.currHP < valeriHP.maxHP * 0.6f)
+                if (valeriHP.currHP < valeriHP.maxHP * 0.5f)
                 {
-                    valeriHP.currHP = valeriHP.maxHP * 0.6f;
+                    valeriHP.currHP = valeriHP.maxHP * 0.5f;
                 }
                 break;
             case EValeribotPhase.PHASE_3:
                 if (!valeribotFSM.onShield)
                 {
                     ShieldHPs[2].gameObject.SetActive(false);
-                }
-                if (valeriHP.currHP < valeriHP.maxHP * 0.4f)
-                {
-                    valeriHP.currHP = valeriHP.maxHP * 0.4f;
-                }
-                break;
-            case EValeribotPhase.PHASE_4:
-                if (!valeribotFSM.onShield)
-                {
-                    ShieldHPs[3].gameObject.SetActive(false);
-                }
-                if (valeriHP.currHP < 0)
-                {
-                    valeriHP.currHP = 0;
                 }
                 break;
         }
@@ -121,12 +106,8 @@ public class ValeribotPhase_GH : MonoBehaviour
                 break;
             case EValeribotPhase.PHASE_3:
                 valeribotFSM.onShield = true;
-                phase3_cannonShield.SetActive(true);
 
                 valeribotFSM.bossPhase = 3;
-                break;
-            case EValeribotPhase.PHASE_4:
-                valeribotFSM.bossPhase = 4;
                 break;
 
         }

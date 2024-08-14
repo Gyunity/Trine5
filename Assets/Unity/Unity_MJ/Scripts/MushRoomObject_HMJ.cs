@@ -25,8 +25,9 @@ public class mushRoomObject_HMJ : MonoBehaviour
     {
         bScaleMove = false;
 
-        minScale = new Vector3(80.0f * 0.7f, 80.0f * 0.7f, 80.0f * 0.7f);
-        maxScale = new Vector3(80.0f * 1.5f, 80.0f * 1.5f, 80.0f * 1.5f);
+        
+        minScale = new Vector3(transform.localScale.x * 0.7f, transform.localScale.y * 0.7f, transform.localScale.z * 0.7f);
+        maxScale = new Vector3(transform.localScale.x * 1.5f, transform.localScale.y * 1.5f, transform.localScale.z * 1.5f);
 
         m_ePlayerScaleState = PlayerScaleState.PlayerScaleStateEnd;
 

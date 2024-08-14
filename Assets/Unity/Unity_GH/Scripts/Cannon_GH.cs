@@ -41,6 +41,8 @@ public class Cannon_GH : MonoBehaviour
 
     void shoot()
     {
+        SoundManager.instance.PlayBossEftSound(SoundManager.EBossEftType.BOSS_CANNON);
+
         //포탄 생성
         GameObject shell = Instantiate(shellFactory, firePoint.position, firePoint.rotation);
 

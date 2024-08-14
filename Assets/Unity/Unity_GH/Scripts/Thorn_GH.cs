@@ -23,6 +23,7 @@ public class Thorn_GH : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Arrow"))
         {
+        SoundManager.instance.PlayBossEftSound(SoundManager.EBossEftType.BOSS_TRAPHIT);
 
             popCone.SetActive(true);
             model.SetActive(false);

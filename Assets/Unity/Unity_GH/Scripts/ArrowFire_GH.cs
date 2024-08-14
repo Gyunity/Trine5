@@ -16,14 +16,18 @@ public class ArrowFire_GH : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.layer == LayerMask.NameToLayer("Arrow"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Arrow"))
         {
-            cannon_GH.arrowFire = true;
+            if (cannon_GH.shellLoad)
+            {
+                cannon_GH.arrowFire = true;
+
+            }
         }
     }
 }

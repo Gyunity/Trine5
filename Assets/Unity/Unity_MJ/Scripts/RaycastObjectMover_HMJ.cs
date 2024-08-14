@@ -37,6 +37,12 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
             if ((null == hitObject) && RaycastGrab(out hitInfo)) // 만약 마우스와 충돌된 오브젝트가 이전에 없었고, 현재 있다면 저장
             {
                 hitObject = hitInfo.collider.gameObject;
+
+                if(hitObject.name == "Log") // 통나무를 잡았을 경우
+                {
+                    PlatformDrop_HMJ platformDrop = hitObject.GetComponentInChildren<PlatformDrop_HMJ>();
+                    platformDrop.enabled = false;
+                }
             }
             else if (hitObject)
             {
@@ -53,6 +59,12 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
             hitObject.GetComponentInChildren<Rigidbody>().useGravity = true;
             hitObject.GetComponentInChildren<Rigidbody>().isKinematic = false;
             hitObject = null;
+
+            if (hitObject.name == "Log") // 통나무를 잡았을 경우
+            {
+                PlatformDrop_HMJ platformDrop = hitObject.GetComponentInChildren<PlatformDrop_HMJ>();
+                platformDrop.enabled = true;
+            }
         }
 
     }
