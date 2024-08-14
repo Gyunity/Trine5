@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/TA/AHJ/AHJ/BETA/besieged-castle-wall-scene/source/Scena_03.fbx.meta
-guid: 74a733ff2f897b941b8677e35aba98c2
-========
-guid: 7188f062406ded94a8e92132fc68d84e
->>>>>>>> Unity:Assets/Unity/Unity_MJ/Assets/Animation/Data/Player/Warrior/death.fbx.meta
+guid: bb265e7929d2fe34e896de08a74729e3
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -28,7 +24,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 3
+    animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -97,13 +93,13 @@ ModelImporter:
     globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
-    hasExtraRoot: 1
+    hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
-  animationType: 3
+  animationType: 2
   humanoidOversampling: 1
-  avatarSetup: 1
+  avatarSetup: 0
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0
