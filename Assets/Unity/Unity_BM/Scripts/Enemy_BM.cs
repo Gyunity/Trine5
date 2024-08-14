@@ -6,6 +6,7 @@ using static EnemyMove;
 
 public class Enemy_BM : MonoBehaviour
 {
+    
     public enum EEnemyState_BM
     {
         Idle,
@@ -22,7 +23,7 @@ public class Enemy_BM : MonoBehaviour
     GameObject player;
 
     //인지범위
-    public float traceRange = 8;
+    public float traceRange = 20;
     //공격범위
     public float attackRange = 2;
     //장거리 공격 범위
@@ -36,11 +37,15 @@ public class Enemy_BM : MonoBehaviour
     Animator anim;
     HpSystem_BM hpSystem;
 
+    BallFactory ballfactory;
+
     void Start()
     {
         player = GameObject.FindWithTag("Player");
         anim = GetComponent<Animator>();
         hpSystem = GetComponent<HpSystem_BM>();
+        ballfactory = GetComponent<BallFactory>();
+        currState = EEnemyState_BM.Idle;
     }
 
     void Update()
@@ -114,6 +119,7 @@ public class Enemy_BM : MonoBehaviour
         // 그렇지 않고 인지범위 보다 작으면
         else if (dist > attackRange && dist < traceRange)
         {
+
             ChangeState(EEnemyState_BM.Throw);
         }
         // 그렇지 않고 인지범위 보다 크면
@@ -197,6 +203,11 @@ public class Enemy_BM : MonoBehaviour
             return true;
         }
         return false;
+    }
+    void ThrowBall()
+    {
+        ballfactory.BallGo();
+        ChangeState(EEnemyState_BM.AttackDelay);
     }
 
 }
