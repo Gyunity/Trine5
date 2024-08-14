@@ -8,10 +8,13 @@ public class Thorn_GH : MonoBehaviour
     public GameObject model;
 
     BoxCollider boxcoll;
+
+    GameObject player;
     // Start is called before the first frame update
     void Start()
     {
         boxcoll = GetComponent<BoxCollider>();
+        player = GameObject.Find("Player");
     }
 
     // Update is called once per frame

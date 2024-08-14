@@ -250,7 +250,6 @@ public class ValeribotFSM_GH : MonoBehaviour
                 LaserMachine();
                 break;
             case EValeribotState.BOMBKICK:
-                BombShoot();
                 break;
             case EValeribotState.TAILATTACK:
 
@@ -408,7 +407,13 @@ public class ValeribotFSM_GH : MonoBehaviour
                 {
                     ChangeState(EValeribotState.IDLE);
                 }
+                else
+                {
+                    dragonAni.SetTrigger("TailAttack");
+                }
+                BombShoot();
                 break;
+                
             case EValeribotState.TAILATTACK:
                 dragonAni.SetTrigger("TailAttack");
                 ChangeState(EValeribotState.STAYDELAY);
@@ -888,19 +893,21 @@ public class ValeribotFSM_GH : MonoBehaviour
             bomb = Instantiate(bombFactory, bombPoints[1].position, bombPoints[1].rotation);
             //포탄 생성
 
-            //포탄의 Rigidbody
-            Rigidbody rb = bomb.GetComponent<Rigidbody>();
+            ////포탄의 Rigidbody
+            //Rigidbody rb = bomb.GetComponent<Rigidbody>();
 
-            //발사각도 라디안으로 변경
-            float radianAngle = angle * Mathf.Deg2Rad;
+            ////발사각도 라디안으로 변경
+            //float radianAngle = angle * Mathf.Deg2Rad;
 
-            //발사 백터 계산
-            Vector3 launchDirection = new Vector3(Mathf.Cos(radianAngle), Mathf.Sin(radianAngle), 0);
+            ////발사 백터 계산
+            //Vector3 launchDirection = new Vector3(Mathf.Cos(radianAngle), Mathf.Sin(radianAngle), 0);
 
-            //발사 힘 적용
-            rb.velocity = launchDirection * launchForce;
+            ////발사 힘 적용
+            //rb.velocity = launchDirection * launchForce;
 
-            ChangeState(EValeribotState.STAYDELAY);
+            //ChangeState(EValeribotState.STAYDELAY);
+
+            StartCoroutine(BoobKickA());
 
 
         }
@@ -909,20 +916,21 @@ public class ValeribotFSM_GH : MonoBehaviour
             bomb = Instantiate(bombFactory, bombPoints[0].position, bombPoints[0].rotation);
             //포탄 생성
 
-            //포탄의 Rigidbody
-            Rigidbody rb = bomb.GetComponent<Rigidbody>();
+            ////포탄의 Rigidbody
+            //Rigidbody rb = bomb.GetComponent<Rigidbody>();
 
-            //발사각도 라디안으로 변경
-            float radianAngle = angle * Mathf.Deg2Rad;
+            ////발사각도 라디안으로 변경
+            //float radianAngle = angle * Mathf.Deg2Rad;
 
-            //발사 백터 계산
-            Vector3 launchDirection = new Vector3(-Mathf.Cos(radianAngle), Mathf.Sin(radianAngle), 0);
+            ////발사 백터 계산
+            //Vector3 launchDirection = new Vector3(-Mathf.Cos(radianAngle), Mathf.Sin(radianAngle), 0);
 
-            //발사 힘 적용
-            rb.velocity = launchDirection * launchForce;
+            ////발사 힘 적용
+            //rb.velocity = launchDirection * launchForce;
 
-            ChangeState(EValeribotState.STAYDELAY);
+            //ChangeState(EValeribotState.STAYDELAY);
 
+            StartCoroutine(BoobKickB());
 
         }
         else
@@ -988,6 +996,42 @@ public class ValeribotFSM_GH : MonoBehaviour
         yield return new WaitForSeconds(5.7f);
         ChangeState(EValeribotState.IDLE);
 
+    }
+    
+    IEnumerator BoobKickA()
+    {
+        yield return new WaitForSeconds(1.5f);
+        //포탄의 Rigidbody
+        Rigidbody rb = bomb.GetComponent<Rigidbody>();
+
+        //발사각도 라디안으로 변경
+        float radianAngle = angle * Mathf.Deg2Rad;
+
+        //발사 백터 계산
+        Vector3 launchDirection = new Vector3(Mathf.Cos(radianAngle), Mathf.Sin(radianAngle), 0);
+
+        //발사 힘 적용
+        rb.velocity = launchDirection * launchForce;
+
+        ChangeState(EValeribotState.STAYDELAY);
+
+    }
+    IEnumerator BoobKickB()
+    {
+        yield return new WaitForSeconds(1.5f);
+        //포탄의 Rigidbody
+        Rigidbody rb = bomb.GetComponent<Rigidbody>();
+
+        //발사각도 라디안으로 변경
+        float radianAngle = angle * Mathf.Deg2Rad;
+
+        //발사 백터 계산
+        Vector3 launchDirection = new Vector3(-Mathf.Cos(radianAngle), Mathf.Sin(radianAngle), 0);
+
+        //발사 힘 적용
+        rb.velocity = launchDirection * launchForce;
+
+        ChangeState(EValeribotState.STAYDELAY);
     }
 
 }
