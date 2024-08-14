@@ -60,11 +60,11 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
             hitObject.GetComponentInChildren<Rigidbody>().isKinematic = false;
             hitObject = null;
 
-            if (hitObject.name == "Log") // 통나무를 잡았을 경우
-            {
-                PlatformDrop_HMJ platformDrop = hitObject.GetComponentInChildren<PlatformDrop_HMJ>();
-                platformDrop.enabled = true;
-            }
+            //if (hitObject.name == "Log") // 통나무를 잡았을 경우
+            //{
+            //    PlatformDrop_HMJ platformDrop = hitObject.GetComponentInChildren<PlatformDrop_HMJ>();
+            //    platformDrop.enabled = true;
+            //}
         }
 
     }
