@@ -118,7 +118,7 @@ AnimatorStateMachine:
     m_Position: {x: 310, y: 260, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3122282690974191926}
-    m_Position: {x: 570, y: 0, z: 0}
+    m_Position: {x: 780, y: 80, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6034977284042074334}
     m_Position: {x: 580, y: -70, z: 0}
@@ -275,7 +275,7 @@ AnimatorController:
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
-    m_DefaultBool: 0
+    m_DefaultBool: 1
     m_Controller: {fileID: 9100000}
   - m_Name: ' Idle'
     m_Type: 9
