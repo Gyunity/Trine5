@@ -7,17 +7,26 @@ using UnityEngine.UI;
 public class ChangeColorUI_HMJ : MonoBehaviour
 {
     HPSystem_HMJ playerHpSystem;
+
     public Material targetMaterial;
     public Vector3 firstColorData;
 
     public Vector3 lastColorData;
     Image imageData;
+
+    float delayTime = 2.0f;
+    float maxLerpTime = 1.0f;
+    float lerpTime = 0.0f;
+
+    float hpValue = 0.0f;
+
+    public int uiType;
     // Start is called before the first frame update
     void Start()
     {
         imageData = GetComponent<Image>();
 
-         targetMaterial = imageData.material;
+        targetMaterial = imageData.material;
 
         // 153, 243, 111
 

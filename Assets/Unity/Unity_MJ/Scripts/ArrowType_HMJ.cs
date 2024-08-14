@@ -29,7 +29,7 @@ public class ArrowType_HMJ : MonoBehaviour
 
     void InputChangeArrowType()
     {
-        if(Input.GetKeyDown(KeyCode.Tab))
+        if(Input.GetKeyDown(KeyCode.Q))
         {
             if (GetArrowType() == ArrowType.ArrowIceType)
                 SetArrowType(ArrowType.ArrowFireType);

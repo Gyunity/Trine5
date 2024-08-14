@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static ArrowMove_HMJ;
+using static ArrowType_HMJ;
 using static UnityEditor.PlayerSettings;
 
 public class ArrowMove_HMJ : MonoBehaviour
@@ -48,6 +49,10 @@ public class ArrowMove_HMJ : MonoBehaviour
     Animator curAnim;
 
     float smoothStep = 0.0f;
+
+    ArrowType_HMJ arrowTypeData;
+
+    public ArrowType arrowType;
     private void Awake()
     {
         lineRenderer = GetComponentInChildren<LineRenderer>();
@@ -60,8 +65,11 @@ public class ArrowMove_HMJ : MonoBehaviour
         lifeTime = 3.0f;
 
         smoothStep = -0.3f;
+        arrowTypeData = GameObject.Find("ArrowManager").GetComponentInChildren<ArrowType_HMJ>();
+
 
         arrowObject = FindBoneManager_HMJ.Instance.FindBone(GameObject.Find("Player").transform, "ArrowPosition").transform.gameObject;
+        arrowType = arrowTypeData.GetArrowType();
     }
 
     void ArrowMove()
