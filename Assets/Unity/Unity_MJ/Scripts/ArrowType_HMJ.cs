@@ -24,7 +24,7 @@ public class ArrowType_HMJ : MonoBehaviour
     void Update()
     {
         InputChangeArrowType();
-        Debug.Log("현재 화살 타입: " + curArrowType);
+       // Debug.Log("현재 화살 타입: " + curArrowType);
     }
 
     void InputChangeArrowType()

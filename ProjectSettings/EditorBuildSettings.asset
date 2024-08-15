@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Main/Scenes/01_Castle.unity
     guid: d7cb8214f4c9cbe468d52d7f61f1906d
   - enabled: 1
-    path: Assets/Unity/Unity_GH/Scenes/Valeribot_GH.unity
-    guid: f7630e0a93293d94e849337a40431323
+    path: Assets/Main/Scenes/02_Valeribot.unity
+    guid: 77511e08d39c97e498c8615e3c0a5fca
+  - enabled: 1
+    path: Assets/Main/Scenes/03_EndingScene.unity
+    guid: 84451ec9af08da74db663b6f4beb96c9
   m_configObjects: {}

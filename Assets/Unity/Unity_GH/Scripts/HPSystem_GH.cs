@@ -12,6 +12,11 @@ public class HPSystem_GH : MonoBehaviour
 
     //HPBar
     public Image hpBar;
+    public Image hpBar_red;
+
+    float hp_red_currTime = 0;
+    float hp_red_delayTime = 3;
+
 
     void Start()
     {
@@ -21,16 +26,23 @@ public class HPSystem_GH : MonoBehaviour
 
     void Update()
     {
+        hp_red_currTime += Time.deltaTime;
+
+        hpBar.fillAmount = currHP / maxHP;
+
+        if (hp_red_currTime > hp_red_delayTime)
+        {
+            hpBar_red.fillAmount = Mathf.Lerp(hpBar_red.fillAmount, currHP / maxHP, 1 * Time.deltaTime);
+        }
 
     }
 
     public void UpdateHP(float value)
     {
+        hp_red_currTime = 0;
+
         // 현재 HP를 value만큼 더하자
         currHP += value;
-
-        hpBar.fillAmount = currHP / maxHP;
-
         // 만약 현재 HP가 0보다 작거나 같으면
         if (currHP <= 0)
         {

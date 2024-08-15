@@ -123,4 +123,9 @@ public class SoundManager : MonoBehaviour
 
         bgmAudio.Play();
     }
+    public void StopBgmSound()
+    {
+        bgmAudio.Stop();
+
+    }
 }

@@ -100,6 +100,10 @@ public class ValeribotFSM_GH : MonoBehaviour
     float laserCurrTime = 0;
 
     public bool onReadyLaser = true;
+
+    public ParticleSystem[] laserBackEft;
+    bool onLaserBack = false;
+    bool laserBackOne = true;
     #endregion
 
     #region 타게팅 레이저 공격
@@ -216,6 +220,30 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     void Update()
     {
+        if (onLaserBack)
+        {
+            if (laserBackOne)
+            {
+                for (int i = 0; i < laserBackEft.Length; i++)
+                {
+                    laserBackEft[i].Play();
+                }
+                laserBackOne = true;
+            }
+        }
+        else
+        {
+            if (!laserBackOne)
+            {
+                for (int i = 0; i < laserBackEft.Length; i++)
+                {
+                    laserBackEft[i].Stop();
+                }
+                laserBackOne = false;
+
+            }
+
+        }
 
         OnShield();
         Damaged();
@@ -636,10 +664,11 @@ public class ValeribotFSM_GH : MonoBehaviour
             else if (laserCurrTime >= targetLaserReadyTime && laserCurrTime < targetLaserDuraTime)
             {
                 onReadyLaser = false;
-
+                onLaserBack = true;
             }
             else if (laserCurrTime >= targetLaserDuraTime)
             {
+                onLaserBack = false;
                 if (bossPhase == 1)
                 {
                     lasers[0].GetComponent<LaserFire_GH>().LaserDone();
@@ -682,9 +711,11 @@ public class ValeribotFSM_GH : MonoBehaviour
             {
                 firePoint.transform.localEulerAngles += new Vector3(0, 0, 1) * 25 * Time.deltaTime;
                 onReadyLaser = false;
+                onLaserBack = true;
             }
             else if (laserCurrTime >= rotateLaserDuraTime)
             {
+                onLaserBack = false;
                 for (int i = 0; i < bossPhase + 2; i++)
                 {
                     if (lasers[i].activeInHierarchy)
@@ -727,12 +758,12 @@ public class ValeribotFSM_GH : MonoBehaviour
 
                 }
                 onReadyLaser = false;
-
+                onLaserBack = true;
 
             }
             else if (laserCurrTime >= groundLaserDuraTime)
             {
-
+                onLaserBack = false;
                 lasers[0].GetComponent<LaserFire_GH>().LaserDone();
 
                 ChangeState(EValeribotState.STAYDELAY);
@@ -830,10 +861,11 @@ public class ValeribotFSM_GH : MonoBehaviour
 
                     onReadyLaser = false;
 
-
+                    onLaserBack = true;
                 }
                 else if (laserCurrTime < machineLaserDuraTime && laserCurrTime >= machineLaserDuraTime - 1.5f)
                 {
+                    onLaserBack = false;
                     if (bossPhase < 3)
                     {
                         for (int i = 0; i < 8; i++)

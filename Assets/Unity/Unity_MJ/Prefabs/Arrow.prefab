@@ -102,7 +102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tValue: 0
   bezierCurve: {fileID: 0}
-  speed: 5
+  speed: 100
   numPoints: 50
   lineRenderer: {fileID: 0}
   mousePos: {x: 0, y: 0, z: 0}
@@ -115,6 +115,7 @@ MonoBehaviour:
   moveTime: 0
   myPower: 0
   arrowObject: {fileID: 0}
+  arrowType: 0
 --- !u!120 &1869551309405041843
 LineRenderer:
   serializedVersion: 2

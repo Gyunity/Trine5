@@ -14,16 +14,24 @@ public class Cannon_GH : MonoBehaviour
     // 발사 각도
     public float angle = 45f;
 
-
     //포탄 장전
     public bool shellLoad;
     public bool arrowFire;
+
+    // 폭탄 로프
+    public GameObject rope;
 
     void Start()
     {
         shellLoad = false;
         //ToDO 화살 되면 바꾸기 false로
         arrowFire = false;
+
+        if (rope != null)
+        {
+            rope.SetActive(false);
+
+        }
     }
 
     // Update is called once per frame
@@ -36,6 +44,18 @@ public class Cannon_GH : MonoBehaviour
             shellLoad = false;
 
             arrowFire = false;
+        }
+
+        if (shellLoad)
+        {
+            if (rope != null)
+                rope.SetActive(true);
+        }
+        else
+        {
+            if (rope != null)
+                rope.SetActive(false);
+
         }
     }
 
