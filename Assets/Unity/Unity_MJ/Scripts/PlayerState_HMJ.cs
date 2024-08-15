@@ -54,6 +54,10 @@ public class PlayerState_HMJ : MonoBehaviour
 
     ChangeCharacter changeCharacter;
 
+    public GameObject HpCanvas;
+
+    public float maxDamageTime = 5.0f;
+    public float damageTime = 5.0f;
     private void Awake()
     {
         anim = GetComponentInChildren<Animator>();
@@ -62,6 +66,9 @@ public class PlayerState_HMJ : MonoBehaviour
         hpSystem = GameObject.Find("Player").GetComponentInChildren<HPSystem_HMJ>();
         staminaSystem = GameObject.Find("Player").GetComponentInChildren<StaminaSystem_HMJ>();
         changeCharacter = GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>();
+
+        maxDamageTime = 5.0f;
+        damageTime = 5.0f;
     }
     // Start is called before the first frame update
     void Start()
@@ -83,6 +90,15 @@ public class PlayerState_HMJ : MonoBehaviour
 
     void UpdateState()
     {
+        damageTime += Time.deltaTime;
+        if (damageTime < maxDamageTime)
+        {
+            HpCanvas.SetActive(true);
+        }
+        else
+        {
+            HpCanvas.SetActive(false);
+        }
         switch (curPlayerState)
         {
             case PlayerState.Idle:
@@ -188,6 +204,7 @@ public class PlayerState_HMJ : MonoBehaviour
                     Debug.Log("Test: Swinging State");
                     break;
                 case PlayerState.Damaged:
+                    damageTime = 0.0f;
                     anim.SetTrigger("Hit");
                     break;
                 case PlayerState.Death:
