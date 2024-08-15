@@ -6383,6 +6383,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5951316550102881545, guid: 2d6b472d4f6c58b4f838b75c1b558141,
+        type: 3}
+      propertyPath: HpCanvas
+      value: 
+      objectReference: {fileID: 2043496704}
     - target: {fileID: 6407679672307255247, guid: 2d6b472d4f6c58b4f838b75c1b558141,
         type: 3}
       propertyPath: m_Name
@@ -20673,6 +20678,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2038920141}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2043496704 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2127528126737620099, guid: 2d6b472d4f6c58b4f838b75c1b558141,
+    type: 3}
+  m_PrefabInstance: {fileID: 624632057}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2064668665
 GameObject:
   m_ObjectHideFlags: 0
@@ -22080,7 +22091,7 @@ PrefabInstance:
     - target: {fileID: 7091266612856547152, guid: b57fe757c6164d542afac3423a6a9c70,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7275453073549982273, guid: b57fe757c6164d542afac3423a6a9c70,
         type: 3}

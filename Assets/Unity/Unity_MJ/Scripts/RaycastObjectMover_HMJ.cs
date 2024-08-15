@@ -34,10 +34,10 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
         effectManagerObject = GameObject.Find("RaycastObjectEffect");
         effectManager = effectManagerObject.GetComponentInChildren<EffectManager_HMJ>();
 
-        wizardRightEffect = effectManager.SpawnAndPlayEffect2(new Vector3(0.0f, 0.0f, 0.0f), 50000.0f, false, new Vector3(0.0f, 0.0f, 0.0f));
+        wizardRightEffect = effectManager.SpawnAndPlayEffect3(new Vector3(0.0f, 0.0f, 0.0f), 500000000.0f, false, new Vector3(0.0f, 0.0f, 0.0f));
         wizardRightEffect.SetActive(false);
 
-        wizardLeftEffect = effectManager.SpawnAndPlayEffect2(new Vector3(0.0f, 0.0f, 0.0f), 50000.0f, false, new Vector3(0.0f, 0.0f, 0.0f));
+        wizardLeftEffect = effectManager.SpawnAndPlayEffect3(new Vector3(0.0f, 0.0f, 0.0f), 500000000.0f, false, new Vector3(0.0f, 0.0f, 0.0f));
         wizardLeftEffect.SetActive(false);
     }
     private void FixedUpdate()

@@ -165,7 +165,7 @@ public class PlayerMove_HMJ : MonoBehaviour
 
         }
 
-        // Dash();
+        Dash();
 
         if (changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.ArcherType)
         {
