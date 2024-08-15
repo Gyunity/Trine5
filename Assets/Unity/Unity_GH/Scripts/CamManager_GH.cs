@@ -32,6 +32,7 @@ public class CamManager_GH : MonoBehaviour
 
 
     public GameObject endingUI;
+    public GameObject endingUI2;
 
     void Start()
     {
@@ -88,7 +89,7 @@ public class CamManager_GH : MonoBehaviour
         yield return new WaitForSeconds(shiftTime);
         deadcamtrans.Priority = 11;
         endingUI.SetActive(false);
-
+        endingUI2.SetActive(false);
         yield return new WaitForSeconds(moveTime);
         deadcamtrans.transform.Translate(Vector3.forward * 0.1f * Time.deltaTime, Space.Self);
         if (!ballCreate)

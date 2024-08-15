@@ -6598,11 +6598,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1320804460690960015, guid: 2d6b472d4f6c58b4f838b75c1b558141,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6407679672307255247, guid: 2d6b472d4f6c58b4f838b75c1b558141,
         type: 3}
       propertyPath: m_Name
@@ -20677,6 +20672,7 @@ MonoBehaviour:
   shellLoad: 0
   arrowFire: 0
   rope: {fileID: 1814872071}
+  fire: {fileID: 0}
 --- !u!33 &1930529475
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -20982,6 +20978,7 @@ MonoBehaviour:
   dragonBallPos: {fileID: 9783943}
   fadeInOut: {fileID: 511936421}
   endingUI: {fileID: 275716951}
+  endingUI2: {fileID: 1414801220}
 --- !u!4 &1976441182
 Transform:
   m_ObjectHideFlags: 0

@@ -220,6 +220,11 @@ public class ValeribotFSM_GH : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Instantiate(bombFactory, bombPoints[1].position, bombPoints[1].rotation);
+        }
+
         if (onLaserBack)
         {
             if (laserBackOne)
@@ -1018,6 +1023,8 @@ public class ValeribotFSM_GH : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Arrow") && !onShield)
         {
+            SoundManager.instance.PlayBossEftSound(SoundManager.EBossEftType.BOSS_HIT1);
+
             //todo
             valeriHP.UpdateHP(-150);
         }

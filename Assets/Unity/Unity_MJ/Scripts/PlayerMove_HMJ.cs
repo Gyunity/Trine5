@@ -523,6 +523,7 @@ public class PlayerMove_HMJ : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Boss"))
         {
             // "Boss" 레이어와 충돌했을 때 실행할 코드
+            SoundManager.instance.PlayBossEftSound(SoundManager.EBossEftType.BOSS_HIT1);
             Debug.Log("Boss와 충돌: " + other.gameObject.name);
             HPSystem_GH hpSystem = other.gameObject.GetComponentInChildren<HPSystem_GH>();
             ValeribotFSM_GH bossFSM = other.gameObject.GetComponentInChildren<ValeribotFSM_GH>();
