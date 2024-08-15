@@ -22,6 +22,9 @@ public class Enemy_BM : MonoBehaviour
 
     //플레이어 게임 오브젝트
     GameObject player;
+    
+    //hp 스크립트 받기 (to do)
+    HPSystem_HMJ playerHP;
 
     //인지범위
     public float traceRange = 20;
@@ -46,11 +49,13 @@ public class Enemy_BM : MonoBehaviour
 
     void Start()
     {
-        player = GameObject.FindWithTag("Player");
+        //player = GameObject.FindWithTag("Player");
         anim = GetComponent<Animator>();
         hpSystem = GetComponent<HpSystem_BM>();
         ballfactory = GetComponent<BallFactory>();
         currState = EEnemyState_BM.Idle;
+        player = GameObject.Find("Player");
+        playerHP = player.GetComponent<HPSystem_HMJ>();
     }
 
     void Update()
@@ -113,7 +118,7 @@ public class Enemy_BM : MonoBehaviour
                 UpdateDie();
                 break;
             case EEnemyState_BM.AttackDelay:
-                //UpdateAttackDelay();
+                UpdateAttackDelay();
                 break;
         }
     }
@@ -208,7 +213,10 @@ public class Enemy_BM : MonoBehaviour
         // 플레이어를 공격하자.
         print("공격! 공격!");
         // 플레이어 HP 줄이자.
-        hpSystem.UpdateHp(-2);
+        print("양배추 플레이어 -10");
+        playerHP.UpdateHP(-100, GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>().GetPlayerCharacterType());
+            
+        
 
     }
     //던지는 상태일때

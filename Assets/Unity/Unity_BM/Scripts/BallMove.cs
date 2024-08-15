@@ -12,13 +12,15 @@ public class BallMove : MonoBehaviour
 
     GameObject player;
     //hp 스크립트 받기 (to do)
-   
+    HPSystem_HMJ playerHP;
+
 
     // Start is called before the first frame update
     void Start()
     {
         rd = GetComponent<Rigidbody>();
         player = GameObject.Find("Player");
+        playerHP = player.GetComponent<HPSystem_HMJ>();
 
     }
 
@@ -35,7 +37,7 @@ public class BallMove : MonoBehaviour
         if (other.gameObject == player)
         {
             print("양배추 플레이어 -10");
-            
+            playerHP.UpdateHP(-300, GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>().GetPlayerCharacterType());
             Destroy(gameObject);
         }
 
