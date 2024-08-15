@@ -580,6 +580,7 @@ GameObject:
   - component: {fileID: 6568707882775373182}
   - component: {fileID: 7721669457507489917}
   - component: {fileID: 4749571450940246724}
+  - component: {fileID: 7884543425418751528}
   m_Layer: 5
   m_Name: HpBar
   m_TagString: Untagged
@@ -634,7 +635,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b9a912bbacb425a41b260145cb6eb794, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 410f9c5304e80c7479fd6f281a719955, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -656,6 +657,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ba7a51d308577c4e885315eccbb7780, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!210 &7884543425418751528
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 319682496893663327}
+  m_Enabled: 1
+  m_SortingLayerID: 853039217
+  m_SortingLayer: 1
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1 &358005061006436393
 GameObject:
   m_ObjectHideFlags: 0
@@ -1466,6 +1479,7 @@ RectTransform:
   m_Children:
   - {fileID: 6367014491176226610}
   - {fileID: 4661084736353135204}
+  - {fileID: 8777821578898214478}
   m_Father: {fileID: 678651541206488858}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2215,6 +2229,7 @@ GameObject:
   - component: {fileID: 3096506122008535320}
   - component: {fileID: 5832662226086895834}
   - component: {fileID: 7717367734025306921}
+  - component: {fileID: 7964322805038908424}
   m_Layer: 5
   m_Name: HpBar full
   m_TagString: Untagged
@@ -2261,8 +2276,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 53d23d8e46f305640a41d7049a791bfc, type: 2}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.5068971, g: 0.7987421, b: 0.43955928, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 0
@@ -2306,6 +2321,18 @@ MonoBehaviour:
   targetMaterial: {fileID: 0}
   firstColorData: {x: 0, y: 0, z: 0}
   lastColorData: {x: 0, y: 0, z: 0}
+--- !u!210 &7964322805038908424
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3219546982938386804}
+  m_Enabled: 1
+  m_SortingLayerID: 853039217
+  m_SortingLayer: 1
+  m_SortingOrder: 2
+  m_SortAtRoot: 0
 --- !u!1 &3221561337545320559
 GameObject:
   m_ObjectHideFlags: 0
@@ -3762,6 +3789,124 @@ Transform:
   - {fileID: 4368922109191479613}
   m_Father: {fileID: 6689152872769093548}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5118909330068204173
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8777821578898214478}
+  - component: {fileID: 56001490425742872}
+  - component: {fileID: 9127020740075638372}
+  - component: {fileID: 4219094793726879187}
+  - component: {fileID: 5105098262727406211}
+  - component: {fileID: 4532886947490300506}
+  m_Layer: 5
+  m_Name: HpBar Delay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8777821578898214478
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5118909330068204173}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4492843821109245065}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1.5, y: 3.3}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &56001490425742872
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5118909330068204173}
+  m_CullTransparentMesh: 1
+--- !u!114 &9127020740075638372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5118909330068204173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.5068971, g: 0.7987421, b: 0.43955928, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 0
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: a64a39a0989248448ae4ddce54aee1f7, type: 3}
+  m_Type: 3
+  m_PreserveAspect: 1
+  m_FillCenter: 1
+  m_FillMethod: 3
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4219094793726879187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5118909330068204173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ba7a51d308577c4e885315eccbb7780, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5105098262727406211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5118909330068204173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 438c28f5479f4e649825724a597f2040, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetMaterial: {fileID: 0}
+  firstColorData: {x: 0, y: 0, z: 0}
+  lastColorData: {x: 0, y: 0, z: 0}
+  hpLerpBar: {fileID: 9127020740075638372}
+--- !u!210 &4532886947490300506
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5118909330068204173}
+  m_Enabled: 1
+  m_SortingLayerID: 853039217
+  m_SortingLayer: 1
+  m_SortingOrder: 1
+  m_SortAtRoot: 0
 --- !u!1 &5147500439897962448
 GameObject:
   m_ObjectHideFlags: 0

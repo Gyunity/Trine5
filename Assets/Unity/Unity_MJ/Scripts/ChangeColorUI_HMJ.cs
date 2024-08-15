@@ -20,7 +20,6 @@ public class ChangeColorUI_HMJ : MonoBehaviour
 
     float hpValue = 0.0f;
 
-    public int uiType;
     // Start is called before the first frame update
     void Start()
     {
