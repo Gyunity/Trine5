@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using static EnemyMove;
 
 public class Enemy_BM : MonoBehaviour
 {
@@ -99,6 +98,7 @@ public class Enemy_BM : MonoBehaviour
                 break;
             case EEnemyState_BM.Damage:
                 hpSystem.UpdateHp(-1);
+                SoundManager.instance.PlayBossEftSound(SoundManager.EBossEftType.BOSS_HIT1);
                 anim.SetTrigger("Damage");
                 break;
             case EEnemyState_BM.Die:
@@ -207,7 +207,28 @@ public class Enemy_BM : MonoBehaviour
     void ThrowBall()
     {
         ballfactory.BallGo();
+        SoundManager.instance.PlayStoryEftSound(SoundManager.EStoryEftType.STORY_MINIBOSS_FIREBALL);
         ChangeState(EEnemyState_BM.AttackDelay);
     }
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    //print("현재 화살과 충돌~~");
+    //    //if (collision.gameObject.layer == LayerMask.NameToLayer("Arrow"))
+    //    //{
+    //    //    print("현재 화살과 충돌~~");
+    //    //    hpSystem.UpdateHp(-1);
+    //    //    // damage
+    //    //}
+    //}
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Arrow"))
+        {
+            print("현재 화살과 충돌~~");
+            hpSystem.UpdateHp(-1);
+            // damage
 
+        }
+    }
+    
 }
