@@ -43,6 +43,8 @@ public class ChangeLerpColorUI_HMJ : MonoBehaviour
     bool changeHpLerp = false;
     bool moveHpLerp = false;
     float data = 0.0f;
+
+    ChangeCharacter changeCharacter;
     // Start is called before the first frame update
     void Start()
     {
@@ -61,6 +63,8 @@ public class ChangeLerpColorUI_HMJ : MonoBehaviour
 
         hpValue = playerHpSystem.maxHP;
         curHpValue = playerHpSystem.maxHP;
+
+        changeCharacter = GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>();
     }
 
     // Update is called once per frame
@@ -84,7 +88,7 @@ public class ChangeLerpColorUI_HMJ : MonoBehaviour
         if(moveHpLerp)
         {
             lerpTime += Time.deltaTime;
-            hpValue = Mathf.Lerp(hpValue, playerHpSystem.currHP, lerpTime);
+            hpValue = Mathf.Lerp(hpValue, playerHpSystem.currHP[(int)changeCharacter.GetPlayerCharacterType()], lerpTime);
 
             Vector3 lerpValue = Vector3.Lerp(firstColorData, lastColorData, 1.0f - lerpTime);
             imageData.color = new Color(lerpValue.x, lerpValue.y, lerpValue.z, 1.0f);
@@ -94,10 +98,10 @@ public class ChangeLerpColorUI_HMJ : MonoBehaviour
                 moveHpLerp = false;
         }
 
-        if (curHpValue > playerHpSystem.currHP && !changeHpLerp) // hp 변화
+        if (curHpValue > playerHpSystem.currHP[(int)changeCharacter.GetPlayerCharacterType()] && !changeHpLerp) // hp 변화
         {
             preHpValue = curHpValue; // 이전 hp 저장
-            curHpValue = playerHpSystem.currHP; // 현재 hp 저장
+            curHpValue = playerHpSystem.currHP[(int)changeCharacter.GetPlayerCharacterType()]; // 현재 hp 저장
 
             data = preHpValue;
             changeHpLerp = true;
@@ -111,7 +115,7 @@ public class ChangeLerpColorUI_HMJ : MonoBehaviour
     void ChangeHpValue()
     {
         preHpValue = curHpValue; // 이전 hp 저장
-        curHpValue = playerHpSystem.currHP; // 현재 hp 저장
+        curHpValue = playerHpSystem.currHP[(int)changeCharacter.GetPlayerCharacterType()]; // 현재 hp 저장
 
         if (preHpValue > curHpValue) // hp가 깎였으면 - hp가 변화했으면
         {

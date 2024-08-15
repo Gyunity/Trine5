@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using static ChangeGrabObject_HMJ;
 
 public enum PlayerCharacterType
@@ -93,6 +94,9 @@ public class ChangeCharacter : MonoBehaviour
     void SetMeshActive(PlayerCharacterType playerCharacterType, bool bActive)
     {
         objectList[(int)playerCharacterType].SetActive(bActive);
+
+        // HP 시스템 업데이트(캐릭터 변경)
+        GameObject.Find("Player").GetComponentInChildren<HPSystem_HMJ>().UpdateHP(0.0f, playerCharacterType);
     }
 
     // 모든 메쉬 엑티브 설정

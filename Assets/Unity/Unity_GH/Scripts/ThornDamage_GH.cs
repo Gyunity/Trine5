@@ -24,7 +24,7 @@ public class ThornDamage_GH : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            playerHP.UpdateHP(-10);
+            playerHP.UpdateHP(-10, GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>().GetPlayerCharacterType());
         }
     }
 }

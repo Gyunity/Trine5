@@ -20,6 +20,7 @@ public class PlayerState_HMJ : MonoBehaviour
         Death,
         Attack00,
         Attack01,
+        reIdle,
         PlayerStateEnd
 
     }
@@ -73,7 +74,7 @@ public class PlayerState_HMJ : MonoBehaviour
     {
         UpdateState();
         if (Input.GetKeyDown(KeyCode.B))
-            hpSystem.UpdateHP(-100.0f);
+            hpSystem.UpdateHP(-100.0f, GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>().GetPlayerCharacterType());
     }
 
     void UpdateState()
@@ -124,7 +125,7 @@ public class PlayerState_HMJ : MonoBehaviour
 
     public bool SetState(PlayerState playerState)
     {
-        if (curPlayerState == PlayerState.Death)
+        if (curPlayerState == PlayerState.Death && playerState == PlayerState.Damaged)
             return false;
         if (curPlayerState != playerState)
         {
@@ -132,8 +133,11 @@ public class PlayerState_HMJ : MonoBehaviour
 
             switch (playerState)
             {
+                case PlayerState.reIdle:
+                    anim.SetTrigger("Idle");
+                    break;
                 case PlayerState.Idle:
-                    //anim.SetTrigger("Idle");
+                    anim.SetTrigger("Idle");
                     //Debug.Log("Test: Idle State");
                     break;
                 case PlayerState.Walk:

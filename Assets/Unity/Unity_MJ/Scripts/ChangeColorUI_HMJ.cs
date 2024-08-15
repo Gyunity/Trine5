@@ -38,7 +38,7 @@ public class ChangeColorUI_HMJ : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float value = playerHpSystem.currHP / playerHpSystem.maxHP;
+        float value = playerHpSystem.currHP[(int)GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>().GetPlayerCharacterType()] / playerHpSystem.maxHP;
         Vector3 lerpValue = Vector3.Lerp(firstColorData, lastColorData, 1.0f - value);
         imageData.color = new Color(lerpValue.x, lerpValue.y, lerpValue.z, 1.0f);
         //targetMaterial.tint = new Vector4(lerpValue.x, lerpValue.y, lerpValue.z, 1.0f);
