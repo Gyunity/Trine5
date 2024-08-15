@@ -69,7 +69,7 @@ public class mushRoomObject_HMJ : MonoBehaviour
         if(playN <= 0 && !effectPlay)
         {
             effectPlay = true;
-            effectManager.SpawnAndPlayEffect(transform.position, 3.0f);
+            effectManager.SpawnAndPlayEffect(transform.position, 3.0f, false, new Vector3(0.0f, 0.0f, 0.0f));
         }
         if (playN <= 0)
         {

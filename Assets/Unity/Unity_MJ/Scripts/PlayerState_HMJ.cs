@@ -21,6 +21,7 @@ public class PlayerState_HMJ : MonoBehaviour
         Attack00,
         Attack01,
         reIdle,
+        Magic,
         PlayerStateEnd
 
     }
@@ -73,8 +74,8 @@ public class PlayerState_HMJ : MonoBehaviour
     void Update()
     {
         UpdateState();
-        if (Input.GetKeyDown(KeyCode.B))
-            hpSystem.UpdateHP(-100.0f, GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>().GetPlayerCharacterType());
+        //if (Input.GetKeyDown(KeyCode.B))
+        //    hpSystem.UpdateHP(-100.0f, GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>().GetPlayerCharacterType());
     }
 
     void UpdateState()
@@ -120,6 +121,8 @@ public class PlayerState_HMJ : MonoBehaviour
                 break;
             case PlayerState.Attack01:
                 break;
+            case PlayerState.Magic:
+                break;
         }
     }
 
@@ -127,6 +130,8 @@ public class PlayerState_HMJ : MonoBehaviour
     {
         if (curPlayerState == PlayerState.Death && playerState == PlayerState.Damaged)
             return false;
+
+        
         if (curPlayerState != playerState)
         {
             playerMove.ResetDashData();
@@ -138,44 +143,45 @@ public class PlayerState_HMJ : MonoBehaviour
                     break;
                 case PlayerState.Idle:
                     anim.SetTrigger("Idle");
-                    //Debug.Log("Test: Idle State");
+                    Debug.Log("Test: Idle State");
                     break;
                 case PlayerState.Walk:
                     break;
                 case PlayerState.Jump:
                     anim.SetTrigger("Jump");
-                    //Debug.Log("Test: Jump State");
+                    Debug.Log("Test: Jump State");
                     break;
                 case PlayerState.Dash:
                     staminaSystem.DashStart();
                     anim.SetTrigger("Dash");
-                    //Debug.Log("Test: Dash State");
+                    Debug.Log("Test: Dash State");
                     break;
                 case PlayerState.Grap:
                     anim.SetTrigger("Grap");
-                    //Debug.Log("Test: Grap State");
+                    Debug.Log("Test: Grap State");
                     grabyPos = 1.8f;
                     break;
                 case PlayerState.Climb:
                     anim.SetTrigger("Climb");
-                    //Debug.Log("Test: Climb State");
+                    Debug.Log("Test: Climb State");
                     grabyPos = 1.4f;
                     break;
                 case PlayerState.DrawArrow:
                     if (arrowManager) // Test용 방어 코드
                         arrowManager.GetComponentInChildren<ArrowManager_HMJ>().SpawnArrow();
-                    //Debug.Log("SpawnArrow~~~");
+                    Debug.Log("Test: SpawnArrow~~~");
                     anim.SetTrigger("ArrowDraw");
+                    Debug.Log("플레이어 상태 변경: " + "ArrowDraw");
                     //Debug.Log("Test: ArrowDraw State");
                     break;
                 case PlayerState.ShootArrow:
                     anim.SetTrigger("ArrowShoot");
-                    //Debug.Log("Test: ArrowShoot State");
+                    Debug.Log("Test: ArrowShoot State");
                     break;
                 case PlayerState.Swinging:
                     anim.SetTrigger("Swinging");
                     playerMove.SelectHangingObject();
-                    //Debug.Log("Test: Swinging State");
+                    Debug.Log("Test: Swinging State");
                     break;
                 case PlayerState.Damaged:
                     anim.SetTrigger("Hit");
@@ -188,6 +194,8 @@ public class PlayerState_HMJ : MonoBehaviour
                     break;
                 case PlayerState.Attack01:
                     anim.SetTrigger("Attack01");
+                    break;
+                case PlayerState.Magic:
                     break;
             }
 

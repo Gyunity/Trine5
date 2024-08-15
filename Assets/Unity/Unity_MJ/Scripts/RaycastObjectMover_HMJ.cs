@@ -16,11 +16,19 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
     GameObject player;
     ChangeCharacter changeCharacter;
 
+    GameObject effectManagerObject;
+    EffectManager_HMJ effectManager;
+
+    GameObject effect;
     private void Start()
     {
         player = GameObject.Find("Player");
 
         changeCharacter = player.GetComponentInChildren<ChangeCharacter>();
+
+        effectManagerObject = GameObject.Find("RaycastObjectEffect");
+
+        effectManager = effectManagerObject.GetComponentInChildren<EffectManager_HMJ>();
     }
     private void FixedUpdate()
     {
@@ -37,8 +45,8 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
             if ((null == hitObject) && RaycastGrab(out hitInfo)) // 만약 마우스와 충돌된 오브젝트가 이전에 없었고, 현재 있다면 저장
             {
                 hitObject = hitInfo.collider.gameObject;
-
-                if(hitObject.name == "Log") // 통나무를 잡았을 경우
+                effect = effectManager.SpawnAndPlayEffect(hitObject.transform.position, 50000.0f, false, new Vector3(0.0f, 0.0f, 0.0f));
+                if (hitObject.name == "Log") // 통나무를 잡았을 경우
                 {
                     PlatformDrop_HMJ platformDrop = hitObject.GetComponentInChildren<PlatformDrop_HMJ>();
                     platformDrop.enabled = false;
@@ -46,6 +54,7 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
             }
             else if (hitObject)
             {
+                effect.transform.position = hitObject.transform.position;
                 RaycastMove(); // 현재 hit된 보관된 오브젝트를 마우스 위치로 변경(2d -> 3d) (만약 레이케스팅된 물체가 있다면 실행)
                 if (Input.GetKey(KeyCode.Z))
                     AddRotationValue(Time.deltaTime * rotateSpeed);
@@ -60,6 +69,8 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
             hitObject.GetComponentInChildren<Rigidbody>().isKinematic = false;
             hitObject = null;
 
+            if(effect)
+                Destroy(effect);
             //if (hitObject.name == "Log") // 통나무를 잡았을 경우
             //{
             //    PlatformDrop_HMJ platformDrop = hitObject.GetComponentInChildren<PlatformDrop_HMJ>();

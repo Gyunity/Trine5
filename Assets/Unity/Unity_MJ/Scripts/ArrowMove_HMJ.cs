@@ -53,6 +53,14 @@ public class ArrowMove_HMJ : MonoBehaviour
     ArrowType_HMJ arrowTypeData;
 
     public ArrowType arrowType;
+
+    EffectManager_HMJ effectManager;
+
+    GameObject effectObject;
+
+    public GameObject arrowPosition;
+    Transform childTransform;
+
     private void Awake()
     {
         lineRenderer = GetComponentInChildren<LineRenderer>();
@@ -70,6 +78,12 @@ public class ArrowMove_HMJ : MonoBehaviour
 
         arrowObject = FindBoneManager_HMJ.Instance.FindBone(GameObject.Find("Player").transform, "ArrowPosition").transform.gameObject;
         arrowType = arrowTypeData.GetArrowType();
+
+        effectManager = GetComponentInChildren<EffectManager_HMJ>();
+
+        childTransform = transform.Find("ArrowPosition");
+
+        
     }
 
     void ArrowMove()
@@ -87,6 +101,8 @@ public class ArrowMove_HMJ : MonoBehaviour
                 {
                     MoveArrow();
                     ArrowMove();
+                    if (effectObject)
+                        effectObject.transform.position = childTransform.position;
                 }
                 break;
             case ArrowState.ArrowDirection:
@@ -122,6 +138,16 @@ public class ArrowMove_HMJ : MonoBehaviour
                         dir = new Vector3(0.0f, 0.0f, 0.0f);
                         myPower = 0;
                         lineRenderer.enabled = false;
+
+                        switch (arrowType)
+                        {
+                            case ArrowType.ArrowIceType:
+                                effectObject = effectManager.SpawnAndPlayEffect(childTransform.position, 10.0f, false, new Vector3(0.0f, 0.0f, 0.0f));
+                                break;
+                            case ArrowType.ArrowFireType:
+                                effectObject = effectManager.SpawnAndPlayEffect2(childTransform.position, 10.0f, false, new Vector3(0.0f, 0.0f, 0.0f));
+                                break;
+                        }
                     }
                     break;
                 case ArrowState.ArrowDraw:
