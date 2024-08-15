@@ -80746,12 +80746,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5951316550102881545, guid: 2d6b472d4f6c58b4f838b75c1b558141,
+        type: 3}
+      propertyPath: HpCanvas
+      value: 
+      objectReference: {fileID: 2036881885}
     - target: {fileID: 6407679672307255247, guid: 2d6b472d4f6c58b4f838b75c1b558141,
         type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1234481553786908134, guid: 2d6b472d4f6c58b4f838b75c1b558141, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -80759,6 +80765,12 @@ PrefabInstance:
 --- !u!4 &2036881884 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 678651541206488858, guid: 2d6b472d4f6c58b4f838b75c1b558141,
+    type: 3}
+  m_PrefabInstance: {fileID: 2036881883}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2036881885 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2127528126737620099, guid: 2d6b472d4f6c58b4f838b75c1b558141,
     type: 3}
   m_PrefabInstance: {fileID: 2036881883}
   m_PrefabAsset: {fileID: 0}

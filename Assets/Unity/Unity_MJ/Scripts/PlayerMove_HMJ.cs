@@ -127,6 +127,8 @@ public class PlayerMove_HMJ : MonoBehaviour
         staminaSystem = GameObject.Find("Player").GetComponentInChildren<StaminaSystem_HMJ>();
 
         effectManager = GameObject.Find("Player").GetComponentInChildren<EffectManager_HMJ>();
+
+        moveSpeed = 4.0f;
     }
     // Update is called once per frame
     void Update()
@@ -152,7 +154,8 @@ public class PlayerMove_HMJ : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift) && staminaSystem.EnableDash())
         {
             playerState.SetState(PlayerState.Dash);
-            effectManager.SpawnAndPlayEffect(transform.position, 0.2f, false, new Vector3(0.0f, 0.0f, 0.0f));
+            if(changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.WarriorType)
+                effectManager.SpawnAndPlayEffect(transform.position, 0.2f, false, new Vector3(0.0f, 0.0f, 0.0f));
         }
 
         if (changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.WarriorType)
@@ -404,6 +407,7 @@ public class PlayerMove_HMJ : MonoBehaviour
         if (playDashTime >= dashTime)
         {
             playerState.SetState(PlayerState.Idle);
+            moveSpeed = 5.0f;
         }
     }
 
