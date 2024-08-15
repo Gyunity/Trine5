@@ -116,6 +116,7 @@ public class PlayerMove_HMJ : MonoBehaviour
         //playerState.SetplayerMoveState(PlayerMoveState.Player_ZeroZ);
 
         arrowManager = GameObject.Find("ArrowManager").GetComponent<ArrowManager_HMJ>();
+
     }
     // Update is called once per frame
     void Update()
@@ -488,9 +489,12 @@ public class PlayerMove_HMJ : MonoBehaviour
         targetCollider = collider;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollerEnter(Collision collision)
     {
         print("충돌" + collision.gameObject.name);
+        
+
     }
+    
 
 }
