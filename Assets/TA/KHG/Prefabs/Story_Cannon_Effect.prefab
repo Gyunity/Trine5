@@ -147,6 +147,8 @@ GameObject:
   - component: {fileID: 3149124605464349703}
   - component: {fileID: 6795422812952412343}
   - component: {fileID: 4907705679531263456}
+  - component: {fileID: 2069888979299252003}
+  - component: {fileID: 7806802173364667552}
   m_Layer: 0
   m_Name: Story_Cannon_Effect
   m_TagString: Untagged
@@ -162,8 +164,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1568277467746146290}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 13.911673, y: 11.945656, z: -76.18464}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4975,6 +4977,39 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!65 &2069888979299252003
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1568277467746146290}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.8062699, y: 1.612166, z: 8.522772}
+  m_Center: {x: 9.119794e-15, y: -0.53240424, z: 3.3582506}
+--- !u!114 &7806802173364667552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1568277467746146290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39d4a796c19cb9a40915cb57874b4357, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3460646581579342797
 GameObject:
   m_ObjectHideFlags: 0

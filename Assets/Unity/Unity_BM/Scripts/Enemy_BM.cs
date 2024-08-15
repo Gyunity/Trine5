@@ -110,10 +110,10 @@ public class Enemy_BM : MonoBehaviour
                 UpdateDamage();
                 break;
             case EEnemyState_BM.Die:
-                //UpdateDie();
+                UpdateDie();
                 break;
             case EEnemyState_BM.AttackDelay:
-                UpdateAttackDelay();
+                //UpdateAttackDelay();
                 break;
         }
     }
@@ -140,12 +140,12 @@ public class Enemy_BM : MonoBehaviour
                 anim.SetTrigger("Throw");
                 break;
             case EEnemyState_BM.Damage:
-                hpSystem.UpdateHp(-1);
                 SoundManager.instance.PlayBossEftSound(SoundManager.EBossEftType.BOSS_HIT1);
                 anim.SetTrigger("Damage");
                 break;
             case EEnemyState_BM.Die:
                 CapsuleCollider coll = GetComponent<CapsuleCollider>();
+                print("dd");
                 coll.enabled = false;
                 anim.SetTrigger("Die");
                 break;
@@ -162,7 +162,7 @@ public class Enemy_BM : MonoBehaviour
         // 그렇지 않고 인지범위 보다 작으면
         else if (dist > attackRange && dist < traceRange)
         {
-
+            print("AAAAAA");
             ChangeState(EEnemyState_BM.Throw);
         }
         // 그렇지 않고 인지범위 보다 크면
@@ -199,7 +199,7 @@ public class Enemy_BM : MonoBehaviour
     void UpdateAttack()
     {
         //공격애니
-        anim.SetTrigger("Attack");
+        // anim.SetTrigger("Attack");
         ChangeState(EEnemyState_BM.AttackDelay);
 
     }
@@ -215,7 +215,7 @@ public class Enemy_BM : MonoBehaviour
     void UpdateThrow()
     {
         //던지는 애니
-        anim.SetTrigger("Throw");
+        // anim.SetTrigger("Throw");
         ChangeState(EEnemyState_BM.AttackDelay);
     }
     //뎀지 상태 전환
@@ -274,7 +274,12 @@ public class Enemy_BM : MonoBehaviour
             currPhase++;
             print("현재 화살과 충돌~~");
             // damage
-            ChangeState(EEnemyState_BM.Damage);
+            if (hpSystem.currHP > 0)
+            {
+                ChangeState(EEnemyState_BM.Damage);
+
+            }
+            Destroy(other.gameObject);
         }
     }
 
