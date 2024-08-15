@@ -21,13 +21,17 @@ public class ArrowFire_GH : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Arrow"))
+        ArrowMove_HMJ arrowType = other.GetComponent<ArrowMove_HMJ>();
+
+        if (other.gameObject.layer == LayerMask.NameToLayer("Arrow") && arrowType.arrowType == ArrowType_HMJ.ArrowType.ArrowFireType)
         {
+            
             if (cannon_GH.shellLoad)
             {
                 cannon_GH.arrowFire = true;
 
             }
         }
+        
     }
 }

@@ -232,8 +232,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movespeed: 10
-  explosionFactory: {fileID: 0}
-  knockBack: {x: 10, y: 10, z: 0}
+  explosionFactory: {fileID: 5487546540350709931, guid: 8cf217ffa37a9ab41bf379f6a5e35f30,
+    type: 3}
 --- !u!1001 &8989294392123944452
 PrefabInstance:
   m_ObjectHideFlags: 0

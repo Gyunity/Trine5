@@ -21,6 +21,7 @@ public class Cannon_GH : MonoBehaviour
     // 폭탄 로프
     public GameObject rope;
 
+    public GameObject fire;
     void Start()
     {
         shellLoad = false;
@@ -77,5 +78,14 @@ public class Cannon_GH : MonoBehaviour
 
         //발사 힘 적용
         rb.velocity = launchDirection * launchForce;
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        ArrowMove_HMJ arrowType = other.GetComponent<ArrowMove_HMJ>();
+
+        if (other.gameObject.layer == LayerMask.NameToLayer("Arrow") && arrowType.arrowType == ArrowType_HMJ.ArrowType.ArrowIceType)
+        {
+            fire.SetActive(false);
+        }
     }
 }
