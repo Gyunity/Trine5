@@ -99,6 +99,8 @@ public class PlayerMove_HMJ : MonoBehaviour
 
     Vector3 incDir;
 
+    StaminaSystem_HMJ staminaSystem;
+
     // GetArrowDirection
     // Start is called before the first frame update
     void Start()
@@ -116,6 +118,8 @@ public class PlayerMove_HMJ : MonoBehaviour
         //playerState.SetplayerMoveState(PlayerMoveState.Player_ZeroZ);
 
         arrowManager = GameObject.Find("ArrowManager").GetComponent<ArrowManager_HMJ>();
+
+        staminaSystem = GameObject.Find("Player").GetComponentInChildren<StaminaSystem_HMJ>();
     }
     // Update is called once per frame
     void Update()
@@ -138,7 +142,7 @@ public class PlayerMove_HMJ : MonoBehaviour
         Jump();
         PlayerMove();
         Swinging();
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(KeyCode.LeftShift) && staminaSystem.EnableDash())
         {
             playerState.SetState(PlayerState.Dash);
         }
@@ -168,7 +172,7 @@ public class PlayerMove_HMJ : MonoBehaviour
                 playerState.SetState(PlayerState.ShootArrow);
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(KeyCode.LeftShift) && staminaSystem.EnableDash())
         {
             playerState.SetState(PlayerState.Dash);
         }

@@ -10,6 +10,7 @@ public class PlayerState_HMJ : MonoBehaviour
         Walk,
         Jump,
         Dash,
+        NoDash,
         Grap,
         Climb,
         DrawArrow,
@@ -46,12 +47,16 @@ public class PlayerState_HMJ : MonoBehaviour
     GameObject arrowManager;
 
     HPSystem_HMJ hpSystem;
+
+    StaminaSystem_HMJ staminaSystem;
+
     private void Awake()
     {
         anim = GetComponentInChildren<Animator>();
         playerMove = GetComponentInChildren<PlayerMove_HMJ>();
         arrowManager = GameObject.Find("ArrowManager");
         hpSystem = GameObject.Find("Player").GetComponentInChildren<HPSystem_HMJ>();
+        staminaSystem = GameObject.Find("Player").GetComponentInChildren<StaminaSystem_HMJ>();
     }
     // Start is called before the first frame update
     void Start()
@@ -138,6 +143,7 @@ public class PlayerState_HMJ : MonoBehaviour
                     //Debug.Log("Test: Jump State");
                     break;
                 case PlayerState.Dash:
+                    staminaSystem.DashStart();
                     anim.SetTrigger("Dash");
                     //Debug.Log("Test: Dash State");
                     break;
