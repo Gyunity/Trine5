@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class BossCamShift : MonoBehaviour
 {
+    public GameObject bossUI;
 
     public CinemachineVirtualCamera bossCam;
     // Start is called before the first frame update
     void Start()
     {
-
+        bossUI.SetActive(false);
     }
 
     // Update is called once per frame
@@ -23,8 +24,11 @@ public class BossCamShift : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             bossCam.Priority = 12;
+            bossUI.SetActive(true);
 
         }
+
+
     }
 
     private void OnTriggerExit(Collider other)
@@ -32,6 +36,7 @@ public class BossCamShift : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             bossCam.Priority = 9;
+            bossUI.SetActive(false);
 
         }
     }

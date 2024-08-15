@@ -30,33 +30,33 @@ public class BossPhase_BM : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        switch (currPhase)
-        {
-            case EBossPhase.Phase_1:
-                if (bossHp.currHp < bossHp.maxHp * 0.8f)
-                {
-                    bossHp.currHp = bossHp.maxHp * 0.8f;
-                }
-                break;
-            case EBossPhase.Phase_2:
-                if (bossHp.currHp < bossHp.maxHp * 0.6f)
-                {
-                    bossHp.currHp = bossHp.maxHp * 0.6f;
-                }
-                break;
-            case EBossPhase.Phase_3:
-                if (bossHp.currHp < bossHp.maxHp * 0.4f)
-                {
-                    bossHp.currHp = bossHp.maxHp * 0.4f;
-                }
-                break;
-            case EBossPhase.Phase_4:
-                if (bossHp.currHp < 0)
-                {
-                    bossHp.currHp = 0;
-                }
-                break;
-        }
+        //switch (currPhase)
+        //{
+        //    case EBossPhase.Phase_1:
+        //        if (bossHp.currHp < bossHp.maxHp * 0.8f)
+        //        {
+        //            bossHp.currHp = bossHp.maxHp * 0.8f;
+        //        }
+        //        break;
+        //    case EBossPhase.Phase_2:
+        //        if (bossHp.currHp < bossHp.maxHp * 0.6f)
+        //        {
+        //            bossHp.currHp = bossHp.maxHp * 0.6f;
+        //        }
+        //        break;
+        //    case EBossPhase.Phase_3:
+        //        if (bossHp.currHp < bossHp.maxHp * 0.4f)
+        //        {
+        //            bossHp.currHp = bossHp.maxHp * 0.4f;
+        //        }
+        //        break;
+        //    case EBossPhase.Phase_4:
+        //        if (bossHp.currHp < 0)
+        //        {
+        //            bossHp.currHp = 0;
+        //        }
+        //        break;
+        //}
         
     }
     public void ChangeState(EBossPhase phase)

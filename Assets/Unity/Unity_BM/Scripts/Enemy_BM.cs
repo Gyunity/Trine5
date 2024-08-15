@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
+using static ValeribotPhase_GH;
 
 public class Enemy_BM : MonoBehaviour
 {
-    
+
     public enum EEnemyState_BM
     {
         Idle,
@@ -38,6 +40,10 @@ public class Enemy_BM : MonoBehaviour
 
     BallFactory ballfactory;
 
+    public Image[] shieldHPs;
+
+    int currPhase = 1;
+
     void Start()
     {
         player = GameObject.FindWithTag("Player");
@@ -49,6 +55,43 @@ public class Enemy_BM : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            hpSystem.UpdateHp(-250);
+
+            currPhase++;
+            ChangeState(EEnemyState_BM.Damage);
+
+        }
+
+        //hp 최저값
+        switch (currPhase)
+        {
+            case 1:
+
+                shieldHPs[0].gameObject.SetActive(false);
+
+
+                if (hpSystem.currHP < hpSystem.maxHP * 0.75f)
+                {
+                    hpSystem.currHP = hpSystem.maxHP * 0.75f;
+                }
+                break;
+            case 2:
+
+                shieldHPs[1].gameObject.SetActive(false);
+                if (hpSystem.currHP < hpSystem.maxHP * 0.5f)
+                {
+                    hpSystem.currHP = hpSystem.maxHP * 0.5f;
+                }
+                break;
+            case 3:
+
+                shieldHPs[2].gameObject.SetActive(false);
+                break;
+        }
+
+
         switch (currState)
         {
             case EEnemyState_BM.Idle:
@@ -149,7 +192,7 @@ public class Enemy_BM : MonoBehaviour
         }
     }
 
-    
+
     //어택상태일때
     void UpdateAttack()
     {
@@ -174,12 +217,12 @@ public class Enemy_BM : MonoBehaviour
         ChangeState(EEnemyState_BM.AttackDelay);
     }
     //뎀지 상태 전환
-    
+
     private float damageDelay = 1;
     //뎀지 상태일때
     void UpdateDamage()
     {
-        if(IsDelayComplete(damageDelay))
+        if (IsDelayComplete(damageDelay))
         {
             DecideStateByDist();
         }
@@ -192,12 +235,12 @@ public class Enemy_BM : MonoBehaviour
     //죽음 상태일때
     void UpdateDie()
     {
-       
+
     }
     bool IsDelayComplete(float delayTime)
     {
         currTime += Time.deltaTime;
-        if(currTime >= delayTime)
+        if (currTime >= delayTime)
         {
             currTime = 0;
             return true;
@@ -224,11 +267,13 @@ public class Enemy_BM : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Arrow"))
         {
-            print("현재 화살과 충돌~~");
-            hpSystem.UpdateHp(-1);
-            // damage
+            hpSystem.UpdateHp(-250);
 
+            currPhase++;
+            print("현재 화살과 충돌~~");
+            // damage
+            ChangeState(EEnemyState_BM.Damage);
         }
     }
-    
+
 }

@@ -172,34 +172,34 @@ public class EnemyMove : MonoBehaviour
     void UpdateSleep()
     {
         
-        print("업데이트 슬립");
-        if (hpSystem.currHp <= 80f && bossPhase == 1)
-        {
-            ChangeState(EEnemyState.Idle);
-            print("1");
-            bossPhase++;
-        }
-        else if (hpSystem.currHp <= 60f && bossPhase  == 2)
-        {
-            ChangeState(EEnemyState.Idle_2);
-            print("2");
-            bossPhase++;
+        //print("업데이트 슬립");
+        //if (hpSystem.currHp <= 80f && bossPhase == 1)
+        //{
+        //    ChangeState(EEnemyState.Idle);
+        //    print("1");
+        //    bossPhase++;
+        //}
+        //else if (hpSystem.currHp <= 60f && bossPhase  == 2)
+        //{
+        //    ChangeState(EEnemyState.Idle_2);
+        //    print("2");
+        //    bossPhase++;
 
-        }
-        else if (hpSystem.currHp <= 40f && bossPhase == 3)
-        {
-            ChangeState(EEnemyState.Idle);
-            print("3");
-            bossPhase++;
+        //}
+        //else if (hpSystem.currHp <= 40f && bossPhase == 3)
+        //{
+        //    ChangeState(EEnemyState.Idle);
+        //    print("3");
+        //    bossPhase++;
 
-        }
-        else if (hpSystem.currHp <= 0 && bossPhase == 4)
-        {
-            ChangeState(EEnemyState.Die);
-            print("4");
-            bossPhase++;
+        //}
+        //else if (hpSystem.currHp <= 0 && bossPhase == 4)
+        //{
+        //    ChangeState(EEnemyState.Die);
+        //    print("4");
+        //    bossPhase++;
 
-        }
+        //}
         
 
     }
