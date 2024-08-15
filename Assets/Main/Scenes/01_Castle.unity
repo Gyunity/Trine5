@@ -13552,7 +13552,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   effectPrefab: {fileID: 1635471638950413021, guid: f2e21eab5d3f7cc48b74da93abf7b2f4,
     type: 3}
-  effectPrefab2: {fileID: 0}
+  effectPrefab2: {fileID: 6378526946106484922, guid: f10bdfb3988c57d47b2d1cd619bcda6f,
+    type: 3}
 --- !u!4 &336152317
 Transform:
   m_ObjectHideFlags: 0
