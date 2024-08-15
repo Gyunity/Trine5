@@ -12,8 +12,12 @@ public class mushRoomObject_HMJ : MonoBehaviour
     int playN = 4;
     bool bScaleMove = false;
 
+    float effectPlayTime = 2.0f;
     PlayerScaleState m_ePlayerScaleState;
 
+    EffectManager_HMJ effectManager;
+
+    bool effectPlay = false;
     public enum PlayerScaleState
     {
         SmallState,
@@ -24,8 +28,8 @@ public class mushRoomObject_HMJ : MonoBehaviour
     void Start()
     {
         bScaleMove = false;
+        effectManager = GetComponentInChildren<EffectManager_HMJ>();
 
-        
         minScale = new Vector3(transform.localScale.x * 0.7f, transform.localScale.y * 0.7f, transform.localScale.z * 0.7f);
         maxScale = new Vector3(transform.localScale.x * 1.5f, transform.localScale.y * 1.5f, transform.localScale.z * 1.5f);
 
@@ -37,7 +41,7 @@ public class mushRoomObject_HMJ : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(bScaleMove)
+        if(bScaleMove && !effectPlay)
         {
             scaleTime += Time.deltaTime;
             if (scaleTime > 1.0f)
@@ -62,9 +66,21 @@ public class mushRoomObject_HMJ : MonoBehaviour
             }
         }
 
+        if(playN <= 0 && !effectPlay)
+        {
+            effectPlay = true;
+            effectManager.SpawnAndPlayEffect(transform.position, 3.0f, false, new Vector3(0.0f, 0.0f, 0.0f));
+        }
         if (playN <= 0)
         {
-            Destroy(gameObject);
+            if (effectPlayTime < 0.0f)
+                Destroy(gameObject);
+            effectPlayTime -= Time.deltaTime;
+        }
+
+        if(effectPlay)
+        {
+
         }
             
     }

@@ -47,7 +47,7 @@ public class Bomb_GH : MonoBehaviour
                 if(bombAttack.transform.gameObject.layer == LayerMask.NameToLayer("Player") && bombDamage)
                 {
                     HPSystem_HMJ playerHP = bombAttack.transform.gameObject.GetComponent<HPSystem_HMJ>();
-                    playerHP.UpdateHP(-500);
+                    playerHP.UpdateHP(-500, GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>().GetPlayerCharacterType());
                     bombDamage = false;
                 }
             }
