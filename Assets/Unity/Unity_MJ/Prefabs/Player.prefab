@@ -5304,6 +5304,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02f35ee345deb0c4d80d7447b17aafd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wizardRightHand: {fileID: 0}
+  wizardLeftHand: {fileID: 0}
+  wizardRightEffect: {fileID: 0}
+  wizardLeftEffect: {fileID: 0}
 --- !u!114 &2348775456660865116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5382,7 +5386,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   effectPrefab: {fileID: 7128922813448173208, guid: 8156f87a9e484a44c92bcfb9630d788e,
     type: 3}
-  effectPrefab2: {fileID: 0}
+  effectPrefab2: {fileID: 3219910842314933193, guid: 451f7577d42c7304f9ded1583adc8bfc,
+    type: 3}
 --- !u!65 &979972085446106405
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5419,6 +5424,7 @@ MonoBehaviour:
   maxStamina: 100
   currStamina: 0
   StaminaBar: {fileID: 9187643818282599530}
+  StaminaCanvas: {fileID: 3669288103141807130}
 --- !u!1 &6656315273984288353
 GameObject:
   m_ObjectHideFlags: 0
@@ -6864,7 +6870,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6882305868621372192}
-  - component: {fileID: 8381706879660059738}
   m_Layer: 0
   m_Name: LeftHandPosition
   m_TagString: Untagged
@@ -6887,21 +6892,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2413027453478247509}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8381706879660059738
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8473233285899686549}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9b29c6f64ff4b249a78829a4a173cd4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  effectPrefab: {fileID: 6378526946106484922, guid: f10bdfb3988c57d47b2d1cd619bcda6f,
-    type: 3}
-  effectPrefab2: {fileID: 0}
 --- !u!1 &8487065379500002154
 GameObject:
   m_ObjectHideFlags: 0
@@ -7300,7 +7290,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3083213615795542093}
-  - component: {fileID: 1221986971803181957}
   m_Layer: 0
   m_Name: RightHandPosition
   m_TagString: Untagged
@@ -7323,21 +7312,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1272057763896083056}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1221986971803181957
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8987928414292662185}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9b29c6f64ff4b249a78829a4a173cd4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  effectPrefab: {fileID: 6378526946106484922, guid: f10bdfb3988c57d47b2d1cd619bcda6f,
-    type: 3}
-  effectPrefab2: {fileID: 0}
 --- !u!1 &9016151262784099728
 GameObject:
   m_ObjectHideFlags: 0

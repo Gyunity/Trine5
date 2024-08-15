@@ -19,22 +19,42 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
     GameObject effectManagerObject;
     EffectManager_HMJ effectManager;
 
+    public GameObject wizardRightHand;
+    public GameObject wizardLeftHand;
+
     GameObject effect;
+
+    public GameObject wizardRightEffect;
+    public GameObject wizardLeftEffect;
+
     private void Start()
     {
         player = GameObject.Find("Player");
-
         changeCharacter = player.GetComponentInChildren<ChangeCharacter>();
-
         effectManagerObject = GameObject.Find("RaycastObjectEffect");
-
         effectManager = effectManagerObject.GetComponentInChildren<EffectManager_HMJ>();
+
+        wizardRightEffect = effectManager.SpawnAndPlayEffect2(new Vector3(0.0f, 0.0f, 0.0f), 50000.0f, false, new Vector3(0.0f, 0.0f, 0.0f));
+        wizardRightEffect.SetActive(false);
+
+        wizardLeftEffect = effectManager.SpawnAndPlayEffect2(new Vector3(0.0f, 0.0f, 0.0f), 50000.0f, false, new Vector3(0.0f, 0.0f, 0.0f));
+        wizardLeftEffect.SetActive(false);
     }
     private void FixedUpdate()
     {
         // 마우스 오른쪽 버튼을 클릭했을 때만 해당되는 레이어 오브젝트의 위치가 변경되도록 수정
         if (changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.WizardType)
+        {
+
+
             ObjectMove();
+        }
+            
+    }
+
+    public void SetHandData()
+    {
+
     }
 
     void ObjectMove()
@@ -44,8 +64,15 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
         {
             if ((null == hitObject) && RaycastGrab(out hitInfo)) // 만약 마우스와 충돌된 오브젝트가 이전에 없었고, 현재 있다면 저장
             {
+                // 손 오브젝트 구하기
+                wizardLeftHand = FindBoneManager_HMJ.Instance.FindBone(GameObject.Find("Player").transform, "LeftHandPosition").gameObject;
+                wizardRightHand = FindBoneManager_HMJ.Instance.FindBone(GameObject.Find("Player").transform, "RightHandPosition").gameObject;
+
                 hitObject = hitInfo.collider.gameObject;
                 effect = effectManager.SpawnAndPlayEffect(hitObject.transform.position, 50000.0f, false, new Vector3(0.0f, 0.0f, 0.0f));
+
+
+
                 if (hitObject.name == "Log") // 통나무를 잡았을 경우
                 {
                     PlatformDrop_HMJ platformDrop = hitObject.GetComponentInChildren<PlatformDrop_HMJ>();
@@ -55,6 +82,17 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
             else if (hitObject)
             {
                 effect.transform.position = hitObject.transform.position;
+
+                wizardRightEffect.SetActive(true);
+                wizardRightEffect.transform.position = wizardRightHand.transform.position;
+
+                wizardRightEffect.transform.position = new Vector3(wizardRightEffect.transform.position.x + 1.0f, wizardRightEffect.transform.position.y, wizardRightEffect.transform.position.z);
+
+                wizardLeftEffect.SetActive(true);
+                wizardLeftEffect.transform.position = wizardLeftHand.transform.position;
+
+                wizardLeftEffect.transform.position = new Vector3(wizardLeftEffect.transform.position.x + 1.0f, wizardLeftEffect.transform.position.y, wizardLeftEffect.transform.position.z);
+
                 RaycastMove(); // 현재 hit된 보관된 오브젝트를 마우스 위치로 변경(2d -> 3d) (만약 레이케스팅된 물체가 있다면 실행)
                 if (Input.GetKey(KeyCode.Z))
                     AddRotationValue(Time.deltaTime * rotateSpeed);
@@ -71,6 +109,14 @@ public class RaycastObjectMover_HMJ : MonoBehaviour
 
             if(effect)
                 Destroy(effect);
+
+            wizardRightEffect.SetActive(false);
+            wizardLeftEffect.SetActive(false);
+            //if (wizardRightEffect)
+            //    Destroy(wizardRightEffect);
+
+            //if (wizardLeftHand)
+            //    Destroy(wizardLeftHand);
             //if (hitObject.name == "Log") // 통나무를 잡았을 경우
             //{
             //    PlatformDrop_HMJ platformDrop = hitObject.GetComponentInChildren<PlatformDrop_HMJ>();

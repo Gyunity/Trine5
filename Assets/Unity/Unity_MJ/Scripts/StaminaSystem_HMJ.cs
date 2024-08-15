@@ -16,6 +16,8 @@ public class StaminaSystem_HMJ : MonoBehaviour
     //StaminaBar
     public Image StaminaBar;
 
+    public GameObject StaminaCanvas;
+
     PlayerState_HMJ playerState;
 
     bool fillStamina = false;
@@ -23,6 +25,7 @@ public class StaminaSystem_HMJ : MonoBehaviour
     float staminaTime = 15.0f;
     float lerpData = 0.0f;
 
+    float enableTime = 2.0f;
     void Start()
     {
         //현재 HP를 최대 HP로 생성
@@ -35,6 +38,7 @@ public class StaminaSystem_HMJ : MonoBehaviour
     {
         if(fillStamina)
         {
+            StaminaCanvas.SetActive(true);
             FillLerpStaminaData();
         }
         StaminaBar.fillAmount = currStamina / maxStamina;
@@ -68,8 +72,11 @@ public class StaminaSystem_HMJ : MonoBehaviour
         lerpData += Time.deltaTime;
         currStamina = Mathf.Lerp(currStamina, maxStamina, lerpData / staminaTime);
 
-        if (lerpData > staminaTime)
+        if (currStamina > maxStamina)
+        {
+            StaminaCanvas.SetActive(false);
             fillStamina = false;
+        }
     }
     
     public bool EnableDash()

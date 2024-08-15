@@ -52,6 +52,8 @@ public class PlayerState_HMJ : MonoBehaviour
 
     StaminaSystem_HMJ staminaSystem;
 
+    ChangeCharacter changeCharacter;
+
     private void Awake()
     {
         anim = GetComponentInChildren<Animator>();
@@ -59,6 +61,7 @@ public class PlayerState_HMJ : MonoBehaviour
         arrowManager = GameObject.Find("ArrowManager");
         hpSystem = GameObject.Find("Player").GetComponentInChildren<HPSystem_HMJ>();
         staminaSystem = GameObject.Find("Player").GetComponentInChildren<StaminaSystem_HMJ>();
+        changeCharacter = GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>();
     }
     // Start is called before the first frame update
     void Start()
@@ -131,7 +134,8 @@ public class PlayerState_HMJ : MonoBehaviour
         if (curPlayerState == PlayerState.Death && playerState == PlayerState.Damaged)
             return false;
 
-        
+        if (playerState == PlayerState.Dash && (changeCharacter.GetPlayerCharacterType() != PlayerCharacterType.WarriorType))
+            return false;
         if (curPlayerState != playerState)
         {
             playerMove.ResetDashData();
