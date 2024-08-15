@@ -52,7 +52,14 @@ public class SoundManager : MonoBehaviour
         BOSS_LASERSTART,
         BOSS_LASERING,
         BOSS_CANNON,
-        BOSS_TRAPHIT
+        BOSS_TRAPHIT,
+        Boss_D_CRY,
+        Boss_D_Fly,
+        Boss_D_Fire1,
+        Boss_D_Fire2,
+        Boss_D_Die
+
+
     }
     public enum EBgmType
     {

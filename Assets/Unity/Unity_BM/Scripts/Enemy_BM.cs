@@ -120,7 +120,7 @@ public class Enemy_BM : MonoBehaviour
 
     public void ChangeState(EEnemyState_BM state)
     {
-        print(currState + "-->" + state);
+        //print(currState + "-->" + state);
         currState = state;
         currTime = 0;
         switch (currState)
@@ -171,6 +171,8 @@ public class Enemy_BM : MonoBehaviour
             // 대기상태로 전환
             ChangeState(EEnemyState_BM.Idle);
         }
+
+
     }
     //대기 상태일때
     void UpdateIdle()

@@ -34140,7 +34140,7 @@ MonoBehaviour:
   hitEffect: {fileID: 1806525129080266}
   hitOffset: 0
   useLaserRotation: 0
-  maxLength: 0
+  maxLength: 100
   mainTextureLength: 1
   noiseTextureLength: 1
   laserMat: []

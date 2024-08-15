@@ -37,12 +37,17 @@ public class LaserFireStory_GH : MonoBehaviour
     float readyLaserTime = 0.5f;
 
 
+    GameObject player;
+    HPSystem_HMJ playerHP;
     void Start()
     {
         laserLine = GetComponent<LineRenderer>();
         effects = GetComponentsInChildren<ParticleSystem>();
         hit = hitEffect.GetComponentsInChildren<ParticleSystem>();
         Flash = transform.GetChild(0).gameObject.GetComponent<ParticleSystem>();
+
+        player = GameObject.Find("Player");
+        playerHP = player.GetComponent<HPSystem_HMJ>();
     }
 
     void Update()
@@ -54,8 +59,9 @@ public class LaserFireStory_GH : MonoBehaviour
             laserLine.SetPosition(0, transform.position);
             RaycastHit rayHit;
             //플레이어와 그라운드만 레이를 쏜다.
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out rayHit, maxLength, playerlay << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Thorn") | 1 << LayerMask.NameToLayer("SummonedObject") | 1 << LayerMask.NameToLayer("Cannon")))
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out rayHit, maxLength, 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Thorn") | 1 << LayerMask.NameToLayer("SummonedObject") | 1 << LayerMask.NameToLayer("Cannon")))
             {
+                print(rayHit.point);
                 if (onFlash)
                 {
                     Flash.Play();
@@ -65,16 +71,10 @@ public class LaserFireStory_GH : MonoBehaviour
                 //끝 레이저 위치가 오브젝트이면
                 laserLine.SetPosition(1, rayHit.point);
 
-                playerlay = 1;
-                //if (onFlash)
-                //{
-                //    Flash.Play();
-                //    onFlash = false;
 
-                //}
 
                 laserLine.textureScale = new Vector2(1, 1);
-                hitEffect.transform.position = rayHit.point + rayHit.normal;
+                hitEffect.transform.position = rayHit.point + rayHit.normal * hitOffset;
 
                 if (rayHit.transform.gameObject.tag == "Cabbage")
                 {
@@ -96,26 +96,26 @@ public class LaserFireStory_GH : MonoBehaviour
                 length[2] = noiseTextureLength * (Vector3.Distance(transform.position, rayHit.point));
 
             }
-            else
-            {
-                //레이저의 끝에 아무것도 없으면
-                Vector3 endPos = transform.position + transform.forward * 30;
-                laserLine.SetPosition(1, endPos);
-                //hitEffect.transform.position = endPos;
-                foreach (var allPs in hit)
-                {
-                    if (allPs.isPlaying)
-                    {
+            //else
+            //{
+            //    //레이저의 끝에 아무것도 없으면
+            //    Vector3 endPos = transform.position + transform.forward * 30;
+            //    laserLine.SetPosition(1, endPos);
+            //    //hitEffect.transform.position = endPos;
+            //    foreach (var allPs in hit)
+            //    {
+            //        if (allPs.isPlaying)
+            //        {
 
-                        allPs.Play();
+            //            allPs.Play();
 
-                    }
-                }
-                length[0] = mainTextureLength * (Vector3.Distance(transform.position, endPos));
-                length[2] = noiseTextureLength * (Vector3.Distance(transform.position, endPos));
+            //        }
+            //    }
+            //    length[0] = mainTextureLength * (Vector3.Distance(transform.position, endPos));
+            //    length[2] = noiseTextureLength * (Vector3.Distance(transform.position, endPos));
 
 
-            }
+            //}
 
 
             //텍스처 크기

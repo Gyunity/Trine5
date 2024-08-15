@@ -20,6 +20,7 @@ public class CabbageCrush_GH : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Arrow"))
         {
+            SoundManager.instance.PlayStoryEftSound(SoundManager.EStoryEftType.STORY_CABAGGE_BOOM);
             Instantiate(Cabbagepiece, transform.position, transform.rotation);
             Destroy(gameObject);
         }
