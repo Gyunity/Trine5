@@ -21,6 +21,7 @@ public class PlayerState_HMJ : MonoBehaviour
         Attack00,
         Attack01,
         reIdle,
+        Magic,
         PlayerStateEnd
 
     }
@@ -120,6 +121,8 @@ public class PlayerState_HMJ : MonoBehaviour
                 break;
             case PlayerState.Attack01:
                 break;
+            case PlayerState.Magic:
+                break;
         }
     }
 
@@ -135,9 +138,9 @@ public class PlayerState_HMJ : MonoBehaviour
 
             switch (playerState)
             {
-                //case PlayerState.reIdle:
-                //    anim.SetTrigger("Idle");
-                //    break;
+                case PlayerState.reIdle:
+                    anim.SetTrigger("Idle");
+                    break;
                 case PlayerState.Idle:
                     anim.SetTrigger("Idle");
                     Debug.Log("Test: Idle State");
@@ -191,6 +194,8 @@ public class PlayerState_HMJ : MonoBehaviour
                     break;
                 case PlayerState.Attack01:
                     anim.SetTrigger("Attack01");
+                    break;
+                case PlayerState.Magic:
                     break;
             }
 

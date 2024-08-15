@@ -12,9 +12,13 @@ public class ArrowManager_HMJ : MonoBehaviour
 
     public GameObject arrowObject;
 
+    public GameObject swingObject;
+
     EffectManager_HMJ effectManager;
 
-    GameObject SwordObject;
+    GameObject fireEffect;
+
+    public float angle = 150.0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,13 +26,28 @@ public class ArrowManager_HMJ : MonoBehaviour
 
         playerChangeState = player.GetComponentInChildren<ChangeCharacter>();
 
-        effectManager = SwordObject.GetComponentInChildren<EffectManager_HMJ>();
+        effectManager = swingObject.GetComponentInChildren<EffectManager_HMJ>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(fireEffect && arrowObject)
+        {
+            //fireEffect.transform.rotation;
+            Quaternion effectRotation = Quaternion.LookRotation(arrowObject.transform.forward);
+
+            // 90도 보정 회전 적용 (Y축 기준으로 90도 시계방향 회전)
+            effectRotation *= Quaternion.Euler(0, 0.0f, 90.0f);
+
+            // 최종 회전값을 이펙트에 적용
+            fireEffect.transform.rotation = effectRotation;
+
+            Vector3 position = swingObject.transform.position;
+            position.y += 0.3f;
+            fireEffect.transform.position = position;
+            Debug.Log("FireEffect 회전중~");
+        }
     }
 
     public void SpawnArrow()
@@ -38,7 +57,11 @@ public class ArrowManager_HMJ : MonoBehaviour
             if (arrowObject && arrowObject.GetComponentInChildren<ArrowMove_HMJ>().m_eCurArrowState == ArrowState.ArrowStateEnd)
                 return;
             arrowObject = Instantiate(arrowPrefab);
-            effectManager.SpawnAndPlayEffect(arrowObject.transform.position, 5.0f);
+
+            Vector3 position = swingObject.transform.position;
+            position.y += 0.5f;
+            fireEffect = effectManager.SpawnAndPlayEffect(position, 0.5f, true, arrowObject.transform.forward);
+
         }
     }
 

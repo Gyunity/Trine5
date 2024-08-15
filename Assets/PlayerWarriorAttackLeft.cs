@@ -22,7 +22,7 @@ public class PlayerWarriorAttackLeft : StateMachineBehaviour
 
         effectManager = swordPosition.GetComponentInChildren<EffectManager_HMJ>();
 
-        effectManager.SpawnAndPlayEffect(swordPosition.transform.position, 200.0f);
+        effectManager.SpawnAndPlayEffect(swordPosition.transform.position, 200.0f, false, new Vector3(0.0f, 0.0f, 0.0f));
 
         nextAttack = false;
 

@@ -152,7 +152,7 @@ public class PlayerMove_HMJ : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift) && staminaSystem.EnableDash())
         {
             playerState.SetState(PlayerState.Dash);
-            effectManager.SpawnAndPlayEffect(transform.position, 0.2f);
+            effectManager.SpawnAndPlayEffect(transform.position, 0.2f, false, new Vector3(0.0f, 0.0f, 0.0f));
         }
 
         if (changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.WarriorType)
