@@ -21,12 +21,23 @@ public class ChangeCharacter : MonoBehaviour
 
     List<RuntimeAnimatorController> animControllerList = new List<RuntimeAnimatorController>();
     PlayerCharacterType curPlayerCharacterType = PlayerCharacterType.PlayerCharacterTypeEnd;
-    Animator animator; 
+    Animator animator;
+
+    EffectManager_HMJ effectManager;
+    GameObject changeEffect;
+
+    GameObject player;
 
     private void Awake()
     {
         LoadPrefab();
         LoadAnimData();
+
+        effectManager = GetComponentInChildren<EffectManager_HMJ>();
+
+        
+
+        player = GameObject.Find("Player");
     }
     // Start is called before the first frame update
     void Start()
@@ -67,6 +78,7 @@ public class ChangeCharacter : MonoBehaviour
     {
         if(curPlayerCharacterType != PlayerCharacterMeshType)
         {
+            changeEffect = effectManager.SpawnAndPlayEffect2(player.transform.position, 1.0f, false, new Vector3());
             SetMeshAllActive(false);
             curPlayerCharacterType = PlayerCharacterMeshType;
             SetMeshActive(curPlayerCharacterType, true);
@@ -80,6 +92,7 @@ public class ChangeCharacter : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             SetMeshData(PlayerCharacterType.WizardType);
+            
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
