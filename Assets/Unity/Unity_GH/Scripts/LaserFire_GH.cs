@@ -131,7 +131,7 @@ public class LaserFire_GH : MonoBehaviour
 
                     if (rayHit.transform.gameObject.layer == LayerMask.NameToLayer("Player"))
                     {
-                        playerHP.UpdateHP(-valeribotSC.laserAttackValue);
+                        playerHP.UpdateHP(-valeribotSC.laserAttackValue, GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>().GetPlayerCharacterType());
                     }
                 }
                 else

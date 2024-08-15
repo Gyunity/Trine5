@@ -22,7 +22,7 @@ public class TailAttack_GH : MonoBehaviour
 
         if(other.gameObject.layer == LayerMask.NameToLayer("Player") && bossFSM.currState != ValeribotFSM_GH.EValeribotState.JUMP)
         {
-            playerHPSC.UpdateHP(-bossFSM.tailAttackValue);
+            playerHPSC.UpdateHP(-bossFSM.tailAttackValue, GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>().GetPlayerCharacterType());
         }
     }
 }
