@@ -8,7 +8,7 @@ public class SceneStory_GH : MonoBehaviour
 {
     public int GemCount = 0;
 
-    int Gem = 9;
+    int Gem = 8;
     public GameObject door;
     public GameObject Connon;
 
@@ -25,7 +25,7 @@ public class SceneStory_GH : MonoBehaviour
     void Update()
     {
         gem.text = Convert.ToString(Gem - GemCount);
-        if(GemCount >= 9)
+        if(GemCount >= 8)
         {
             curr += Time.deltaTime;
             if(curr < dur)

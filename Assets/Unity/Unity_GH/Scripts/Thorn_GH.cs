@@ -24,7 +24,7 @@ public class Thorn_GH : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Arrow"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Arrow") || collision.gameObject.layer == LayerMask.NameToLayer("PlayerSword"))
         {
         SoundManager.instance.PlayBossEftSound(SoundManager.EBossEftType.BOSS_TRAPHIT);
 

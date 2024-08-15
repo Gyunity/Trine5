@@ -49,7 +49,7 @@ public class PlayerWayPoint_HMJ : MonoBehaviour
         playerPosition.y = 0.0f;
         targetPosition.y = 0.0f;
 
-        Debug.Log("현재 웨이 포인트 방향: " + moveDirection);
+        //Debug.Log("현재 웨이 포인트 방향: " + moveDirection);
 
         if (Vector3.Distance(playerPosition, targetPosition) < 0.5f)
         {

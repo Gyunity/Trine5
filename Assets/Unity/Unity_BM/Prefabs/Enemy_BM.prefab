@@ -112,7 +112,7 @@ CapsuleCollider:
   m_Radius: 1
   m_Height: 6
   m_Direction: 1
-  m_Center: {x: 0, y: 3, z: 2.67}
+  m_Center: {x: -1.02, y: 3, z: 2.67}
 --- !u!54 &8812484450628643153
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -157,6 +157,10 @@ MonoBehaviour:
   attackRange: 5
   longAttackRange: 8
   attackDelayTime: 2
+  shieldHPs:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &2480582012232068111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,9 +173,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 983fb02aa851d604c95cccd87c110fc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 120
-  currHp: 0
+  maxHP: 1000
+  currHP: 0
   hpBar: {fileID: 0}
+  hpBar_red: {fileID: 0}
 --- !u!114 &3261828866199039602
 MonoBehaviour:
   m_ObjectHideFlags: 0
