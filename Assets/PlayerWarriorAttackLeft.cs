@@ -8,12 +8,26 @@ public class PlayerWarriorAttackLeft : StateMachineBehaviour
 {
     PlayerState_HMJ playerState;
     bool nextAttack = false;
+    EffectManager_HMJ effectManager;
+
+    GameObject swordPosition;
+    
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        GameObject player;
+        player = GameObject.Find("Player");
         playerState = GameObject.Find("Player").GetComponentInChildren<PlayerState_HMJ>();
+        swordPosition = FindBoneManager_HMJ.Instance.FindBone(player.transform, "SwordPosition").transform.gameObject;
 
-        nextAttack = false; 
+        effectManager = swordPosition.GetComponentInChildren<EffectManager_HMJ>();
+
+        effectManager.SpawnAndPlayEffect(swordPosition.transform.position, 200.0f);
+
+        nextAttack = false;
+
+        
+
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

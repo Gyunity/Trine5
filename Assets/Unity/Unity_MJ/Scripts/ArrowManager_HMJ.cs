@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static ArrowMove_HMJ;
 
 public class ArrowManager_HMJ : MonoBehaviour
 {
@@ -10,12 +11,18 @@ public class ArrowManager_HMJ : MonoBehaviour
     public ChangeCharacter playerChangeState;
 
     public GameObject arrowObject;
+
+    EffectManager_HMJ effectManager;
+
+    GameObject SwordObject;
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.Find("Player");
 
         playerChangeState = player.GetComponentInChildren<ChangeCharacter>();
+
+        effectManager = SwordObject.GetComponentInChildren<EffectManager_HMJ>();
     }
 
     // Update is called once per frame
@@ -26,8 +33,13 @@ public class ArrowManager_HMJ : MonoBehaviour
 
     public void SpawnArrow()
     {
-        if(playerChangeState.GetPlayerCharacterType() == PlayerCharacterType.ArcherType)
+        if (playerChangeState.GetPlayerCharacterType() == PlayerCharacterType.ArcherType)
+        {
+            if (arrowObject && arrowObject.GetComponentInChildren<ArrowMove_HMJ>().m_eCurArrowState == ArrowState.ArrowStateEnd)
+                return;
             arrowObject = Instantiate(arrowPrefab);
+            effectManager.SpawnAndPlayEffect(arrowObject.transform.position, 5.0f);
+        }
     }
 
     public Vector3 GetArrowDirection()

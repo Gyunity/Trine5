@@ -60,7 +60,7 @@ public class HPSystem_HMJ : MonoBehaviour
         {
             UpdateHP(-300.0f, GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>().GetPlayerCharacterType());
         }
-        if (deathTimeUI.EnableDeath())
+        if (deathTimeUI.EnableDeath() && playerState.GetState() != PlayerState.DrawArrow)
         {
             playerState.SetState(PlayerState_HMJ.PlayerState.Idle);
         }

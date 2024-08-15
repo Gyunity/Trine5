@@ -48,6 +48,9 @@ public class PlayerMove_HMJ : MonoBehaviour
 
     Vector3 movement;
 
+    bool AttackCheck = false;
+
+
     PlayerState_HMJ playerState;
 
     Rigidbody rb;
@@ -101,16 +104,18 @@ public class PlayerMove_HMJ : MonoBehaviour
 
     StaminaSystem_HMJ staminaSystem;
 
+    EffectManager_HMJ effectManager;
+
     // GetArrowDirection
     // Start is called before the first frame update
     void Start()
     {
         // Character Controller
-        
+
         cc = GetComponent<CharacterController>();
         rb = GetComponentInChildren<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
-        
+
         playerState = GameObject.Find("Player").GetComponentInChildren<PlayerState_HMJ>();
         changeCharacter = GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>();
         //wayPointData = GameObject.Find("RootManager").GetComponentInChildren<PlayerWayPoint_HMJ>();
@@ -120,11 +125,13 @@ public class PlayerMove_HMJ : MonoBehaviour
         arrowManager = GameObject.Find("ArrowManager").GetComponent<ArrowManager_HMJ>();
 
         staminaSystem = GameObject.Find("Player").GetComponentInChildren<StaminaSystem_HMJ>();
+
+        effectManager = GameObject.Find("Player").GetComponentInChildren<EffectManager_HMJ>();
     }
     // Update is called once per frame
     void Update()
     {
-        if(playerState.GetState() != PlayerState.DrawArrow)
+        if (playerState.GetState() != PlayerState.DrawArrow)
             PlayerZFixZeroMove();
 
         if (movement.magnitude > 0 /*&& playerState.GetState() != PlayerState.DrawArrow*/ && playerState.GetState() != PlayerState.Swinging)
@@ -145,9 +152,10 @@ public class PlayerMove_HMJ : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift) && staminaSystem.EnableDash())
         {
             playerState.SetState(PlayerState.Dash);
+            effectManager.SpawnAndPlayEffect(transform.position, 0.2f);
         }
 
-        if(changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.WarriorType)
+        if (changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.WarriorType)
         {
             attackLeftTime -= Time.deltaTime;
             if (Input.GetMouseButtonDown(0) && (playerState.GetState() != PlayerState.Attack00))
@@ -161,8 +169,9 @@ public class PlayerMove_HMJ : MonoBehaviour
 
         if (changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.ArcherType)
         {
-            if (Input.GetMouseButton(0) && (playerState.GetState() == PlayerState.Idle || playerState.GetState() == PlayerState.Walk))
+            if (Input.GetMouseButton(0) && (playerState.GetState() == PlayerState.Idle || playerState.GetState() == PlayerState.Walk) && (playerState.GetState() != PlayerState.Walk))
             {
+                Debug.Log("드로우 에셋에서 스테이트: " + playerState.GetState());
                 Debug.Log("드로우 에셋");
                 playerState.SetState(PlayerState.DrawArrow);
             }
@@ -175,6 +184,7 @@ public class PlayerMove_HMJ : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift) && staminaSystem.EnableDash())
         {
             playerState.SetState(PlayerState.Dash);
+
         }
 
         transform.position = new Vector3(transform.position.x, transform.position.y, 0);
@@ -195,7 +205,7 @@ public class PlayerMove_HMJ : MonoBehaviour
 
         //Vector3 Direction = wayPointData.GetMoveDirection();
         //Direction = new Vector3(horizontal * Direction.x, 0.0f, horizontal * Direction.z);
-       // movement = Direction;
+        // movement = Direction;
     }
 
     void UpdateLineRender(Vector3 TargetPosition, Vector3 playerHandPositoin)
@@ -267,7 +277,7 @@ public class PlayerMove_HMJ : MonoBehaviour
             currentAngle -= boundingSpeed * Time.deltaTime;
             UpdateSwing();
 
-            if(moveAngle <= 0.0f)
+            if (moveAngle <= 0.0f)
             {
                 left = false;
                 moveFirstAngle -= 2.0f;
@@ -286,7 +296,7 @@ public class PlayerMove_HMJ : MonoBehaviour
             {
                 left = true;
                 moveFirstAngle -= 2.0f;
-  
+
                 moveAngle = moveFirstAngle;
                 moveAngle = Mathf.Clamp(moveAngle, 90.0f, 270.0f);
             }
@@ -345,7 +355,7 @@ public class PlayerMove_HMJ : MonoBehaviour
         if (Input.GetMouseButtonDown(1) && SelectHangingObject() && (changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.ArcherType))
         {
             startTime = Time.time;
-            if(playerState.SetState(PlayerState.Swinging)) // 스테이트가 바뀌었으면
+            if (playerState.SetState(PlayerState.Swinging)) // 스테이트가 바뀌었으면
             {
                 originPos = grapPos;
                 // 초기 그랩 시 각도 계산
@@ -362,18 +372,18 @@ public class PlayerMove_HMJ : MonoBehaviour
                 // 90 ~ 270
                 if (currentAngle >= 180.0f)
                 {
-                    
+
                     left = true;
                     moveFirstAngle = Mathf.Clamp(currentAngle - 180.0f, 90.0f, 180.0f);
                 }
                 else
-                { 
+                {
                     left = false;
-                    moveFirstAngle = Mathf.Clamp(currentAngle, 90.0f, 180.0f); 
+                    moveFirstAngle = Mathf.Clamp(currentAngle, 90.0f, 180.0f);
                 }
 
             }
-                
+
         }
 
         if (Input.GetMouseButton(1))
@@ -391,7 +401,7 @@ public class PlayerMove_HMJ : MonoBehaviour
         moveSpeed = Mathf.Lerp(moveSpeed, dashMaxSpeed, playDashTime / dashTime);
         // moveSpeed -> dashMaxSpeed로 값 변경 
         cc.Move(dashDir * moveSpeed * Time.deltaTime);
-        if(playDashTime >= dashTime)
+        if (playDashTime >= dashTime)
         {
             playerState.SetState(PlayerState.Idle);
         }
@@ -400,17 +410,17 @@ public class PlayerMove_HMJ : MonoBehaviour
     void Jump()
     {
         // 땅에 있음
-        if (cc.isGrounded && (playerState.GetState() != PlayerState.DrawArrow) && (playerState.GetState() != PlayerState.Swinging) && (playerState.GetState() != PlayerState.Attack00) && (playerState.GetState() != PlayerState.Attack01))
+        if (cc.isGrounded && (playerState.GetState() != PlayerState.DrawArrow) && (playerState.GetState() != PlayerState.Swinging) && (playerState.GetState() != PlayerState.Attack00) && (playerState.GetState() != PlayerState.Attack01) && (playerState.GetState() != PlayerState.DrawArrow))
         {
             JumpCurN = 0;
             yVelocity = 0.0f;
-           
-            playerState.SetState(PlayerState.Idle);              
+
+            playerState.SetState(PlayerState.Idle);
         }
 
         if (Input.GetButtonDown("Jump"))
         {
-            if(playerState.SetState(PlayerState.Jump))
+            if (playerState.SetState(PlayerState.Jump))
             {
                 swingSpeed = 20.0f;      // 흔들림 속도 (스윙 속도)
                 boundingSpeed = 30.0f;      // 반동 속도 (반동 속도)
@@ -420,7 +430,7 @@ public class PlayerMove_HMJ : MonoBehaviour
                 boundingAngle = 0.0f;
                 isSwingingLeft = false;
                 isSwingingRight = false;
-}
+            }
             // 만약에 현재 점프 횟수가 최대 점프 횟수보다 작으면
             if (JumpCurN < maxJumpN)
             {
@@ -446,7 +456,7 @@ public class PlayerMove_HMJ : MonoBehaviour
             incDir = GetIncVector();
 
             if (playerState.GetState() != PlayerState.DrawArrow && playerState.GetState() != PlayerState.Swinging)
-                cc.Move((movement * moveSpeed + new Vector3(0.0f, yVelocity, 0.0f) + incDir)  * Time.deltaTime);
+                cc.Move((movement * moveSpeed + new Vector3(0.0f, yVelocity, 0.0f) + incDir) * Time.deltaTime);
         }
 
 
@@ -460,9 +470,9 @@ public class PlayerMove_HMJ : MonoBehaviour
         Ray ray = new Ray(transform.position + Vector3.up, Vector3.down);
         RaycastHit hitinfo;
 
-        if(Physics.Raycast(ray,out hitinfo,5, 1 << LayerMask.NameToLayer("SummonedObject")))
+        if (Physics.Raycast(ray, out hitinfo, 5, 1 << LayerMask.NameToLayer("SummonedObject")))
         {
-           float dot = -Vector3.Dot(Vector3.right, hitinfo.normal);
+            float dot = -Vector3.Dot(Vector3.right, hitinfo.normal);
 
             result = Vector3.Cross(Vector3.forward, hitinfo.normal) * dot;
         }
@@ -495,6 +505,30 @@ public class PlayerMove_HMJ : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         print("충돌" + collision.gameObject.name);
+    }
+
+
+    public void PlayerSwordAttackStart()
+    {
+        AttackCheck = true;
+    }
+
+    public void PlayerSwordAttackEnd()
+    {
+        AttackCheck = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Boss"))
+        {
+            // "Boss" 레이어와 충돌했을 때 실행할 코드
+            Debug.Log("Boss와 충돌: " + other.gameObject.name);
+            HPSystem_GH hpSystem = other.gameObject.GetComponentInChildren<HPSystem_GH>();
+            ValeribotFSM_GH bossFSM = other.gameObject.GetComponentInChildren<ValeribotFSM_GH>();
+            if (!bossFSM.onShield)
+                hpSystem.UpdateHP(-50.0f);
+        }
     }
 
 }
