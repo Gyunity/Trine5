@@ -46,12 +46,12 @@ public class ChangeGrabObject_HMJ : MonoBehaviour
     void LoadPrefab()
     {
         // 프리펩 정보 리스트에 미리 로드
-        string[] prefabNames = { "CubePrefab_HMJ.prefab", "BrickPrefab_HMJ.prefab", "SpherePrefab_HMJ.prefab" }; // .prefab
+        string[] prefabNames = { "CubePrefab_HMJ", "BrickPrefab_HMJ", "SpherePrefab_HMJ" }; // .prefab
         foreach (string prefabName in prefabNames)
         {
             GameObject parentObject = GameObject.Find("Player");
             // 프리팹 로드(특정 경로에 있는 프리팹 3가지 로드)
-            GameObject obj = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Unity/Unity_MJ/Prefabs/" + prefabName);
+            GameObject obj = Resources.Load<GameObject>(prefabName);
             objectList.Add(Instantiate(obj, Vector3.zero, Quaternion.identity));
             parentObject.transform.SetParent(parentObject.transform, false);
         }

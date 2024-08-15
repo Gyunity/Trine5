@@ -123,18 +123,29 @@ public class ChangeCharacter : MonoBehaviour
 
     void LoadAnimData()
     {
+        // "Prefabs/MyPrefab"은 "Resources" 폴더 내의 경로입니다.
+        GameObject prefab = Resources.Load<GameObject>("Prefabs/MyPrefab");
+
+        if (prefab != null)
+        {
+            Instantiate(prefab); // 프리팹 인스턴스화
+        }
+        else
+        {
+            Debug.LogError("Failed to load prefab");
+        }
         // 
-        // 추후에 리소스 로드로 변경할 예정 - 에디터 전용 함수: LoadAssetAtPath
+        // 추후에 리소스 로드로 변경할 예정 - 에디터 전용 함수: LoadAssetAtPath 사용 금지
         animator = GetComponentInChildren<Animator>();
-        avatarList.Add(AssetDatabase.LoadAssetAtPath<Avatar>("Assets/Unity/Unity_MJ/Assets/Mesh/Download/Knight D Pelegrini.fbx"));
-        avatarList.Add(AssetDatabase.LoadAssetAtPath<Avatar>("Assets/Unity/Unity_MJ/Assets/Character/Erika Archer With Bow Arrow.fbx"));
-        avatarList.Add(AssetDatabase.LoadAssetAtPath<Avatar>("Assets/Unity/Unity_MJ/Assets/Character/Warrior/Paladin WProp J Nordstrom.fbx"));
+        avatarList.Add(Resources.Load<Avatar>("Knight D Pelegrini"));
+        avatarList.Add(Resources.Load<Avatar>("Erika Archer With Bow Arrow"));
+        avatarList.Add(Resources.Load<Avatar>("Paladin WProp J Nordstrom"));
         // 
 
 
-        animControllerList.Add(AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Unity/Unity_MJ/Assets/Animation/Animation Active/Player_Wizard.controller"));
-        animControllerList.Add(AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Unity/Unity_MJ/Assets/Animation/Animation Active/Player_Archer.controller"));
-        animControllerList.Add(AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Unity/Unity_MJ/Assets/Animation/Animation Active/Player_Warrior.controller"));
+        animControllerList.Add(Resources.Load<RuntimeAnimatorController>("Player_Wizard"));
+        animControllerList.Add(Resources.Load<RuntimeAnimatorController>("Player_Archer"));
+        animControllerList.Add(Resources.Load<RuntimeAnimatorController>("Player_Warrior"));
         //
     }
 

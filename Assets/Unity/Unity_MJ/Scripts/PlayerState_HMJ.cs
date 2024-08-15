@@ -229,7 +229,7 @@ public class PlayerState_HMJ : MonoBehaviour
                     break;
                 case PlayerState.Attack00:
                     anim.SetTrigger("Attack00");
-                    SoundManager.instance.PlayPlayerEftSound(EPlayerEftType.PLAYER_WARRIOR_SLASH);
+
                     break;
                 case PlayerState.Attack01:
                     anim.SetTrigger("Attack01");
