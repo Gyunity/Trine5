@@ -9,6 +9,7 @@ using UnityEngine.ProBuilder;
 using UnityEngine.UIElements;
 using static ArrowMove_HMJ;
 using static PlayerState_HMJ;
+using static SoundManager;
 using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerMove_HMJ : MonoBehaviour
@@ -145,6 +146,7 @@ public class PlayerMove_HMJ : MonoBehaviour
 
             transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * 10.0f);
             anim.SetFloat("MoveSpeed", Mathf.Abs(horizontal));
+
         }
 
         UpdateKey(); // 반동 업데이트 키
@@ -168,7 +170,7 @@ public class PlayerMove_HMJ : MonoBehaviour
 
         }
 
-        Dash();
+        //Dash();
 
         if (changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.ArcherType)
         {

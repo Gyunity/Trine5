@@ -6598,6 +6598,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5951316550102881545, guid: 2d6b472d4f6c58b4f838b75c1b558141,
+        type: 3}
+      propertyPath: HpCanvas
+      value: 
+      objectReference: {fileID: 1332611670}
     - target: {fileID: 6407679672307255247, guid: 2d6b472d4f6c58b4f838b75c1b558141,
         type: 3}
       propertyPath: m_Name
@@ -6608,6 +6613,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d6b472d4f6c58b4f838b75c1b558141, type: 3}
+--- !u!1 &624632058 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4926116867505544994, guid: 2d6b472d4f6c58b4f838b75c1b558141,
+    type: 3}
+  m_PrefabInstance: {fileID: 624632057}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &626526634
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16692,6 +16703,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1329497454}
   m_CullTransparentMesh: 1
+--- !u!1 &1332611670 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2127528126737620099, guid: 2d6b472d4f6c58b4f838b75c1b558141,
+    type: 3}
+  m_PrefabInstance: {fileID: 624632057}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1344042821 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5876317230815310939, guid: 931110c847eea4007b670ae0ac1e55ff,
@@ -23076,7 +23093,7 @@ MonoBehaviour:
   player: {fileID: 0}
   playerChangeState: {fileID: 0}
   arrowObject: {fileID: 0}
-  swingObject: {fileID: 0}
+  swingObject: {fileID: 624632058}
   angle: 150
 --- !u!4 &2118787329
 Transform:
