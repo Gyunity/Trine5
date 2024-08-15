@@ -7,7 +7,7 @@ public class FireBallMove : MonoBehaviour
 {
     //Player
     GameObject target;
-    public string targetName = "Player";
+    public string targetName = "XXX";
     Vector3 dir;
     public float speed = 4f;
 
@@ -28,13 +28,18 @@ public class FireBallMove : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        //PlayerWepon에도
+        if (other.gameObject == target)
+        {
+            Destroy(gameObject);
+        }
+        
+        /*//PlayerWepon에도
         if (other.gameObject.tag == "Player" || other.gameObject.layer == LayerMask.NameToLayer("Wall") || other.gameObject.layer == LayerMask.NameToLayer("Ground") || other.gameObject.tag == "Player_equipment")
         {
             Debug.Log("불꽃 공격");
             //GameObject explosion = Instantiate(explosionFactory);
             //explosion.transform.position = transform.position;
             Destroy(gameObject);
-        }
+        }*/
     }
 }
