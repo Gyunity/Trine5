@@ -16,6 +16,8 @@ public class StaminaSystem_HMJ : MonoBehaviour
     //StaminaBar
     public Image StaminaBar;
 
+    public GameObject StaminaCanvas;
+
     PlayerState_HMJ playerState;
 
     bool fillStamina = false;
@@ -23,22 +25,35 @@ public class StaminaSystem_HMJ : MonoBehaviour
     float staminaTime = 15.0f;
     float lerpData = 0.0f;
 
+    float enableTime = 1.5f;
     void Start()
     {
         //현재 HP를 최대 HP로 생성
         currStamina = maxStamina;
 
         playerState = GameObject.Find("Player").GetComponentInChildren<PlayerState_HMJ>();
+
+        StaminaCanvas.SetActive(false);
     }
 
     void Update()
     {
         if(fillStamina)
         {
-            FillLerpStaminaData();
+            enableTime -= Time.deltaTime;
+            if (enableTime < 0.0f)
+            {
+                StaminaCanvas.SetActive(true);
+                FillLerpStaminaData();
+            }
+
         }
         StaminaBar.fillAmount = currStamina / maxStamina;
 
+        if (StaminaBar.fillAmount >= 0.98f)
+        {
+            StaminaCanvas.SetActive(false);
+        }
     }
 
     public void DashStart()
@@ -61,6 +76,8 @@ public class StaminaSystem_HMJ : MonoBehaviour
     public void FillStaminaData(bool bfillStamina)
     {
         fillStamina = bfillStamina;
+        if (fillStamina)
+            enableTime = 1.5f;
     }
 
     public void FillLerpStaminaData()
@@ -68,8 +85,11 @@ public class StaminaSystem_HMJ : MonoBehaviour
         lerpData += Time.deltaTime;
         currStamina = Mathf.Lerp(currStamina, maxStamina, lerpData / staminaTime);
 
-        if (lerpData > staminaTime)
+        if (currStamina > maxStamina)
+        {
+            StaminaCanvas.SetActive(false);
             fillStamina = false;
+        }
     }
     
     public bool EnableDash()

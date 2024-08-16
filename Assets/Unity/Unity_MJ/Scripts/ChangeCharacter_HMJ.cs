@@ -21,12 +21,23 @@ public class ChangeCharacter : MonoBehaviour
 
     List<RuntimeAnimatorController> animControllerList = new List<RuntimeAnimatorController>();
     PlayerCharacterType curPlayerCharacterType = PlayerCharacterType.PlayerCharacterTypeEnd;
-    Animator animator; 
+    Animator animator;
+
+    EffectManager_HMJ effectManager;
+    GameObject changeEffect;
+
+    GameObject player;
 
     private void Awake()
     {
         LoadPrefab();
         LoadAnimData();
+
+        effectManager = GetComponentInChildren<EffectManager_HMJ>();
+
+        
+
+        player = GameObject.Find("Player");
     }
     // Start is called before the first frame update
     void Start()
@@ -67,6 +78,7 @@ public class ChangeCharacter : MonoBehaviour
     {
         if(curPlayerCharacterType != PlayerCharacterMeshType)
         {
+            changeEffect = effectManager.SpawnAndPlayEffect2(player.transform.position, 1.0f, false, new Vector3());
             SetMeshAllActive(false);
             curPlayerCharacterType = PlayerCharacterMeshType;
             SetMeshActive(curPlayerCharacterType, true);
@@ -80,6 +92,7 @@ public class ChangeCharacter : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             SetMeshData(PlayerCharacterType.WizardType);
+            
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
@@ -110,18 +123,29 @@ public class ChangeCharacter : MonoBehaviour
 
     void LoadAnimData()
     {
+        // "Prefabs/MyPrefab"은 "Resources" 폴더 내의 경로입니다.
+        GameObject prefab = Resources.Load<GameObject>("Prefabs/MyPrefab");
+
+        if (prefab != null)
+        {
+            Instantiate(prefab); // 프리팹 인스턴스화
+        }
+        else
+        {
+            Debug.LogError("Failed to load prefab");
+        }
         // 
-        // 추후에 리소스 로드로 변경할 예정 - 에디터 전용 함수: LoadAssetAtPath
+        // 추후에 리소스 로드로 변경할 예정 - 에디터 전용 함수: LoadAssetAtPath 사용 금지
         animator = GetComponentInChildren<Animator>();
-        avatarList.Add(AssetDatabase.LoadAssetAtPath<Avatar>("Assets/Unity/Unity_MJ/Assets/Mesh/Download/Knight D Pelegrini.fbx"));
-        avatarList.Add(AssetDatabase.LoadAssetAtPath<Avatar>("Assets/Unity/Unity_MJ/Assets/Character/Erika Archer With Bow Arrow.fbx"));
-        avatarList.Add(AssetDatabase.LoadAssetAtPath<Avatar>("Assets/Unity/Unity_MJ/Assets/Character/Warrior/Paladin WProp J Nordstrom.fbx"));
+        avatarList.Add(Resources.Load<Avatar>("Knight D Pelegrini"));
+        avatarList.Add(Resources.Load<Avatar>("Erika Archer With Bow Arrow"));
+        avatarList.Add(Resources.Load<Avatar>("Paladin WProp J Nordstrom"));
         // 
 
 
-        animControllerList.Add(AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Unity/Unity_MJ/Assets/Animation/Animation Active/Player_Wizard.controller"));
-        animControllerList.Add(AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Unity/Unity_MJ/Assets/Animation/Animation Active/Player_Archer.controller"));
-        animControllerList.Add(AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Unity/Unity_MJ/Assets/Animation/Animation Active/Player_Warrior.controller"));
+        animControllerList.Add(Resources.Load<RuntimeAnimatorController>("Player_Wizard"));
+        animControllerList.Add(Resources.Load<RuntimeAnimatorController>("Player_Archer"));
+        animControllerList.Add(Resources.Load<RuntimeAnimatorController>("Player_Warrior"));
         //
     }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using static ArrowMove_HMJ;
+using static SoundManager;
 
 public class ArrowManager_HMJ : MonoBehaviour
 {

@@ -23,7 +23,6 @@ public class CollectObject_HMJ : MonoBehaviour
         // 플레이어와 콜리전 충돌하면 삭제
         if (other.name.Contains("Player"))
         {
-            storySC.GemCount++;
             SoundManager.instance.PlayStoryEftSound(SoundManager.EStoryEftType.STORY_ITEMGET);
 
             Destroy(gameObject);

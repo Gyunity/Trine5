@@ -6,9 +6,8 @@ using UnityEngine.UI;
 
 public class SceneStory_GH : MonoBehaviour
 {
-    public int GemCount = 0;
+    public List<GameObject>Gems = new List<GameObject>();
 
-    int Gem = 8;
     public GameObject door;
     public GameObject Connon;
 
@@ -24,8 +23,15 @@ public class SceneStory_GH : MonoBehaviour
 
     void Update()
     {
-        gem.text = Convert.ToString(Gem - GemCount);
-        if(GemCount >= 8)
+        for(int i = 0; i < Gems.Count; i++)
+        {
+            if(Gems[i] == null)
+            {
+                Gems.RemoveAt(i);
+            }
+        }
+        gem.text = Convert.ToString(Gems.Count);
+        if(Gems.Count == 0)
         {
             curr += Time.deltaTime;
             if(curr < dur)

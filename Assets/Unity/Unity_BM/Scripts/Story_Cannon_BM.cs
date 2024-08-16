@@ -5,9 +5,14 @@ using UnityEngine;
 public class Story_Cannon_BM : MonoBehaviour
 {
     GameObject player;
-    private void Start()
+    HPSystem_HMJ playerHP;
+
+
+    void Start()
     {
         player = GameObject.Find("Player");
+        playerHP = player.GetComponent<HPSystem_HMJ>();
+
     }
     //private void OnTriggerStay(Collider other)
     //{
@@ -50,18 +55,21 @@ public class Story_Cannon_BM : MonoBehaviour
             yield return new WaitForSeconds(damageInterval);
         }
     }*/
-    void OnCollisionEnter(Collision other)
+
+    private void OnCollisionEnter(Collision collision)
+   
     {
-        if (other.gameObject == player)
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            print("데미지");
+            playerHP.UpdateHP(-100, GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>().GetPlayerCharacterType());
         }
     }
+    
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == player)
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            print("데미지");
+            playerHP.UpdateHP(-100, GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>().GetPlayerCharacterType());
         }
     }
 }

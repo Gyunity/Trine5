@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static ArrowType_HMJ;
 
 public class Bomb_GH : MonoBehaviour
 {
@@ -68,7 +69,9 @@ public class Bomb_GH : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Arrow"))
+        ArrowMove_HMJ arrowType = collision.gameObject.GetComponent<ArrowMove_HMJ>();
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Arrow") && arrowType.arrowType == ArrowType_HMJ.ArrowType.ArrowIceType)
         {
             fireMode = false;
         }

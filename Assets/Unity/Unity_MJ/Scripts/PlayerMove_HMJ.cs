@@ -9,6 +9,7 @@ using UnityEngine.ProBuilder;
 using UnityEngine.UIElements;
 using static ArrowMove_HMJ;
 using static PlayerState_HMJ;
+using static SoundManager;
 using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerMove_HMJ : MonoBehaviour
@@ -127,6 +128,8 @@ public class PlayerMove_HMJ : MonoBehaviour
         staminaSystem = GameObject.Find("Player").GetComponentInChildren<StaminaSystem_HMJ>();
 
         effectManager = GameObject.Find("Player").GetComponentInChildren<EffectManager_HMJ>();
+
+        moveSpeed = 4.0f;
     }
     // Update is called once per frame
     void Update()
@@ -143,6 +146,7 @@ public class PlayerMove_HMJ : MonoBehaviour
 
             transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * 10.0f);
             anim.SetFloat("MoveSpeed", Mathf.Abs(horizontal));
+
         }
 
         UpdateKey(); // 반동 업데이트 키
@@ -152,7 +156,8 @@ public class PlayerMove_HMJ : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift) && staminaSystem.EnableDash())
         {
             playerState.SetState(PlayerState.Dash);
-            effectManager.SpawnAndPlayEffect(transform.position, 0.2f, false, new Vector3(0.0f, 0.0f, 0.0f));
+            if(changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.WarriorType)
+                effectManager.SpawnAndPlayEffect(transform.position, 0.2f, false, new Vector3(0.0f, 0.0f, 0.0f));
         }
 
         if (changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.WarriorType)
@@ -165,7 +170,7 @@ public class PlayerMove_HMJ : MonoBehaviour
 
         }
 
-        // Dash();
+        //Dash();
 
         if (changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.ArcherType)
         {
@@ -404,6 +409,7 @@ public class PlayerMove_HMJ : MonoBehaviour
         if (playDashTime >= dashTime)
         {
             playerState.SetState(PlayerState.Idle);
+            moveSpeed = 5.0f;
         }
     }
 
@@ -523,6 +529,7 @@ public class PlayerMove_HMJ : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Boss"))
         {
             // "Boss" 레이어와 충돌했을 때 실행할 코드
+            SoundManager.instance.PlayBossEftSound(SoundManager.EBossEftType.BOSS_HIT1);
             Debug.Log("Boss와 충돌: " + other.gameObject.name);
             HPSystem_GH hpSystem = other.gameObject.GetComponentInChildren<HPSystem_GH>();
             ValeribotFSM_GH bossFSM = other.gameObject.GetComponentInChildren<ValeribotFSM_GH>();

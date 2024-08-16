@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static SoundManager;
 
 public class PlayerState_HMJ : MonoBehaviour
 {
@@ -52,6 +53,12 @@ public class PlayerState_HMJ : MonoBehaviour
 
     StaminaSystem_HMJ staminaSystem;
 
+    ChangeCharacter changeCharacter;
+
+    public GameObject HpCanvas;
+
+    public float maxDamageTime = 5.0f;
+    public float damageTime = 5.0f;
     private void Awake()
     {
         anim = GetComponentInChildren<Animator>();
@@ -59,6 +66,10 @@ public class PlayerState_HMJ : MonoBehaviour
         arrowManager = GameObject.Find("ArrowManager");
         hpSystem = GameObject.Find("Player").GetComponentInChildren<HPSystem_HMJ>();
         staminaSystem = GameObject.Find("Player").GetComponentInChildren<StaminaSystem_HMJ>();
+        changeCharacter = GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>();
+
+        maxDamageTime = 5.0f;
+        damageTime = 5.0f;
     }
     // Start is called before the first frame update
     void Start()
@@ -80,6 +91,15 @@ public class PlayerState_HMJ : MonoBehaviour
 
     void UpdateState()
     {
+        damageTime += Time.deltaTime;
+        if (damageTime < maxDamageTime)
+        {
+            HpCanvas.SetActive(true);
+        }
+        else
+        {
+            HpCanvas.SetActive(false);
+        }
         switch (curPlayerState)
         {
             case PlayerState.Idle:
@@ -131,7 +151,8 @@ public class PlayerState_HMJ : MonoBehaviour
         if (curPlayerState == PlayerState.Death && playerState == PlayerState.Damaged)
             return false;
 
-        
+        if (playerState == PlayerState.Dash && (changeCharacter.GetPlayerCharacterType() != PlayerCharacterType.WarriorType))
+            return false;
         if (curPlayerState != playerState)
         {
             playerMove.ResetDashData();
@@ -148,15 +169,18 @@ public class PlayerState_HMJ : MonoBehaviour
                 case PlayerState.Walk:
                     break;
                 case PlayerState.Jump:
+                    SoundManager.instance.PlayPlayerEftSound(EPlayerEftType.PLAYER_JUMP);
                     anim.SetTrigger("Jump");
                     Debug.Log("Test: Jump State");
                     break;
                 case PlayerState.Dash:
+                    SoundManager.instance.PlayPlayerEftSound(EPlayerEftType.PLAYER_WARRIOR_DASH);
                     staminaSystem.DashStart();
                     anim.SetTrigger("Dash");
                     Debug.Log("Test: Dash State");
                     break;
                 case PlayerState.Grap:
+                    
                     anim.SetTrigger("Grap");
                     Debug.Log("Test: Grap State");
                     grabyPos = 1.8f;
@@ -177,6 +201,7 @@ public class PlayerState_HMJ : MonoBehaviour
                 case PlayerState.ShootArrow:
                     anim.SetTrigger("ArrowShoot");
                     Debug.Log("Test: ArrowShoot State");
+                    SoundManager.instance.PlayPlayerEftSound(EPlayerEftType.PLAYER_ARCHER_ARROWLONGSHOOT);
                     break;
                 case PlayerState.Swinging:
                     anim.SetTrigger("Swinging");
@@ -184,16 +209,31 @@ public class PlayerState_HMJ : MonoBehaviour
                     Debug.Log("Test: Swinging State");
                     break;
                 case PlayerState.Damaged:
+                    if( changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.WarriorType)
+                        SoundManager.instance.PlayPlayerEftSound(EPlayerEftType.PLAYER_WARRIOR_DAMAGE);
+                    else if (changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.ArcherType)
+                        SoundManager.instance.PlayPlayerEftSound(EPlayerEftType.PLAYER_ARCHER_DAMAGE);
+                    else if(changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.WizardType)
+                        SoundManager.instance.PlayPlayerEftSound(EPlayerEftType.PLAYER_WIZARD_DAMAGE);
+                    damageTime = 0.0f;
                     anim.SetTrigger("Hit");
                     break;
                 case PlayerState.Death:
                     anim.SetTrigger("Death");
+                    if (changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.WarriorType)
+                        SoundManager.instance.PlayPlayerEftSound(EPlayerEftType.PLAYER_WIZARD_WARRIOR_DEAD);
+                    else if (changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.ArcherType)
+                        SoundManager.instance.PlayPlayerEftSound(EPlayerEftType.PLAYER_ARCHER_DEAD);
+                    else if (changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.WizardType)
+                        SoundManager.instance.PlayPlayerEftSound(EPlayerEftType.PLAYER_WIZARD_WARRIOR_DEAD);
                     break;
                 case PlayerState.Attack00:
                     anim.SetTrigger("Attack00");
+
                     break;
                 case PlayerState.Attack01:
                     anim.SetTrigger("Attack01");
+                    SoundManager.instance.PlayPlayerEftSound(EPlayerEftType.PLAYER_WARRIOR_THROWSWORD);
                     break;
                 case PlayerState.Magic:
                     break;
