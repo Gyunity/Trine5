@@ -36,5 +36,18 @@ public class Thorn_GH : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("PlayerSword"))
+        {
+            SoundManager.instance.PlayBossEftSound(SoundManager.EBossEftType.BOSS_TRAPHIT);
+
+            popCone.SetActive(true);
+            model.SetActive(false);
+            boxcoll.enabled = false;
+            Destroy(other.gameObject);
+            Destroy(gameObject, 5);
+        }
+    }
 
 }

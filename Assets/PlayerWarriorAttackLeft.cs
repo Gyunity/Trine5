@@ -18,7 +18,7 @@ public class PlayerWarriorAttackLeft : StateMachineBehaviour
         GameObject player;
         player = GameObject.Find("Player");
         playerState = GameObject.Find("Player").GetComponentInChildren<PlayerState_HMJ>();
-        swordPosition = FindBoneManager_HMJ.Instance.FindBone(player.transform, "SwordPosition").transform.gameObject;
+        //swordPosition = FindBoneManager_HMJ.Instance.FindBone(player.transform, "SwordPosition").transform.gameObject;
 
         //effectManager = swordPosition.GetComponentInChildren<EffectManager_HMJ>();
 
