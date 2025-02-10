@@ -176,10 +176,12 @@ public class ValeribotFSM_GH : MonoBehaviour
     #region 꼬리 치기
     TailCollider_GH tailSc;
     #endregion
+
     #region 공격력
     public float tailAttackValue = 50;
     public float laserAttackValue = 1f;
     #endregion
+
     void Start()
     {
         tailSc = GetComponentInChildren<TailCollider_GH>();
@@ -189,8 +191,6 @@ public class ValeribotFSM_GH : MonoBehaviour
         valeriHP = GetComponent<HPSystem_GH>();
 
         shield = GetComponentInChildren<Shield_GH>();
-
-        //chicken = GetComponent<Chicken_GH>();
 
         transform.position = pointC.position;
 
@@ -214,16 +214,11 @@ public class ValeribotFSM_GH : MonoBehaviour
             laserMachines[i].transform.position = transform.position;
             laserMachines[i].SetActive(false);
         }
-
-
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Instantiate(bombFactory, bombPoints[1].position, bombPoints[1].rotation);
-        }
+   
 
         if (onLaserBack)
         {
@@ -233,7 +228,7 @@ public class ValeribotFSM_GH : MonoBehaviour
                 {
                     laserBackEft[i].Play();
                 }
-                laserBackOne = true;
+                //laserBackOne = true;
             }
         }
         else
@@ -244,7 +239,7 @@ public class ValeribotFSM_GH : MonoBehaviour
                 {
                     laserBackEft[i].Stop();
                 }
-                laserBackOne = false;
+                //laserBackOne = false;
 
             }
 
@@ -253,8 +248,6 @@ public class ValeribotFSM_GH : MonoBehaviour
         OnShield();
         Damaged();
 
-        //z축 고정
-        //transform.position = new Vector3(transform.position.x, transform.position.y, 0);
 
         if (Input.GetKeyDown(KeyCode.K))
         {
@@ -327,6 +320,8 @@ public class ValeribotFSM_GH : MonoBehaviour
         switch (currState)
         {
             case EValeribotState.IDLE:
+                //보스 움직임 순서대로
+                /*
                 if (randBoss < 6)
                 {
                     randBoss++;
@@ -335,7 +330,11 @@ public class ValeribotFSM_GH : MonoBehaviour
                 {
                     randBoss = 0;
                 }
-                //randBoss = Random.Range(1, 7);
+                */
+
+
+                // 보스 움직임 랜덤으로
+                randBoss = Random.Range(1, 7);
                 break;
             case EValeribotState.JUMP:
                 jumpState = true;
@@ -557,21 +556,21 @@ public class ValeribotFSM_GH : MonoBehaviour
                     switch (currBossPosState)
                     {
                         case 0:
-                            currentPoint = CalculateBezierPoint(jumpCurrTime / jumpDuration, pointL.position, pointLC.position, pointC.position);
+                            currentPoint = BezierPoint(jumpCurrTime / jumpDuration, pointL.position, pointLC.position, pointC.position);
                             break;
                         case 1:
                             if (RandMove == 0)
                             {
-                                currentPoint = CalculateBezierPoint(jumpCurrTime / jumpDuration, pointC.position, pointLC.position, pointL.position);
+                                currentPoint = BezierPoint(jumpCurrTime / jumpDuration, pointC.position, pointLC.position, pointL.position);
                             }
                             else
                             {
-                                currentPoint = CalculateBezierPoint(jumpCurrTime / jumpDuration, pointC.position, pointRC.position, pointR.position);
+                                currentPoint = BezierPoint(jumpCurrTime / jumpDuration, pointC.position, pointRC.position, pointR.position);
                             }
                             break;
 
                         case 2:
-                            currentPoint = CalculateBezierPoint(jumpCurrTime / jumpDuration, pointR.position, pointRC.position, pointC.position);
+                            currentPoint = BezierPoint(jumpCurrTime / jumpDuration, pointR.position, pointRC.position, pointC.position);
                             break;
                     }
 
@@ -649,12 +648,13 @@ public class ValeribotFSM_GH : MonoBehaviour
 
 
     }
-    Vector3 CalculateBezierPoint(float t, Vector3 p1, Vector3 p2, Vector3 p3)
+    Vector3 BezierPoint(float t, Vector3 p1, Vector3 p2, Vector3 p3)
     {
         Vector3 p1p2 = Vector3.Lerp(p1, p2, t);
         Vector3 p2p3 = Vector3.Lerp(p2, p3, t);
         return Vector3.Lerp(p1p2, p2p3, t);
     }
+
     void TargetingLaser()
     {
         if (onTargetingLaser)
@@ -1019,16 +1019,7 @@ public class ValeribotFSM_GH : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Arrow") && !onShield)
-        {
-            SoundManager.instance.PlayBossEftSound(SoundManager.EBossEftType.BOSS_HIT1);
-
-            //todo
-            valeriHP.UpdateHP(-150);
-        }
-    }
+   
 
     IEnumerator StartAni()
     {
@@ -1072,5 +1063,14 @@ public class ValeribotFSM_GH : MonoBehaviour
 
         ChangeState(EValeribotState.STAYDELAY);
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Arrow") && !onShield)
+        {
+            SoundManager.instance.PlayBossEftSound(SoundManager.EBossEftType.BOSS_HIT1);
 
+            //todo
+            valeriHP.UpdateHP(-150);
+        }
+    }
 }

@@ -11,10 +11,10 @@ public class CamManager_GH : MonoBehaviour
     public GameObject deadCam;
 
     CinemachineVirtualCamera deadcamtrans;
-    float currTime = 0;
-    float shiftTime = 5;
-    float moveTime = 2;
-    float fadeTime = 6;
+    public float currentTime = 0;
+    float shiftTime = 6.5f;
+    float moveTime = 8;
+    float fadeTime = 15;
 
     public ValeribotFSM_GH boss;
 
@@ -36,7 +36,6 @@ public class CamManager_GH : MonoBehaviour
 
     void Start()
     {
-        //bgm 사운드 바꾸기 todo 주석 없애기
         SoundManager.instance.PlayBgmSound(SoundManager.EBgmType.BGM_BOSS);
 
         deadcamtrans = deadCam.GetComponent<CinemachineVirtualCamera>();
@@ -48,7 +47,7 @@ public class CamManager_GH : MonoBehaviour
     {
         if (boss.currState == ValeribotFSM_GH.EValeribotState.DIE)
         {
-            StartCoroutine(CamTest());
+            CamMove();
         }
         if (fade)
         {
@@ -74,7 +73,7 @@ public class CamManager_GH : MonoBehaviour
         {
             fadeInOut.color += new Color(0, 0, 0, fadeOutSpeed) * Time.deltaTime;
         }
-        else if(fadeInOut.color.a >= 1)
+        else if (fadeInOut.color.a >= 1)
         {
             SoundManager.instance.StopBgmSound();
             SceneManager.LoadScene(3);
@@ -84,23 +83,32 @@ public class CamManager_GH : MonoBehaviour
     }
 
 
-    IEnumerator CamTest()
+    void CamMove()
     {
-        yield return new WaitForSeconds(shiftTime);
-        deadcamtrans.Priority = 11;
-        endingUI.SetActive(false);
-        endingUI2.SetActive(false);
-        yield return new WaitForSeconds(moveTime);
-        deadcamtrans.transform.Translate(Vector3.forward * 0.1f * Time.deltaTime, Space.Self);
-        if (!ballCreate)
+        currentTime += Time.deltaTime;
+        if (currentTime > shiftTime)
         {
-            Instantiate(dragonBallFac, dragonBallPos);
-            ballCreate = true;
+            deadcamtrans.Priority = 11;
+            endingUI.SetActive(false);
+            endingUI2.SetActive(false);
         }
 
-        yield return new WaitForSeconds(fadeTime);
-        fade = false;
-        //SceneManager.LoadScene(3);
+        if (currentTime > moveTime)
+        {
+            deadcamtrans.transform.Translate(Vector3.forward * 0.1f * Time.deltaTime, Space.Self);
+            if (!ballCreate)
+            {
+                Instantiate(dragonBallFac, dragonBallPos);
+                ballCreate = true;
+            }
+        }
+
+        if (currentTime > fadeTime)
+        {
+            fade = false;
+
+        }
+
 
     }
 }
