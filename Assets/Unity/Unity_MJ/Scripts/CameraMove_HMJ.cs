@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CameraMove : MonoBehaviour
 {
-    public Transform target;
+    public Transform[] target;
     // 카메라가 따라갈 대상
 
     public float smoothSpeed = 0.125f;
@@ -14,14 +14,21 @@ public class CameraMove : MonoBehaviour
     public Vector3 offset;
     // 대상과 카메라 사이의 거리
 
-    // Start is called before the first frame update
-    void Start()
+    ChangeCharacter changeCharacter;
+
+    public void SettingComponent()
     {
-        
+        GameObject player = GameObject.Find("Player");
+        changeCharacter = player.GetComponent<ChangeCharacter>();
+    }
+    // Start is called before the first frame update
+    private void Start()
+    {
+        SettingComponent();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         
     }
@@ -29,7 +36,7 @@ public class CameraMove : MonoBehaviour
     private void LateUpdate()
     {
         // 카메라의 목표 위치 계산
-        Vector3 desiredPosition = target.position + offset;
+        Vector3 desiredPosition = target[(int)changeCharacter.GetPlayerCharacterType()].position + offset;
 
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
 

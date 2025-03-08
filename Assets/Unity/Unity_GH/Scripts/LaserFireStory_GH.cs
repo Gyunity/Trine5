@@ -61,7 +61,6 @@ public class LaserFireStory_GH : MonoBehaviour
             //플레이어와 그라운드만 레이를 쏜다.
             if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out rayHit, maxLength, 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Thorn") | 1 << LayerMask.NameToLayer("SummonedObject") | 1 << LayerMask.NameToLayer("Cannon")))
             {
-                print(rayHit.point);
                 if (onFlash)
                 {
                     Flash.Play();
@@ -70,8 +69,6 @@ public class LaserFireStory_GH : MonoBehaviour
                 }
                 //끝 레이저 위치가 오브젝트이면
                 laserLine.SetPosition(1, rayHit.point);
-
-
 
                 laserLine.textureScale = new Vector2(1, 1);
                 hitEffect.transform.position = rayHit.point + rayHit.normal * hitOffset;

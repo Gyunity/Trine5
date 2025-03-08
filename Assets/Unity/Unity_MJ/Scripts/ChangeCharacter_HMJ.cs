@@ -17,9 +17,10 @@ public enum PlayerCharacterType
 public class ChangeCharacter : MonoBehaviour
 {
     List<GameObject> objectList = new List<GameObject>();
-    List<Avatar> avatarList = new List<Avatar>();
 
+    List<Avatar> avatarList = new List<Avatar>();
     List<RuntimeAnimatorController> animControllerList = new List<RuntimeAnimatorController>();
+
     PlayerCharacterType curPlayerCharacterType = PlayerCharacterType.PlayerCharacterTypeEnd;
     Animator animator;
 
@@ -31,21 +32,16 @@ public class ChangeCharacter : MonoBehaviour
     private void Awake()
     {
         LoadPrefab();
-        LoadAnimData();
+        LoadPlayerData();
 
         effectManager = GetComponentInChildren<EffectManager_HMJ>();
 
-        
-
         player = GameObject.Find("Player");
     }
-    // Start is called before the first frame update
     void Start()
     {
         SetMeshData(PlayerCharacterType.WizardType);
     }
-
-    // Update is called once per frame
     void Update()
     {
         ChangeMeshPrefab();
@@ -61,17 +57,6 @@ public class ChangeCharacter : MonoBehaviour
             if(gameObject.layer == LayerMask.NameToLayer("Player"))
                 objectList.Add(gameObject);
         }
-
-        //// 프리펩 정보 리스트에 미리 로드
-        //string[] prefabNames = { "Wizard.prefab", "Archer.prefab"};
-        //foreach (string prefabName in prefabNames)
-        //{
-        //    // 프리팹 로드(특정 경로에 있는 프리팹 3가지 로드)
-        //    GameObject obj = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Unity/Unity_MJ/Prefabs/Player/" + prefabName);
-        //    GameObject Data = Instantiate(obj, Vector3.zero, Quaternion.identity);
-        //    objectList.Add(Data);
-        //    Data.transform.SetParent(player.transform, false);
-        //}
     }
 
     public void SetMeshData(PlayerCharacterType PlayerCharacterMeshType)
@@ -90,18 +75,11 @@ public class ChangeCharacter : MonoBehaviour
     void ChangeMeshPrefab()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
             SetMeshData(PlayerCharacterType.WizardType);
-            
-        }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
             SetMeshData(PlayerCharacterType.ArcherType);
-        }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
             SetMeshData(PlayerCharacterType.WarriorType);
-        }
     }
 
     void SetMeshActive(PlayerCharacterType playerCharacterType, bool bActive)
@@ -121,32 +99,16 @@ public class ChangeCharacter : MonoBehaviour
         }
     }
 
-    void LoadAnimData()
+    void LoadPlayerData()
     {
-        // "Prefabs/MyPrefab"은 "Resources" 폴더 내의 경로입니다.
-        GameObject prefab = Resources.Load<GameObject>("Prefabs/MyPrefab");
-
-        if (prefab != null)
-        {
-            Instantiate(prefab); // 프리팹 인스턴스화
-        }
-        else
-        {
-            Debug.LogError("Failed to load prefab");
-        }
-        // 
-        // 추후에 리소스 로드로 변경할 예정 - 에디터 전용 함수: LoadAssetAtPath 사용 금지
         animator = GetComponentInChildren<Animator>();
         avatarList.Add(Resources.Load<Avatar>("Knight D Pelegrini"));
         avatarList.Add(Resources.Load<Avatar>("Erika Archer With Bow Arrow"));
         avatarList.Add(Resources.Load<Avatar>("Paladin WProp J Nordstrom"));
-        // 
-
 
         animControllerList.Add(Resources.Load<RuntimeAnimatorController>("Player_Wizard"));
         animControllerList.Add(Resources.Load<RuntimeAnimatorController>("Player_Archer"));
         animControllerList.Add(Resources.Load<RuntimeAnimatorController>("Player_Warrior"));
-        //
     }
 
     public PlayerCharacterType GetPlayerCharacterType()

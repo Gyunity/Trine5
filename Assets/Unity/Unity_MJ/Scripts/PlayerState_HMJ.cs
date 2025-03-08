@@ -12,11 +12,9 @@ public class PlayerState_HMJ : MonoBehaviour
         Jump,
         Dash,
         NoDash,
-        Grap,
         Climb,
         DrawArrow,
         ShootArrow,
-        Swinging,
         Damaged,
         Death,
         Attack00,
@@ -26,7 +24,6 @@ public class PlayerState_HMJ : MonoBehaviour
         PlayerStateEnd
 
     }
-
     public enum PlayerMoveState
     {
         Player_ZeroZ,
@@ -45,7 +42,7 @@ public class PlayerState_HMJ : MonoBehaviour
 
     Animator anim;
 
-    PlayerMove_HMJ playerMove;
+    BasePlayer playerMove;
 
     GameObject arrowManager;
 
@@ -61,12 +58,14 @@ public class PlayerState_HMJ : MonoBehaviour
     public float damageTime = 5.0f;
     private void Awake()
     {
+        GameObject player = GameObject.Find("Player");
+
         anim = GetComponentInChildren<Animator>();
-        playerMove = GetComponentInChildren<PlayerMove_HMJ>();
+        playerMove = GetComponentInChildren<BasePlayer>();
         arrowManager = GameObject.Find("ArrowManager");
-        hpSystem = GameObject.Find("Player").GetComponentInChildren<HPSystem_HMJ>();
-        staminaSystem = GameObject.Find("Player").GetComponentInChildren<StaminaSystem_HMJ>();
-        changeCharacter = GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>();
+        hpSystem = player.GetComponentInChildren<HPSystem_HMJ>();
+        staminaSystem = player.GetComponentInChildren<StaminaSystem_HMJ>();
+        changeCharacter = player.GetComponentInChildren<ChangeCharacter>();
 
         maxDamageTime = 5.0f;
         damageTime = 5.0f;
@@ -80,16 +79,12 @@ public class PlayerState_HMJ : MonoBehaviour
         curPlayerMoveState = PlayerMoveState.PlayerMoveStateEnd;
         prePlayerMoveState = PlayerMoveState.PlayerMoveStateEnd;
     }
-
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         UpdateState();
-        //if (Input.GetKeyDown(KeyCode.B))
-        //    hpSystem.UpdateHP(-100.0f, GameObject.Find("Player").GetComponentInChildren<ChangeCharacter>().GetPlayerCharacterType());
     }
 
-    void UpdateState()
+    private void UpdateState()
     {
         damageTime += Time.deltaTime;
         if (damageTime < maxDamageTime)
@@ -103,45 +98,16 @@ public class PlayerState_HMJ : MonoBehaviour
         switch (curPlayerState)
         {
             case PlayerState.Idle:
-                //Debug.Log("Idle State");
                 break;
             case PlayerState.Walk:
-                //Debug.Log("Walk State");
                 break;
             case PlayerState.Jump:
-                //Debug.Log("Jump State");
                 break;
             case PlayerState.Dash:
-                //Debug.Log("Dash State");
-                playerMove.Dash();
-                break;
-            case PlayerState.Grap:
-                //Debug.Log("Grap State");
-                transform.position = new Vector3(transform.position.x, grabyPos, transform.position.z);
+                playerMove.DashMove();
                 break;
             case PlayerState.Climb:
-                //Debug.Log("Climb State");
                 transform.position = new Vector3(transform.position.x, grabyPos, transform.position.z);
-                break;
-            case PlayerState.ShootArrow:
-                //Debug.Log("Shoot State");
-                break;
-            case PlayerState.DrawArrow:
-                //Debug.Log("Draw State");
-                break;
-            case PlayerState.Swinging:
-
-                //playerMove.MoveWithBounce();
-                //Debug.Log("Swinging State");
-                break;
-            case PlayerState.Damaged:
-                //anim.SetTrigger("Swinging");
-                break;
-            case PlayerState.Attack00:
-                break;
-            case PlayerState.Attack01:
-                break;
-            case PlayerState.Magic:
                 break;
         }
     }
@@ -164,49 +130,30 @@ public class PlayerState_HMJ : MonoBehaviour
                     break;
                 case PlayerState.Idle:
                     anim.SetTrigger("Idle");
-                    Debug.Log("Test: Idle State");
                     break;
                 case PlayerState.Walk:
                     break;
                 case PlayerState.Jump:
                     SoundManager.instance.PlayPlayerEftSound(EPlayerEftType.PLAYER_JUMP);
                     anim.SetTrigger("Jump");
-                    Debug.Log("Test: Jump State");
                     break;
                 case PlayerState.Dash:
                     SoundManager.instance.PlayPlayerEftSound(EPlayerEftType.PLAYER_WARRIOR_DASH);
                     staminaSystem.DashStart();
                     anim.SetTrigger("Dash");
-                    Debug.Log("Test: Dash State");
-                    break;
-                case PlayerState.Grap:
-                    
-                    anim.SetTrigger("Grap");
-                    Debug.Log("Test: Grap State");
-                    grabyPos = 1.8f;
                     break;
                 case PlayerState.Climb:
                     anim.SetTrigger("Climb");
-                    Debug.Log("Test: Climb State");
                     grabyPos = 1.4f;
                     break;
                 case PlayerState.DrawArrow:
                     if (arrowManager) // Test용 방어 코드
                         arrowManager.GetComponentInChildren<ArrowManager_HMJ>().SpawnArrow();
-                    Debug.Log("Test: SpawnArrow~~~");
                     anim.SetTrigger("ArrowDraw");
-                    Debug.Log("플레이어 상태 변경: " + "ArrowDraw");
-                    //Debug.Log("Test: ArrowDraw State");
                     break;
                 case PlayerState.ShootArrow:
                     anim.SetTrigger("ArrowShoot");
-                    Debug.Log("Test: ArrowShoot State");
                     SoundManager.instance.PlayPlayerEftSound(EPlayerEftType.PLAYER_ARCHER_ARROWLONGSHOOT);
-                    break;
-                case PlayerState.Swinging:
-                    anim.SetTrigger("Swinging");
-                    playerMove.SelectHangingObject();
-                    Debug.Log("Test: Swinging State");
                     break;
                 case PlayerState.Damaged:
                     if( changeCharacter.GetPlayerCharacterType() == PlayerCharacterType.WarriorType)
@@ -229,7 +176,6 @@ public class PlayerState_HMJ : MonoBehaviour
                     break;
                 case PlayerState.Attack00:
                     anim.SetTrigger("Attack00");
-
                     break;
                 case PlayerState.Attack01:
                     anim.SetTrigger("Attack01");
@@ -238,10 +184,8 @@ public class PlayerState_HMJ : MonoBehaviour
                 case PlayerState.Magic:
                     break;
             }
-
             prePlayerState = curPlayerState;
             curPlayerState = playerState;
-
             return true;
         }
         return false;
@@ -252,8 +196,6 @@ public class PlayerState_HMJ : MonoBehaviour
     {
         if (curPlayerMoveState != playerMoveState)
         {
-            //playerMove.ResetDashData();
-
             switch (playerMoveState)
             {
                 case PlayerMoveState.Player_ZeroZ:
@@ -262,16 +204,12 @@ public class PlayerState_HMJ : MonoBehaviour
                 case PlayerMoveState.Player_FixZ:
                     break;
             }
-
             prePlayerMoveState = curPlayerMoveState;
             curPlayerMoveState = playerMoveState;
-
             return true;
         }
         return false;
     }
-
-    // 
 
     public PlayerState GetState()
     {
